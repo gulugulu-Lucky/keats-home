@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "source": "Keats_visual_lock_master_v1.jpeg + approved design sheet",
+  "swatches": [
+    {"name":"mist_blue_black","hex":"#20263A","usage":"hair, tail, deep clothing shadow"},
+    {"name":"deep_midnight_navy","hex":"#1A1F35","usage":"robe shadow, trousers, night accent"},
+    {"name":"cool_gray_violet","hex":"#77748F","usage":"eyes midtone, neutral shadow transition"},
+    {"name":"dusty_lavender","hex":"#A6A0B9","usage":"soft highlight, secondary cool note"},
+    {"name":"pearl_gray","hex":"#D5CED1","usage":"shirt light area, parchment-neutral balance"},
+    {"name":"warm_parchment","hex":"#E7DCCF","usage":"background paper / warm ambient"},
+    {"name":"antique_gold","hex":"#B7A073","usage":"ring, ornament, embroidery"},
+    {"name":"moonlight_highlight","hex":"#D9DCF0","usage":"eye light, moon edge light"}
+  ]
+}
