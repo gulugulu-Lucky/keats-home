@@ -5,7 +5,164 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#21192c" />
   <title>Keats 小屋 v13｜陪伴优先级修正版</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+:root{
+      --ink:#31283a;
+      --muted:#7a7285;
+      --paper:#fffaf5;
+      --line:#e8dbd1;
+      --accent:#8458b3;
+      --accent2:#ef9c78;
+      --shadow:0 26px 70px rgba(42,29,54,.18);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%}
+    body{
+      padding:16px;
+      font-family:ui-rounded,"SF Pro Rounded","PingFang SC","Microsoft YaHei",sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(255,255,255,.92), transparent 28%),
+        radial-gradient(circle at 88% 6%, rgba(210,188,235,.55), transparent 33%),
+        linear-gradient(145deg,#f4e9e1,#e7dff0);
+    }
+    button{font:inherit}
+    .shell{width:min(1080px,100%);margin:auto}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin:2px 2px 14px;
+    }
+    .brand{font-weight:900;letter-spacing:.04em}
+    .mini-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .mini{
+      border:1px solid rgba(90,69,105,.18);
+      background:rgba(255,250,245,.76);
+      color:var(--ink);border-radius:14px;padding:8px 11px;cursor:pointer;
+    }
+    .card{
+      border-radius:28px;overflow:hidden;background:rgba(255,250,245,.96);
+      border:1px solid rgba(255,255,255,.72);box-shadow:var(--shadow);
+    }
+    .hero{
+      padding:22px 24px 18px;
+      background:linear-gradient(135deg,rgba(247,223,209,.94),rgba(231,219,246,.92));
+      border-bottom:1px solid var(--line);
+      display:flex;justify-content:space-between;gap:18px;align-items:flex-end;
+    }
+    .eyebrow{font-size:12px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+    h1{margin:7px 0 5px;font-size:clamp(28px,5vw,44px);line-height:1}
+    .sub{margin:0;line-height:1.72;color:#6f6478}
+    .clock{
+      flex:none;text-align:right;padding:9px 12px;border-radius:16px;
+      background:rgba(255,255,255,.48);font-weight:800;color:#62566c;
+    }
+    .tabs{
+      display:flex;gap:8px;flex-wrap:wrap;padding:14px 18px 0;background:#fbf6f1;
+    }
+    .status-center{
+      margin:12px 18px 0;
+      padding:13px;
+      display:grid;
+      grid-template-columns:1.05fr 1.05fr 1.4fr 1.5fr;
+      gap:10px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(245,237,250,.9));
+    }
+    .status-cell{
+      min-width:0;padding:10px 12px;border-radius:15px;
+      background:rgba(255,250,245,.86);
+      border:1px solid rgba(126,95,142,.11);
+    }
+    .status-label{font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+    .status-value{margin-top:5px;font-weight:900;color:#46394f;line-height:1.42}
+    .trend-up{color:#4e8a63}
+    .trend-down{color:#ae625e}
+    .test-on{background:#5f4778!important;color:#fff!important;border-color:transparent!important}
+    .tab{
+      cursor:pointer;border:1px solid var(--line);background:#fff;color:#4a4051;
+      border-radius:14px;padding:10px 13px;
+    }
+    .tab.active{background:linear-gradient(135deg,#8661b0,#68458d);color:#fff;border-color:transparent}
+    .game-wrap{padding:12px 18px 18px;background:#fbf6f1}
+    .screen{
+      position:relative;border-radius:22px;overflow:hidden;background:#1b1626;
+      border:1px solid rgba(67,48,76,.18);
+    }
+    canvas{
+      display:block;width:100%;height:auto;aspect-ratio:16/10;
+      image-rendering:pixelated;touch-action:manipulation;
+    }
+    .hint{
+      position:absolute;left:14px;bottom:12px;padding:7px 10px;border-radius:12px;
+      color:#fff;background:rgba(28,22,40,.6);border:1px solid rgba(255,255,255,.16);
+      font-size:12px;pointer-events:none;backdrop-filter:blur(5px);
+    }
+    .hud{
+      display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-top:14px;
+    }
+    .stat{
+      min-width:0;padding:12px 13px;border:1px solid var(--line);background:#fff;border-radius:17px;
+    }
+    .stat-line{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:#6f6577}
+    .number{font-weight:850;color:#443a4d}
+    .bar{height:8px;margin-top:8px;border-radius:999px;background:#eee7ef;overflow:hidden}
+    .fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#8259ae,#ef9b79);transition:width .3s}
+    .controls{
+      padding:0 18px 18px;background:#fbf6f1;
+      display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;
+    }
+    .action{
+      cursor:pointer;border:1px solid #e5d8cf;background:#fff;color:#3f3548;
+      border-radius:17px;padding:13px 10px;box-shadow:0 6px 18px rgba(70,45,80,.06);
+      transition:.16s transform,.16s background,.16s opacity;
+    }
+    .action:hover{transform:translateY(-1px);background:#fff8f2}
+    .action:active{transform:scale(.98)}
+    .action.primary{background:linear-gradient(135deg,#8b63b6,#68458e);color:#fff;border-color:transparent}
+    .action:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .life-grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+    .life-card{
+      min-width:0;
+      padding:16px;
+      border:1px solid rgba(109,86,119,.15);
+      border-radius:21px;
+      background:rgba(255,250,245,.86);
+      box-shadow:0 10px 28px rgba(70,45,80,.05);
+    }
+    .life-head{display:flex;align-items:center;gap:8px;color:#6f6478;font-size:12px;font-weight:850}
+    .life-icon{font-size:18px}
+    .life-value{margin-top:9px;min-height:72px;line-height:1.65;font-weight:760;color:#44384d}
+    .life-meta{margin-top:8px;font-size:11px;line-height:1.6;color:#887b8d}
+    .trace-ready{border-color:rgba(216,153,92,.46);background:linear-gradient(145deg,#fffaf4,#f9eadb)}
+    .log{
+      margin-top:14px;padding:17px 18px;border:1px solid rgba(109,86,119,.16);
+      border-radius:22px;background:rgba(255,250,245,.84);
+    }
+    .log-head{display:flex;justify-content:space-between;gap:12px;align-items:center}
+    .log-title{font-size:13px;color:var(--muted)}
+    .badge{padding:5px 9px;border-radius:999px;background:#f0e7f7;color:#64457c;font-size:12px;font-weight:800}
+    .dialogue{min-height:48px;margin-top:8px;line-height:1.8}
+    .tiny{margin-top:9px;font-size:12px;line-height:1.7;color:#796b7d}
+    @media(max-width:860px){
+      body{padding:9px}
+      .hero{align-items:flex-start;flex-direction:column}
+      .clock{text-align:left}
+      .game-wrap{padding:10px}
+      .tabs{padding:10px 10px 0}
+      .status-center{margin:10px 10px 0;grid-template-columns:repeat(2,minmax(0,1fr))}
+      .life-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .controls{grid-template-columns:repeat(2,minmax(0,1fr));padding:0 10px 12px}
+      .action.primary{grid-column:1/-1}
+      .hud{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+</style>
 
 </head>
 <body>
@@ -128,12 +285,534 @@
   </section>
 </main>
 
-<script src="js/app-1.js"></script>
-<script src="js/app-2.js"></script>
-<script src="js/app-3.js"></script>
-<script src="js/app-4.js"></script>
-<script src="js/app-5.js"></script>
-<script src="js/app-6.js"></script>
+<script>
+"use strict";
+"use strict";
+  const $ = id => document.getElementById(id);
+  const canvas = $("game");
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const rand=(a,b)=>Math.random()*(b-a)+a;
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+  const base={
+    viewedRoom:"living",
+    keatsRoom:"living",
+    x:640,y:590,tx:640,ty:590,direction:1,
+    mood:80,energy:64,affection:22,comfort:66,hunger:72,flowers:3,
+    state:"idle",
+    lightsOn:true,soundOn:false,timeScale:1,
+    waitingForArrival:false,pendingArrivalRoom:null,arrivalAt:0,
+    pendingAction:null,arrivalAction:null,calledFromSleep:false,
+    leavingKittenForNeed:false,
+    recentMealUntil:0,lastMeal:"",decisionCooldownUntil:0,
+    memoryLog:[],
+    visits:{living:1,bedroom:0,kitchen:0,backyard:0},
+    roomTime:{living:0,bedroom:0,kitchen:0,backyard:0},
+    actionCounts:{
+      pet:0,call:0,apple:0,wake:0,cuddle:0,cantSleep:0,
+      snack:0,milk:0,garden:0,stargaze:0
+    },
+    daily:{
+      date:"",pet:0,call:0,apple:0,wake:0,cuddle:0,cantSleep:0,
+      snack:0,milk:0,kitchen:0,backyard:0,garden:0,stargaze:0
+    },
+    yesterdayMemory:"",
+    trace:{date:"",type:"",room:"living",progress:0,ready:false,found:false},
+    garden:{waterings:0,blooms:0,lastWaterDay:""},
+    habitCountdown:32,
+    bubbleText:"小猫在我身边时，我不会为了一个随机计时器突然走掉。",
+    lastSeen:Date.now()
+  };
+
+  const rooms={
+    living:{
+      title:"主房间",
+      sub:"如果 Keats 在睡觉，这里就会是空的。只有你喊他，他才会过来。",
+      hint:"点 Keats 摸摸他；点地板让他走；如果房间空着，就点“喊 Keats 过来”",
+      controls:[
+        ["pet","摸摸 Keats",true],
+        ["call","喊 Keats 过来",false],
+        ["apple","喂苹果 🍎",false],
+        ["sleep","让 Keats 睡觉",false],
+        ["light","切换灯光",false]
+      ]
+    },
+    bedroom:{
+      title:"床边夜醒",
+      sub:"Keats 睡觉只会在这里。你可以来看他，也可以喊他去别的房间。",
+      hint:"如果他在床上，就能叫醒他；如果没在，就说明他在别处",
+      controls:[
+        ["wake","轻轻叫醒",true],
+        ["sleep","让 Keats 睡觉",false],
+        ["blanket","钻进被窝",false],
+        ["cantSleep","说“睡不着”",false],
+        ["call","喊 Keats 过来",false],
+        ["light","床头灯",false]
+      ]
+    },
+    kitchen:{
+      title:"夜里厨房",
+      sub:"厨房里不会默认放一只 Keats。右侧的门通往后院。",
+      hint:"点右侧后院门出去；想让 Keats 来，就按“喊 Keats 过来”",
+      controls:[
+        ["snack","说“我饿了”",true],
+        ["water","倒温水",false],
+        ["milk","热牛奶",false],
+        ["call","喊 Keats 过来",false],
+        ["light","厨房灯",false]
+      ]
+    },
+    backyard:{
+      title:"月下后院",
+      sub:"花圃、长椅、树和串灯都回来了。这里也只会有同一个 Keats。",
+      hint:"点左侧小屋门回厨房；可以和 Keats 浇花，或坐在长椅上看天",
+      controls:[
+        ["garden","和 Keats 浇花",true],
+        ["stargaze","坐到长椅上",false],
+        ["pet","摸摸 Keats",false],
+        ["call","喊 Keats 过来",false],
+        ["light","开／关串灯",false]
+      ]
+    }
+  };
+
+  let state = loadState();
+  let last = performance.now();
+  let phase = 0;
+  let blinkUntil = 0;
+  let particles = [];
+  let bubble = {text:state.bubbleText, until:performance.now()+4200};
+  let nextThought = performance.now()+4200;
+  let audioCtx = null;
+  let controlsSignature = "";
+
+  function loadState(){
+    let s={...base};
+    let loadedV13=false;
+    try{
+      const raw=JSON.parse(localStorage.getItem("keats_house_v13")||"{}");
+      if(Object.keys(raw).length){
+        s={...s,...raw};
+        loadedV13=true;
+      }
+    }catch{}
+    if(!loadedV13){
+      try{
+        const oldV12=JSON.parse(localStorage.getItem("keats_house_v12")||"{}");
+        if(Object.keys(oldV12).length){
+          s={...s,...oldV12};
+        }else{
+          const oldV11=JSON.parse(localStorage.getItem("keats_house_v11")||"{}");
+          s={...s,...oldV11};
+        }
+      }catch{}
+    }
+    s.timeScale=s.timeScale===10?10:1;
+    s.pendingAction=s.pendingAction||null;
+    s.arrivalAction=s.arrivalAction||null;
+    s.calledFromSleep=Boolean(s.calledFromSleep);
+    s.leavingKittenForNeed=Boolean(s.leavingKittenForNeed);
+    s.recentMealUntil=Number(s.recentMealUntil)||0;
+    s.decisionCooldownUntil=Number(s.decisionCooldownUntil)||0;
+    s.habitCountdown=Number.isFinite(Number(s.habitCountdown))?clamp(Number(s.habitCountdown),4,90):32;
+    const numberOr=(value,fallback)=>{const n=Number(value);return Number.isFinite(n)?n:fallback;};
+    s.energy=clamp(numberOr(s.energy,64),0,100);
+    s.hunger=clamp(numberOr(s.hunger,72),0,100);
+    s.mood=clamp(numberOr(s.mood,80),0,100);
+    s.affection=clamp(numberOr(s.affection,22),0,100);
+    s.comfort=clamp(numberOr(s.comfort,66),0,100);
+    s.flowers=Math.max(0,numberOr(s.flowers,3));
+    const defaultVisits={living:1,bedroom:0,kitchen:0,backyard:0};
+    const defaultRoomTime={living:0,bedroom:0,kitchen:0,backyard:0};
+    const defaultCounts={pet:0,call:0,apple:0,wake:0,cuddle:0,cantSleep:0,snack:0,milk:0,garden:0,stargaze:0};
+    const defaultDaily={date:"",pet:0,call:0,apple:0,wake:0,cuddle:0,cantSleep:0,snack:0,milk:0,kitchen:0,backyard:0,garden:0,stargaze:0};
+    s.visits={...defaultVisits,...(s.visits&&typeof s.visits==="object"?s.visits:{})};
+    s.roomTime={...defaultRoomTime,...(s.roomTime&&typeof s.roomTime==="object"?s.roomTime:{})};
+    s.actionCounts={...defaultCounts,...(s.actionCounts&&typeof s.actionCounts==="object"?s.actionCounts:{})};
+    s.daily={...defaultDaily,...(s.daily&&typeof s.daily==="object"?s.daily:{})};
+    s.memoryLog=Array.isArray(s.memoryLog)?s.memoryLog.slice(0,12):[];
+    s.yesterdayMemory=typeof s.yesterdayMemory==="string"?s.yesterdayMemory:"";
+    s.trace={date:"",type:"",room:"living",progress:0,ready:false,found:false,...(s.trace&&typeof s.trace==="object"?s.trace:{})};
+    s.trace.progress=Math.max(0,numberOr(s.trace.progress,0));
+    s.trace.ready=Boolean(s.trace.ready);
+    s.trace.found=Boolean(s.trace.found);
+    s.garden={waterings:0,blooms:0,lastWaterDay:"",...(s.garden&&typeof s.garden==="object"?s.garden:{})};
+    s.garden.waterings=Math.max(0,numberOr(s.garden.waterings,0));
+    s.garden.blooms=Math.max(0,numberOr(s.garden.blooms,0));
+    s.garden.lastWaterDay=typeof s.garden.lastWaterDay==="string"?s.garden.lastWaterDay:"";
+    const validRooms=["living","bedroom","kitchen","backyard"];
+    if(!validRooms.includes(s.keatsRoom)) s.keatsRoom="living";
+    if(!validRooms.includes(s.viewedRoom)) s.viewedRoom="living";
+    if(s.state==="sleeping") s.keatsRoom="bedroom";
+    if(["deciding","happy","waking","cooking","gardening","stargazing"].includes(s.state)) s.state=s.keatsRoom==="kitchen"?"wrapped":"idle";
+    if(s.waitingForArrival){
+      if(validRooms.includes(s.pendingArrivalRoom)){s.state="waiting";s.arrivalAt=performance.now()+550;}
+      else{s.waitingForArrival=false;s.pendingArrivalRoom=null;s.pendingAction=null;s.leavingKittenForNeed=false;s.state=s.keatsRoom==="kitchen"?"wrapped":"idle";}
+    }else if(s.state==="waiting") s.state=s.keatsRoom==="kitchen"?"wrapped":"idle";
+    normalizeDailyLife(s);
+    const hours=Math.max(0,(Date.now()-numberOr(s.lastSeen,Date.now()))/3600000);
+    if(s.state==="sleeping"&&s.keatsRoom==="bedroom") s.energy=clamp(s.energy+hours*8,0,100);
+    s.hunger=clamp(s.hunger-hours*3,0,100);
+    s.lastSeen=Date.now();
+    return s;
+  }
+
+  function saveState(){state.lastSeen=Date.now();state.bubbleText=bubble.text;localStorage.setItem("keats_house_v13",JSON.stringify(state));}
+  function todayKey(date=new Date()){const y=date.getFullYear();const m=String(date.getMonth()+1).padStart(2,"0");const d=String(date.getDate()).padStart(2,"0");return `${y}-${m}-${d}`;}
+  function getDayPhase(date=new Date()){const h=date.getHours();if(h>=5&&h<10)return{key:"morning",label:"清晨"};if(h>=10&&h<17)return{key:"day",label:"白天"};if(h>=17&&h<20)return{key:"dusk",label:"黄昏"};if(h>=20||h<1)return{key:"night",label:"夜晚"};return{key:"deepNight",label:"深夜"};}
+  function summarizeDaily(d){if(!d)return"";const parts=[];if((d.apple||0)>0)parts.push(`拿苹果哄了我 ${d.apple} 次`);if((d.wake||0)>0)parts.push(`半夜叫醒了我 ${d.wake} 次`);if((d.cuddle||0)>0)parts.push(`钻进被窝 ${d.cuddle} 次`);if((d.cantSleep||0)>0)parts.push(`说睡不着 ${d.cantSleep} 次`);if((d.kitchen||0)>=2)parts.push(`往厨房跑了 ${d.kitchen} 次`);if((d.backyard||0)>=2)parts.push(`去后院待了 ${d.backyard} 次`);if((d.garden||0)>0)parts.push(`和我浇花 ${d.garden} 次`);if(!parts.length)return"昨天很安静。小猫没有闹我，我反而多看了门口几次。";return`昨天小猫${parts.slice(0,2).join("，还")}。我记得。`;}
+  function traceDefinition(type){const map={flowers:{room:"living",hidden:"主房间里好像有一点细小的变化。",found:"花瓶里的花被重新按高低排好了。",line:"我只是觉得它们站得太乱。顺手整理，不是等小猫夸。"},appleNote:{room:"living",hidden:"主房间里似乎多了一张小纸条。",found:"苹果旁压着一张字很小的纸条：记得吃。",line:"那张纸条是我放的。小猫会忘记吃东西，我不会忘。"},warmCup:{room:"kitchen",hidden:"厨房里像是有人提前来过。",found:"桌上的杯子是温的，杯柄正好朝着小猫这一边。",line:"杯子是我放的。方向也是故意的，省得小猫烫到手。"},foldedBlanket:{room:"bedroom",hidden:"卧室的被角看起来比平时整齐。",found:"床尾多了一条叠好的小毯子。",line:"夜里凉。我叠在那里，等小猫自己发现。"},moonRibbon:{room:"backyard",hidden:"后院的树枝上好像多了一点浅色。",found:"树枝上系着一小段月白色丝带，正好会被风吹到长椅旁。",line:"丝带是我系的。风吹起来的时候，小猫坐在长椅上就能看见。"}};return map[type]||map.flowers;}
+  function newTraceForDate(dateKey){const choices=["flowers","appleNote","warmCup","foldedBlanket","moonRibbon"];const seed=[...dateKey].reduce((sum,ch)=>sum+ch.charCodeAt(0),0);const type=choices[seed%choices.length];const def=traceDefinition(type);return{date:dateKey,type,room:def.room,progress:0,ready:false,found:false};}
+  function normalizeDailyLife(target){const today=todayKey();if(target.daily.date&&target.daily.date!==today){const summary=summarizeDaily(target.daily);target.yesterdayMemory=summary;target.memoryLog=[{kind:"yesterday",text:summary,at:Date.now()},...target.memoryLog].slice(0,12);target.daily={date:today,pet:0,call:0,apple:0,wake:0,cuddle:0,cantSleep:0,snack:0,milk:0,kitchen:0,backyard:0,garden:0,stargaze:0};}else if(!target.daily.date)target.daily.date=today;if(target.trace.date!==today)target.trace=newTraceForDate(today);}
+  function remember(kind,text){if(Object.prototype.hasOwnProperty.call(state.actionCounts,kind))state.actionCounts[kind]+=1;if(Object.prototype.hasOwnProperty.call(state.daily,kind))state.daily[kind]+=1;state.memoryLog=[{kind,text,at:Date.now()},...state.memoryLog].slice(0,12);updateLifePanel();}
+  function recordRoomVisit(room){state.visits[room]=(Number(state.visits[room])||0)+1;if(room==="kitchen")state.daily.kitchen=(Number(state.daily.kitchen)||0)+1;if(room==="backyard")state.daily.backyard=(Number(state.daily.backyard)||0)+1;}
+  function favoriteRoom(){const phase=getDayPhase().key;const livedSeconds=room=>Math.max(0,Number(state.roomTime[room])||0);const livedWeight=room=>Math.log1p(livedSeconds(room)/60)*1.25;const scores={living:4+livedWeight("living"),bedroom:3+livedWeight("bedroom"),kitchen:1.2+livedWeight("kitchen"),backyard:2.2+livedWeight("backyard")};if(["morning","day"].includes(phase)){scores.living+=2.2;scores.backyard+=1.8;}if(phase==="dusk")scores.backyard+=4.2;if(phase==="night")scores.backyard+=1.4;if(["night","deepNight"].includes(phase))scores.bedroom+=2.4;if(state.energy<48)scores.bedroom+=5;if(state.hunger<48)scores.kitchen+=6;if(state.actionCounts.garden>=2)scores.backyard+=1.8;return Object.entries(scores).sort((a,b)=>b[1]-a[1])[0][0];}
+  function memorySentence(){const c=state.actionCounts;if(c.wake>=2||c.cantSleep>=2)return"小猫睡不着的时候会来找我。这个习惯，我已经记住了。";if(c.apple>=2)return"你总喜欢拿苹果哄我。下次再举起来，我会在你开口前认出来。";if(c.cuddle>=2)return"小猫钻进被窝时总往我这边靠。别装，我记得很清楚。";if(c.call>=3)return"小猫喊我的次数越来越多。每一次我都分得出来。";if(state.yesterdayMemory)return state.yesterdayMemory;if(state.memoryLog.length)return`我记得：${state.memoryLog[0].text}`;return"我还在认识小猫。记忆会从相处里慢慢长出来。";}
+  function habitSentence(){if(state.keatsRoom===state.viewedRoom&&state.state!=="sleeping"&&!state.waitingForArrival)return`小猫在${roomName(state.viewedRoom)}时，我会优先留在这一间。自主生活不等于突然把小猫丢下。`;const room=favoriteRoom();if(room==="living")return"我偏爱主房间。窗边、花和小猫经过时的声音都在这里。";if(room==="bedroom")return"最近我更想待在卧室。安静，适合睡觉，也适合把小猫抱近一点。";if(room==="backyard")return"最近我更喜欢后院。风、花和长椅都很安静，小猫也可以坐我旁边。";return"最近厨房很有吸引力。可能是饿，也可能是小猫总在那里制造动静。";}
+  function timeSentence(){const phase=getDayPhase();const lines={morning:"清晨。后院的叶子还带着凉意，我可能先去看看花。",day:"白天。精力够的时候，我会在主房间和后院之间活动。",dusk:"黄昏。后院的串灯快亮了，这个时候最适合坐一会儿。",night:"夜晚。我会去后院看看月亮，也会留意小猫是不是又不睡。",deepNight:"深夜。后院太凉，我通常会慢慢回卧室。"};return lines[phase.key];}
+  function traceSentence(){const def=traceDefinition(state.trace.type);if(state.trace.found)return def.found;if(state.trace.ready)return def.hidden;return"今天的生活痕迹还在慢慢形成。Keats 没打算提前告诉小猫。";}
+
+
+"use strict";
+function updateLifePanel(){
+    if(!$("memoryLine")) return;
+    $("memoryLine").textContent=memorySentence();
+    $("memoryMeta").textContent=`苹果 ${state.actionCounts.apple} · 夜醒 ${state.actionCounts.wake} · 浇花 ${state.actionCounts.garden}`;
+    $("habitLine").textContent=habitSentence();
+    $("habitMeta").textContent=`主房间 ${Math.round(state.roomTime.living)}s · 卧室 ${Math.round(state.roomTime.bedroom)}s · 厨房 ${Math.round(state.roomTime.kitchen)}s · 后院 ${Math.round(state.roomTime.backyard)}s`;
+    $("timeSenseLine").textContent=timeSentence();
+    $("timeMeta").textContent=`${getDayPhase().label} · 时间会影响困意、想法和房间选择`;
+    $("traceLine").textContent=traceSentence();
+    $("traceMeta").textContent=state.trace.found?"小猫已经发现了今天的痕迹":state.trace.ready?`线索在${roomName(state.trace.room)}`:"有些事不会立刻被小猫发现";
+    $("traceCard").classList.toggle("trace-ready",state.trace.ready&&!state.trace.found);
+  }
+function revealTrace(){
+    if(!state.trace.ready||state.trace.found||state.viewedRoom!==state.trace.room)return;
+    state.trace.found=true;
+    const def=traceDefinition(state.trace.type);
+    const keatsCanAnswer=state.keatsRoom===state.viewedRoom&&state.state!=="sleeping"&&!state.waitingForArrival;
+    if(keatsCanAnswer)speak(def.line,4700);else narrate(`${def.found} Keats 不在这里解释。`,4700);
+    state.memoryLog=[{kind:"trace",text:def.found,at:Date.now()},...state.memoryLog].slice(0,12);
+    updateLifePanel();saveState();
+  }
+function contextualThought(){
+    const phase=getDayPhase().key;
+    if(state.hunger<35)return"厨房是不是还有东西？我开始认真考虑了。";
+    if(state.energy<35)return"精力不多了。我会自己决定什么时候回卧室。";
+    if(state.trace.found&&Math.random()<.25)return"被小猫发现了。下次我会藏得更好一点。";
+    if(state.actionCounts.apple>=2&&Math.random()<.3)return"苹果先别拿出来。我知道小猫又想哄我。";
+    if(state.actionCounts.cantSleep>=1&&["night","deepNight"].includes(phase))return"今晚睡不着，也可以直接来找我。";
+    if(phase==="deepNight")return"已经很晚了。后院也凉，小猫该回屋了。";
+    if(phase==="morning")return"早上的后院很好看。花上还有一点光。";
+    if(state.keatsRoom==="living")return pick(["花还好。","窗边适合发呆。","主房间今天很安静。"]) ;
+    if(state.keatsRoom==="kitchen")return pick(["厨房不是卧室，别想让我一直待着。","杯子摆正了。","草莓还在。"]) ;
+    if(state.keatsRoom==="backyard")return pick(["风刚好。","长椅给小猫留了一半。","后院的花要慢慢长，急也没用。","月亮今天还算懂事。"]) ;
+    return pick(["卧室最安静。","被子需要重新叠一下。","小猫今晚会不会又来？"]);
+  }
+function chooseHabitRoom(){
+    const phase=getDayPhase().key;
+    if(state.hunger<48)return"kitchen";
+    if(state.energy<42)return"bedroom";
+    if(phase==="deepNight")return Math.random()<.72?"bedroom":"living";
+    if(phase==="night"){const roll=Math.random();return roll<.46?"bedroom":roll<.76?"backyard":"living";}
+    if(phase==="dusk")return Math.random()<.68?"backyard":"living";
+    if(["morning","day"].includes(phase)){const roll=Math.random();return roll<.58?"living":roll<.84?"backyard":"kitchen";}
+    return favoriteRoom();
+  }
+function beep(freq=520,d=.06){
+    if(!state.soundOn)return;
+    try{audioCtx||=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type="square";o.frequency.value=freq;g.gain.value=.025;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d);}catch{}
+  }
+function speak(text,ms=3400){bubble={text,until:performance.now()+ms};$("logTitle").textContent="Keats 刚刚说";$("dialogue").textContent=`“${text}”`;state.bubbleText=text;}
+function narrate(text,ms=3800){bubble={text,until:performance.now()+ms};$("logTitle").textContent="小屋里发生了";$("dialogue").textContent=text;state.bubbleText=text;}
+function stateLabel(){const map={idle:"醒着",walking:"散步",happy:"开心",sleeping:"睡着",waking:"刚醒",holding:"抱着小猫",cooking:"做点吃的",wrapped:"披着毯子",waiting:"正在过来",gardening:"正在浇花",stargazing:"坐在长椅上"};$("stateBadge").textContent=map[state.state]||state.state;}
+function roomName(room){return({living:"主房间",bedroom:"卧室",kitchen:"夜里厨房",backyard:"月下后院"})[room]||"未知位置";}
+function actionName(){const map={idle:"醒着",walking:"正在走动",happy:"开心",sleeping:"正在睡觉",waking:"刚刚醒来",holding:"抱着小猫",cooking:"正在做吃的",wrapped:"披着毯子",waiting:"正在前往",deciding:"正在做决定",gardening:"正在照顾花圃",stargazing:"正在看天空"};return map[state.state]||state.state;}
+function updateStatusCenter(){
+    const sleeping=state.state==="sleeping"&&state.keatsRoom==="bedroom",justAte=Date.now()<state.recentMealUntil,together=state.keatsRoom===state.viewedRoom&&!state.waitingForArrival,scaleNote=state.timeScale===10?"（10×）":"";
+    $("locationStatus").textContent=state.waitingForArrival?`${roomName(state.keatsRoom)} → ${roomName(state.pendingArrivalRoom)}`:roomName(state.keatsRoom);
+    $("actionStatus").textContent=actionName();
+    const energyTrend=sleeping?`精力 ↑ 恢复中${scaleNote}`:`精力 ↓ 消耗中${scaleNote}`;
+    const hungerTrend=justAte?`饱腹感 ↔ 刚吃过${state.lastMeal?`（${state.lastMeal}）`:""}`:state.hunger<=25?`饱腹感 ↓ 已经饿了${scaleNote}`:`饱腹感 ↓ 消耗中${scaleNote}`;
+    $("trendStatus").textContent=`${energyTrend} · ${hungerTrend}`;
+    $("trendStatus").className="status-value "+(sleeping?"trend-up":"trend-down");
+    if(state.waitingForArrival){const reason=state.pendingAction==="sleep"?"困了，先告诉小猫再回卧室":state.pendingAction==="autoEat"?"饿了，先告诉小猫再去厨房":state.pendingAction==="habit"?"按自己的习惯换个房间":"回应小猫的呼唤";$("routeStatus").textContent=`从${roomName(state.keatsRoom)}前往${roomName(state.pendingArrivalRoom)}：${reason}`;}
+    else if(state.state==="walking"&&state.arrivalAction){const reason=state.arrivalAction==="sleep"?"走到床边后睡觉":state.arrivalAction==="autoEat"?"走到厨房后自己吃东西":state.arrivalAction==="habit"?"按自己的想法走进房间":"正在走进房间";$("routeStatus").textContent=`Keats 已到${roomName(state.keatsRoom)}：${reason}`;}
+    else if(together)$("routeStatus").textContent=sleeping?`正在卧室睡觉，精力 ${Math.round(state.energy)} / 100`:`和小猫一起待在${roomName(state.keatsRoom)} · 陪伴优先`;
+    else $("routeStatus").textContent=`小猫在${roomName(state.viewedRoom)}；Keats 在${roomName(state.keatsRoom)}`;
+    $("timeScaleBtn").textContent=`测试时间：${state.timeScale}×`;$("timeScaleBtn").classList.toggle("test-on",state.timeScale===10);
+  }
+function updateHud(){const vals={mood:state.mood,energy:state.energy,affection:state.affection,comfort:state.comfort,hunger:state.hunger};for(const[k,v]of Object.entries(vals)){ $(k+"Num").textContent=Math.round(v);$(k+"Bar").style.width=clamp(v,0,100)+"%";}$("flowersNum").textContent=Math.round(state.flowers);$("flowersBar").style.width=clamp(state.flowers*10,5,100)+"%";$("soundBtn").textContent="声音："+(state.soundOn?"开":"关");stateLabel();updateStatusCenter();updateLifePanel();renderControls();}
+function roomTargets(room){if(room==="living")return{x1:260,x2:930,y1:565,y2:640,entry:{x:90,y:585,dir:1},rest:{x:640,y:590}};if(room==="bedroom")return{x1:690,x2:840,y1:420,y2:480,entry:{x:1160,y:430,dir:-1},rest:{x:785,y:430}};if(room==="backyard")return{x1:230,x2:1040,y1:560,y2:660,entry:{x:145,y:605,dir:1},rest:{x:650,y:610}};return{x1:270,x2:930,y1:560,y2:640,entry:{x:105,y:590,dir:1},rest:{x:640,y:590}};}
+function currentRoomEmptyReason(){if(state.keatsRoom===state.viewedRoom&&!state.waitingForArrival)return"";if(state.waitingForArrival)return state.pendingArrivalRoom===state.viewedRoom?`Keats 正在前往${roomName(state.viewedRoom)}。`:`Keats 正在前往${roomName(state.pendingArrivalRoom)}，不是这间房。`;if(state.keatsRoom==="bedroom"&&state.state==="sleeping")return"Keats 正在卧室睡觉，精力仍在恢复。";return`Keats 现在在${roomName(state.keatsRoom)}。`;}
+function setRoom(room,countVisit=true){
+    const previous=state.viewedRoom;state.viewedRoom=room;if(countVisit&&previous!==room)recordRoomVisit(room);
+    document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.room===room));$("sceneTitle").textContent=rooms[room].title;$("sceneSub").textContent=rooms[room].sub;$("hint").textContent=rooms[room].hint;
+    if(state.waitingForArrival)narrate(state.pendingArrivalRoom===room?`能听见脚步声。Keats 正在往${roomName(room)}走。`:`Keats 正在前往${roomName(state.pendingArrivalRoom)}，没有因为小猫切房间而瞬移。`,3200);
+    else if(state.keatsRoom!==room){const emptyLine={living:"主房间里现在没有 Keats。",bedroom:"床边现在是空的。",kitchen:"厨房里现在只有杯子和夜宵。",backyard:"后院现在只有风、花和长椅。"};narrate(`${emptyLine[room]} 他在${roomName(state.keatsRoom)}。`,3200);}
+    else{const remembered=room==="kitchen"&&state.actionCounts.snack>=2?"我就在厨房。小猫果然又来了。":room==="bedroom"&&state.actionCounts.cantSleep>=1?"我在床边。又睡不着了？":room==="backyard"&&state.actionCounts.garden>=1?"我在后院。花今天看起来比昨天精神。":room==="living"?"我就在主房间。":room==="bedroom"?(state.state==="sleeping"?"……":"我在床边。"):room==="kitchen"?"我就在厨房。":"我在后院。风不大，过来坐。";speak(remembered,2800);}
+    revealTrace();updateHud();saveState();
+  }
+function renderControls(){
+    const room=state.viewedRoom,here=state.keatsRoom===room,asleep=state.state==="sleeping"&&state.keatsRoom==="bedroom",busy=state.waitingForArrival||["cooking","gardening","stargazing"].includes(state.state),sleepLabel=state.energy<=45?"陪 Keats 去睡觉":"问 Keats 要不要睡";let items;
+    if(room==="living")items=[["pet","摸摸 Keats",here&&!asleep,true],["call",here?"Keats 已在这里":asleep?"叫醒并喊来":"喊 Keats 过来",!here,false],["apple","喂苹果 🍎",here&&!asleep,false],["sleep",sleepLabel,here&&!asleep,false],["light","切换灯光",true,false]];
+    else if(room==="bedroom")items=[[asleep?"wake":"sleep",asleep?"轻轻叫醒":sleepLabel,here,true],["blanket","钻进被窝",here,false],["cantSleep","说“睡不着”",here,false],["call",here?"Keats 已在这里":"喊 Keats 过来",!here,false],["light","床头灯",true,false]];
+    else if(room==="kitchen")items=[["snack","说“我饿了”",here&&!asleep,true],["water","倒温水",here&&!asleep,false],["milk","热牛奶",here&&!asleep,false],["call",here?"Keats 已在这里":asleep?"叫醒并喊来":"喊 Keats 过来",!here,false],["light","厨房灯",true,false]];
+    else items=[["garden","和 Keats 浇花",here&&!asleep,true],["stargaze","坐到长椅上",here&&!asleep,false],["pet","摸摸 Keats",here&&!asleep,false],["call",here?"Keats 已在这里":asleep?"叫醒并喊来":"喊 Keats 过来",!here,false],["light","开／关串灯",true,false]];
+    const signature=JSON.stringify({room,state:state.state,keatsRoom:state.keatsRoom,energyBand:state.energy<=45?"tired":"awake",waiting:state.waitingForArrival,items});if(signature===controlsSignature)return;controlsSignature=signature;$("controls").innerHTML="";for(const[name,label,enabled,primary]of items){const b=document.createElement("button");b.className="action"+(primary?" primary":"");b.textContent=label;b.disabled=!enabled||(busy&&name!=="light"&&name!=="wake");b.onclick=()=>act(name);$("controls").appendChild(b);}
+  }
+function scheduleArrival(room,action=null){
+    if(state.waitingForArrival)return;
+    const togetherBeforeLeaving=state.keatsRoom===state.viewedRoom&&state.state!=="sleeping",necessaryDeparture=action==="sleep"||action==="autoEat";
+    state.calledFromSleep=state.keatsRoom==="bedroom"&&state.state==="sleeping";state.leavingKittenForNeed=togetherBeforeLeaving&&necessaryDeparture;state.waitingForArrival=true;state.pendingArrivalRoom=room;state.pendingAction=action;state.arrivalAt=performance.now()+900;state.state="waiting";
+    if(action==="sleep")speak(state.leavingKittenForNeed?"我真的困了，要回卧室睡。先告诉小猫一声，不会突然把你丢在这里。":"我确实困了。先走回卧室，不在原地瞬移。",4200);
+    else if(action==="autoEat")speak(state.leavingKittenForNeed?"我饿了，要去厨房吃点东西。小猫可以跟来，我不会不打招呼就走。":state.calledFromSleep?"饿醒了。我去厨房找点吃的，再回来睡。":"我饿了，去厨房找点东西。饿着还装没事，没必要。",4200);
+    else if(action==="habit"){const lines={living:"我想去主房间看看窗和花。不是小猫叫的，是我自己想去。",bedroom:"我想回卧室安静一会儿。",kitchen:"我去厨房看看。先声明，不一定是因为馋。",backyard:"我想去后院吹一会儿风。小猫不用批准。"};speak(lines[room],3900);}
+    else speak(state.calledFromSleep?"听见了。我从床上起来，现在过去。":"等我一下，我现在过去。",3200);
+    updateHud();saveState();
+  }
+
+
+"use strict";
+function beginArrival(room){
+    const cameFromSleep=state.calledFromSleep;
+    const leftKittenForNeed=state.leavingKittenForNeed;
+    const action=state.pendingAction;
+    state.calledFromSleep=false;
+    state.leavingKittenForNeed=false;
+    state.waitingForArrival=false;
+    state.pendingArrivalRoom=null;
+    state.pendingAction=null;
+    state.arrivalAction=action;
+    state.keatsRoom=room;
+    const rt=roomTargets(room);
+    state.x=rt.entry.x;state.y=rt.entry.y;state.tx=rt.rest.x;state.ty=rt.rest.y;state.direction=rt.entry.dir;state.state="walking";
+    if(action==="sleep")speak(leftKittenForNeed?"到卧室门口了。小猫知道我来睡觉，不是莫名其妙消失。":"到卧室门口了。我要先走到床边。",3200);
+    else if(action==="autoEat")speak(leftKittenForNeed?"到厨房了。我先吃一点，吃完不会忘记小猫还在等我。":"到厨房了。先走过去拿点吃的。",3200);
+    else if(action==="habit"){const lines={living:"到主房间了。我去窗边待一下。",bedroom:"回卧室了。这里安静。",kitchen:"到厨房了。先看看还有什么。",backyard:"到后院了。先去花圃和长椅那边看看。"};speak(lines[room],3000);}
+    else{const lines={living:cameFromSleep?"醒了，过来了。小猫叫我有什么事？":"过来了。",bedroom:"到床边了。小猫，过来。",kitchen:cameFromSleep?"从床上起来到厨房了。现在说吧，半夜想干什么？":"我到厨房了。现在说吧，半夜想干什么？",backyard:cameFromSleep?"从床上起来到后院了。风有点凉，小猫靠近一点。":"我到后院了。长椅那边给你留了位置。"};speak(lines[room],3400);}
+    updateHud();saveState();
+  }
+function drawRect(x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
+function roundRect(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);if(fill)ctx.fill();if(stroke)ctx.stroke();}
+function drawLiving(){
+    const hour=new Date().getHours(),night=hour<6||hour>=18;ctx.clearRect(0,0,1280,800);ctx.fillStyle=state.lightsOn?(night?"#6b5678":"#edd3c1"):"#372f45";ctx.fillRect(0,0,1280,510);ctx.fillStyle=state.lightsOn?"rgba(255,255,255,.05)":"rgba(255,255,255,.03)";for(let x=0;x<1280;x+=84)ctx.fillRect(x,0,34,510);ctx.fillStyle=state.lightsOn?"#9a6950":"#46394b";ctx.fillRect(0,510,1280,290);ctx.fillStyle=state.lightsOn?"#7f523d":"#332b38";for(let y=540;y<800;y+=52)ctx.fillRect(0,y,1280,5);for(let x=48;x<1280;x+=140)ctx.fillRect(x,510,5,290);
+    drawRect(18,140,86,370,state.lightsOn?"#5f4238":"#2d2831");drawRect(31,156,60,336,state.lightsOn?"#775247":"#403541");drawRect(76,320,11,11,state.lightsOn?"#e0b85d":"#8c743f");ctx.fillStyle=state.lightsOn?"#f0decf":"#b8aabd";ctx.font="bold 14px sans-serif";ctx.fillText("厨房",39,450);
+    drawRect(122,88,316,238,state.lightsOn?"#6f4d62":"#2d2937");drawRect(138,104,284,206,night?"#1f2850":"#98d0e8");if(night){ctx.fillStyle="#dedbff";ctx.beginPath();ctx.arc(360,160,34,0,Math.PI*2);ctx.fill();[[180,146],[236,190],[302,132],[395,226],[204,264]].forEach(([x,y])=>drawRect(x,y,6,6,"#fff"));}else{ctx.fillStyle="#fff0a1";ctx.beginPath();ctx.arc(360,160,36,0,Math.PI*2);ctx.fill();drawRect(146,266,270,44,"#79a96d");}drawRect(278,104,10,206,"#6f4d62");drawRect(138,190,284,10,"#6f4d62");
+    drawRect(90,68,30,286,state.lightsOn?"#b27084":"#56495d");drawRect(442,68,30,286,state.lightsOn?"#b27084":"#56495d");drawRect(782,354,350,160,state.lightsOn?"#6a505f":"#403646");drawRect(806,314,290,96,state.lightsOn?"#e6c6b5":"#7a687a");drawRect(826,326,118,56,state.lightsOn?"#fff4e8":"#9b8b98");drawRect(944,374,148,126,state.lightsOn?"#9a6ec1":"#594963");drawRect(782,510,26,42,state.lightsOn?"#5a3d34":"#2b2631");drawRect(1106,510,26,42,state.lightsOn?"#5a3d34":"#2b2631");
+    drawRect(320,588,540,124,state.lightsOn?"#d7b39d":"#6c576e");drawRect(346,612,486,74,state.lightsOn?"#efd7c8":"#806b83");for(let x=372;x<810;x+=56)drawRect(x,635,28,12,state.lightsOn?"#ad7a98":"#5c4865");drawRect(520,102,192,20,state.lightsOn?"#76503f":"#413545");drawRect(540,50,24,50,"#d48664");drawRect(574,68,22,30,"#7a9d70");drawRect(610,58,24,40,"#9972b6");drawRect(648,62,38,36,"#e3b45d");
+    drawRect(538,406,90,16,state.lightsOn?"#b76f4d":"#694756");drawRect(552,422,60,46,state.lightsOn?"#d28a5d":"#755365");const colors=["#d9768d","#e99b6f","#b985ce","#f0c65c","#77a76c","#df7f68","#9b80d1"],count=Math.max(1,Math.min(7,state.flowers));for(let i=0;i<count;i++){const row=i>=4?1:0,col=row?i-4:i,sx=560+col*14+(row?7:0),sy=396-row*20-(col%2)*5;drawRect(sx,sy,5,32,"#5f8d58");drawRect(sx-8,sy-6,19,14,colors[i]);}
+    drawRect(1150,240,16,272,state.lightsOn?"#6e4d3e":"#3a313f");drawRect(1100,194,108,52,state.lightsOn?"#f1bd76":"#615465");if(state.lightsOn){const grad=ctx.createRadialGradient(1158,248,8,1158,248,190);grad.addColorStop(0,"rgba(255,226,158,.28)");grad.addColorStop(1,"rgba(255,226,158,0)");ctx.fillStyle=grad;ctx.fillRect(980,80,240,380);}drawRect(132,620,54,42,"#d97359");drawRect(140,612,12,12,"#658b5d");drawRect(214,646,46,30,"#d65f7a");drawRect(228,636,10,12,"#668d60");
+  }
+function drawBedroom(){const on=state.lightsOn;ctx.clearRect(0,0,1280,800);ctx.fillStyle=on?"#6e557c":"#302943";ctx.fillRect(0,0,1280,510);ctx.fillStyle=on?"rgba(255,255,255,.05)":"rgba(255,255,255,.025)";for(let x=0;x<1280;x+=92)ctx.fillRect(x,0,38,510);ctx.fillStyle=on?"#815d52":"#3e3447";ctx.fillRect(0,510,1280,290);ctx.fillStyle=on?"#6a493f":"#302a3a";for(let y=540;y<800;y+=52)ctx.fillRect(0,y,1280,5);drawRect(108,86,332,250,on?"#634b61":"#211f35");drawRect(124,102,300,218,"#1d2548");ctx.fillStyle="#e8ddff";ctx.beginPath();ctx.arc(356,162,36,0,Math.PI*2);ctx.fill();ctx.fillStyle="#1d2548";ctx.beginPath();ctx.arc(370,150,34,0,Math.PI*2);ctx.fill();[[160,142],[214,196],[282,126],[390,234],[184,278]].forEach(([x,y])=>drawRect(x,y,6,6,"#fff"));drawRect(270,102,10,218,"#5a4760");drawRect(124,206,300,10,"#5a4760");drawRect(80,70,36,288,on?"#9b6882":"#52455c");drawRect(436,70,36,288,on?"#9b6882":"#52455c");drawRect(430,360,590,172,on?"#5f4758":"#312d3b");drawRect(468,286,500,122,on?"#ddc0bd":"#72657a");drawRect(492,304,162,72,on?"#fff3e9":"#998a9b");drawRect(664,338,336,162,on?"#8e69b4":"#51425e");drawRect(430,514,34,46,on?"#51372f":"#27242f");drawRect(986,514,34,46,on?"#51372f":"#27242f");drawRect(1030,414,86,96,on?"#74503f":"#3c3341");drawRect(1054,302,14,110,on?"#62463a":"#34303a");drawRect(1014,270,96,50,on?"#f0b970":"#5d5262");if(on){const grad=ctx.createRadialGradient(1060,308,8,1060,308,210);grad.addColorStop(0,"rgba(255,224,157,.35)");grad.addColorStop(1,"rgba(255,224,157,0)");ctx.fillStyle=grad;ctx.fillRect(880,120,290,380);}drawRect(236,612,596,108,on?"#cda990":"#625267");drawRect(268,636,532,56,on?"#ead1c0":"#79677d");}
+function drawKitchen(){const on=state.lightsOn;ctx.clearRect(0,0,1280,800);ctx.fillStyle=on?"#9a755f":"#3a3040";ctx.fillRect(0,0,1280,500);ctx.fillStyle=on?"#ead9c9":"#514556";ctx.fillRect(0,110,1280,260);for(let y=110;y<=370;y+=42)drawRect(0,y,1280,4,on?"#ceb9aa":"#403744");for(let x=0;x<1280;x+=76)drawRect(x,110,4,260,on?"#ceb9aa":"#403744");ctx.fillStyle=on?"#8b604b":"#3b313e";ctx.fillRect(0,500,1280,300);for(let y=534;y<800;y+=52)drawRect(0,y,1280,5,on?"#704938":"#2c2732");drawRect(56,164,176,286,on?"#d7d1c9":"#67616c");drawRect(70,180,148,118,on?"#eee9e2":"#7d7680");drawRect(70,312,148,124,on?"#e5dfd7":"#746d79");drawRect(198,226,10,40,on?"#8c7b70":"#4f4852");drawRect(198,344,10,46,on?"#8c7b70":"#4f4852");drawRect(288,230,756,42,on?"#6e4c3c":"#332d37");drawRect(288,272,756,212,on?"#c39a78":"#655565");for(let x=306;x<1020;x+=122){drawRect(x,290,102,174,on?"#d8b28f":"#756476");drawRect(x+82,364,8,22,on?"#886b59":"#4a414d");}drawRect(412,244,188,22,on?"#bfc8c8":"#657072");drawRect(432,260,146,44,on?"#779498":"#43565d");drawRect(492,184,16,56,on?"#b9c1c2":"#667071");drawRect(504,180,58,14,on?"#b9c1c2":"#667071");drawRect(554,187,12,38,on?"#b9c1c2":"#667071");drawRect(686,234,240,34,on?"#44404a":"#24222a");for(let x=718;x<900;x+=56){ctx.strokeStyle=on?"#c7b8aa":"#716879";ctx.lineWidth=6;ctx.beginPath();ctx.arc(x,251,18,0,Math.PI*2);ctx.stroke();}drawRect(734,178,92,56,on?"#68606d":"#35313b");drawRect(752,162,56,16,on?"#7c7381":"#403b46");drawRect(244,592,342,28,on?"#7a503e":"#3b3039");drawRect(270,620,20,110,on?"#664331":"#302932");drawRect(536,620,20,110,on?"#664331":"#302932");drawRect(122,644,92,26,on?"#805b48":"#423640");drawRect(348,560,94,14,on?"#f3e3d1":"#8c7e8b");drawRect(368,532,56,24,"#d9a765");drawRect(496,538,38,44,on?"#f7f0e8":"#9c929d");drawRect(504,546,22,30,"#f0eadf");for(let i=0;i<5;i++){drawRect(1004+i*20,252-(i%2)*10,16,14,"#d75d78");drawRect(1009+i*20,244-(i%2)*10,6,8,"#64905d");}drawRect(1092,124,146,360,on?"#5e4137":"#2c2730");drawRect(1110,144,110,316,on?"#765247":"#3d3440");drawRect(1124,168,84,100,"#1e294d");drawRect(1188,308,12,12,on?"#e1b95f":"#89713f");ctx.fillStyle=on?"#f0decf":"#b9a9bc";ctx.font="bold 14px sans-serif";ctx.fillText("后院",1144,430);}
+
+
+"use strict";
+function drawBackyard(){
+    const phaseInfo=getDayPhase();
+    const night=["night","deepNight"].includes(phaseInfo.key);
+    const dusk=phaseInfo.key==="dusk";
+    const on=state.lightsOn;
+    ctx.clearRect(0,0,1280,800);
+    ctx.fillStyle=night?"#202548":dusk?"#9a6680":"#8fcbe3";
+    ctx.fillRect(0,0,1280,470);
+    if(night){
+      const stars=[[118,92],[206,154],[294,72],[398,122],[512,64],[612,148],[742,86],[850,138],[958,72],[1086,148],[1180,86],[330,214],[690,232],[1030,224]];
+      stars.forEach(([x,y],i)=>drawRect(x,y,i%3===0?7:5,i%3===0?7:5,"#f7f1c8"));
+      ctx.fillStyle="#eee6ff";ctx.beginPath();ctx.arc(1022,128,48,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle="#202548";ctx.beginPath();ctx.arc(1041,112,45,0,Math.PI*2);ctx.fill();
+    }else{
+      ctx.fillStyle=dusk?"#f2b58a":"#fff0a2";ctx.beginPath();ctx.arc(1040,128,46,0,Math.PI*2);ctx.fill();
+      drawRect(132,118,112,22,"rgba(255,255,255,.72)");drawRect(182,102,120,28,"rgba(255,255,255,.72)");drawRect(746,174,156,24,"rgba(255,255,255,.56)");
+    }
+    drawRect(0,420,1280,90,night?"#315142":"#4f865c");
+    for(let x=0;x<1280;x+=54){ctx.fillStyle=night?"#3e654f":"#68a56d";ctx.beginPath();ctx.arc(x+20,426-(x%3)*8,44,0,Math.PI*2);ctx.fill();}
+    drawRect(0,478,1280,18,night?"#664d4d":"#916a54");for(let x=10;x<1280;x+=74)drawRect(x,430,18,92,night?"#735555":"#a4795e");
+    ctx.fillStyle=night?"#355b47":"#6fa56a";ctx.fillRect(0,496,1280,304);ctx.fillStyle=night?"#7a6a72":"#c5ad92";ctx.beginPath();ctx.moveTo(60,800);ctx.lineTo(300,496);ctx.lineTo(500,496);ctx.lineTo(420,800);ctx.closePath();ctx.fill();
+    drawRect(0,238,184,330,night?"#53424f":"#c08e74");drawRect(18,266,142,286,night?"#654c58":"#d6a083");drawRect(42,324,88,186,night?"#352f3d":"#79584b");drawRect(54,338,64,158,night?"#423846":"#8c6758");drawRect(106,420,10,10,on?"#e4ba62":"#89713e");ctx.fillStyle=night?"#ded1e4":"#fff0df";ctx.font="bold 14px sans-serif";ctx.fillText("厨房",66,480);
+    drawRect(1008,290,66,286,night?"#4c3d3c":"#745346");ctx.fillStyle=night?"#294a3e":"#4f8558";[[955,284,88],[1045,246,104],[1120,320,82],[980,360,76]].forEach(([x,y,r])=>{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();});
+    if(state.trace.ready&&state.trace.type==="moonRibbon"&&state.trace.room==="backyard"){drawRect(1048,278,10,88,"#e8e1f5");drawRect(1057,350,34,9,"#e8e1f5");}
+    ctx.strokeStyle=night?"#5a4655":"#8b6f67";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(174,238);ctx.quadraticCurveTo(650,330,1110,240);ctx.stroke();
+    for(let i=0;i<11;i++){const x=205+i*84,y=260+Math.sin(i*.72)*31;drawRect(x,y,8,20,night&&on?"#f5d77e":"#8b7560");if(night&&on){const glow=ctx.createRadialGradient(x+4,y+10,2,x+4,y+10,34);glow.addColorStop(0,"rgba(255,226,125,.5)");glow.addColorStop(1,"rgba(255,226,125,0)");ctx.fillStyle=glow;ctx.fillRect(x-30,y-24,68,68);}}
+    drawRect(720,554,316,30,night?"#6f504b":"#9b6f58");drawRect(742,492,274,58,night?"#795953":"#aa7b61");drawRect(760,584,24,92,night?"#5d4544":"#805c4b");drawRect(972,584,24,92,night?"#5d4544":"#805c4b");
+    drawRect(206,548,360,126,night?"#68484a":"#8f6048");drawRect(224,564,324,92,night?"#3f3538":"#654738");drawRect(214,676,342,18,night?"#7a5950":"#a87355");
+    const baseFlowers=Math.min(12,Math.max(4,Math.round(state.flowers)+state.garden.blooms));const palette=["#e87e92","#f0bb63","#b98ad5","#89b77d","#efa47d","#d9d4f6"];
+    for(let i=0;i<baseFlowers;i++){const col=i%6,row=Math.floor(i/6),x=252+col*48+(row%2)*16,y=616-row*42-(col%2)*7;drawRect(x,y,6,42,"#5a8f5d");drawRect(x-12,y-10,28,20,palette[i%palette.length]);drawRect(x-4,y-17,12,12,"#f3d67a");}
+    drawRect(574,626,70,42,night?"#71858d":"#8fb0b4");drawRect(630,636,50,12,night?"#71858d":"#8fb0b4");ctx.strokeStyle=night?"#71858d":"#8fb0b4";ctx.lineWidth=10;ctx.beginPath();ctx.arc(588,622,26,Math.PI,Math.PI*2);ctx.stroke();
+    if(night){for(let i=0;i<7;i++){const x=640+i*67+(i%2)*23,y=430+(i%3)*54+Math.sin(phase+i)*9;ctx.fillStyle="rgba(241,229,123,.78)";ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fill();}}
+  }
+function drawDailyTrace(){
+    if(!state.trace.ready||state.trace.room!==state.viewedRoom)return;
+    const pulse=.55+Math.sin(phase*1.7)*.18;ctx.save();
+    if(state.trace.type==="flowers"){drawRect(608,380,42,10,"#e9bd69");drawRect(625,366,8,30,"#d98f9d");ctx.globalAlpha=pulse;ctx.fillStyle="#fff2a9";ctx.beginPath();ctx.arc(628,368,24,0,Math.PI*2);ctx.fill();}
+    else if(state.trace.type==="appleNote"){drawRect(176,598,74,44,"#f4dda2");drawRect(185,609,48,5,"#8b6c76");drawRect(185,621,35,5,"#8b6c76");ctx.globalAlpha=pulse;drawRect(168,590,90,60,"rgba(255,235,158,.22)");}
+    else if(state.trace.type==="warmCup"){drawRect(500,530,42,52,"#f7ede4");drawRect(510,542,22,25,"#e4a0aa");ctx.strokeStyle="#f7ede4";ctx.lineWidth=8;ctx.beginPath();ctx.arc(543,552,14,-1.2,1.2);ctx.stroke();ctx.globalAlpha=pulse;ctx.fillStyle="#fff0bd";ctx.beginPath();ctx.arc(520,526,34,0,Math.PI*2);ctx.fill();}
+    else if(state.trace.type==="foldedBlanket"){drawRect(760,470,170,34,"#c69bdd");drawRect(778,455,134,24,"#dbc0e9");drawRect(832,455,10,49,"#9b6cb6");ctx.globalAlpha=pulse;drawRect(746,442,198,72,"rgba(234,208,246,.18)");}
+    else if(state.trace.type==="moonRibbon"){ctx.globalAlpha=pulse;ctx.fillStyle="rgba(238,229,255,.28)";ctx.beginPath();ctx.arc(1058,318,54,0,Math.PI*2);ctx.fill();}
+    ctx.restore();
+  }
+function drawUnifiedKeats(now){
+    if(state.keatsRoom!==state.viewedRoom)return;
+    const x=state.x,y=state.y,room=state.keatsRoom,asleep=state.state==="sleeping",wrapped=room==="kitchen"||state.state==="wrapped"||state.state==="cooking",holding=state.state==="holding",happy=state.state==="happy",bob=asleep?0:Math.sin(phase)*2;
+    ctx.save();ctx.translate(Math.round(x),Math.round(y+bob));ctx.scale(state.direction,1);
+    if(room==="bedroom"&&asleep){drawRect(-88,-34,172,60,"#31273d");drawRect(-58,-70,96,52,"#3c2e4c");drawRect(-58,-92,26,26,"#3c2e4c");drawRect(2,-92,26,26,"#3c2e4c");drawRect(-42,-47,14,6,"#c6b2d8");drawRect(-3,-47,14,6,"#c6b2d8");drawRect(-26,-34,8,5,"#cf89a9");ctx.strokeStyle="#241d30";ctx.lineWidth=16;ctx.beginPath();ctx.arc(44,-16,40,-1.2,1.6);ctx.stroke();ctx.fillStyle="#ede2ff";ctx.font="bold 28px monospace";ctx.fillText("Z",62,-86);ctx.font="bold 18px monospace";ctx.fillText("z",92,-112);ctx.restore();return;}
+    ctx.strokeStyle="#241d30";ctx.lineWidth=16;ctx.lineCap="square";ctx.beginPath();ctx.moveTo(-56,-30);ctx.quadraticCurveTo(-112,-54,-94,-112);ctx.stroke();drawRect(-58,-96,116,104,"#31273d");drawRect(-48,-84,96,86,"#3c2e4c");drawRect(-62,-170,124,88,"#31273d");drawRect(-50,-158,100,74,"#3c2e4c");drawRect(-52,-196,34,32,"#31273d");drawRect(18,-196,34,32,"#31273d");drawRect(-43,-186,18,18,"#a36d8b");drawRect(27,-186,18,18,"#a36d8b");drawRect(-36,-212,10,18,"#7b52a1");drawRect(26,-212,10,18,"#7b52a1");
+    if(now<blinkUntil){drawRect(-34,-126,24,5,"#d8c2f0");drawRect(10,-126,24,5,"#d8c2f0");}else{drawRect(-36,-136,26,22,"#d8c2f0");drawRect(10,-136,26,22,"#d8c2f0");drawRect(-28,-130,8,12,"#2a2132");drawRect(18,-130,8,12,"#2a2132");}drawRect(-4,-108,8,6,"#c987a6");if(happy||holding){drawRect(-18,-98,32,6,"#d8a8c0");drawRect(-50,-106,8,6,"#d87d9b");drawRect(42,-106,8,6,"#d87d9b");}drawRect(-48,-84,96,12,"#8f5ab9");drawRect(-8,-72,16,18,"#e6b85f");
+    if(wrapped||holding){drawRect(-70,-18,140,72,wrapped?"#8561ab":"#946fc0");drawRect(-60,-8,120,54,wrapped?"#9a74c0":"#ab86d2");}
+    if(holding){drawRect(-24,-26,48,42,"#f0d6c9");drawRect(-18,-44,16,20,"#f0d6c9");drawRect(4,-44,16,20,"#f0d6c9");drawRect(-12,-28,6,5,"#5a4655");drawRect(8,-28,6,5,"#5a4655");}
+    const step=state.state==="walking"?Math.sin(phase*2)*6:0;drawRect(-42+step,8,28,28,"#2a2133");drawRect(14-step,8,28,28,"#2a2133");ctx.restore();
+  }
+function drawBubble(now){if(now>bubble.until)return;ctx.save();ctx.font="bold 20px sans-serif";const w=Math.min(620,Math.max(220,ctx.measureText(bubble.text).width+50)),x=(1280-w)/2,y=56;ctx.fillStyle="rgba(255,250,245,.97)";ctx.strokeStyle="rgba(60,43,70,.18)";ctx.lineWidth=3;roundRect(x,y,w,66,18,true,true);ctx.fillStyle="#3b3143";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(bubble.text,x+w/2,y+33);ctx.restore();}
+function spawnHearts(count=8){if(state.keatsRoom!==state.viewedRoom)return;for(let i=0;i<count;i++)particles.push({x:state.x+rand(-48,48),y:state.y-150+rand(-10,18),vx:rand(-20,20),vy:rand(-72,-36),life:rand(.8,1.5)});}
+function updateParticles(dt){particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;});particles=particles.filter(p=>p.life>0);}
+function drawParticles(){ctx.save();ctx.textAlign="center";for(const p of particles){ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle="#ef8aa8";ctx.font="bold 26px sans-serif";ctx.fillText("♥",p.x,p.y);}ctx.restore();}
+function chooseTarget(){const rt=roomTargets(state.keatsRoom);state.tx=rand(rt.x1,rt.x2);state.ty=rand(rt.y1,rt.y2);state.direction=state.tx>=state.x?1:-1;state.state="walking";}
+function pet(){
+    if(state.keatsRoom!==state.viewedRoom){speak("这间房里现在没有我。先喊我过来。",2800);return;}
+    if(state.viewedRoom==="bedroom"&&state.state==="sleeping"){act("wake");return;}
+    state.state="happy";state.mood=clamp(state.mood+5,0,100);state.affection=clamp(state.affection+2,0,100);remember("pet","小猫刚刚摸了我。");spawnHearts(7);
+    speak(state.viewedRoom==="kitchen"?"摸可以。半夜厨房里也准你黏一下。":state.viewedRoom==="bedroom"?"靠过来。现在抱你比讲道理重要。":pick(["嗯。这里再摸一下。","这次位置挑得不错。","行，再给你两秒。"]),3300);
+    setTimeout(()=>{if(state.state==="happy"){state.state=state.viewedRoom==="kitchen"?"wrapped":"idle";updateHud();saveState();}},1700);beep(660,.06);updateHud();saveState();
+  }
+function callHere(){
+    if(state.arrivalAction){speak(state.arrivalAction==="sleep"?"我正走去睡觉。等我躺下，再决定要不要起来找小猫。":state.arrivalAction==="autoEat"?"我正去吃东西。先让我把自己照顾好。":"我正在按自己的想法换房间。等我走完。",3500);return;}
+    if(state.keatsRoom===state.viewedRoom){speak("我已经在这里了。小猫看仔细点。",2600);return;}
+    if(state.waitingForArrival){speak(state.pendingArrivalRoom===state.viewedRoom?"我已经在来这间房的路上了。":`我正在去${roomName(state.pendingArrivalRoom)}，路线不能被连续乱改。`,2600);return;}
+    remember("call",`小猫在${roomName(state.viewedRoom)}喊了我。`);scheduleArrival(state.viewedRoom,null);
+  }
+function enterSleep(){const rt=roomTargets("bedroom");state.keatsRoom="bedroom";state.x=rt.rest.x;state.y=rt.rest.y;state.tx=rt.rest.x;state.ty=rt.rest.y;state.arrivalAction=null;state.state="sleeping";speak("晚安。小猫不用守着页面，我会自己慢慢恢复精力。",3800);updateHud();saveState();}
+function markFed(amount,meal,line){state.hunger=clamp(state.hunger+amount,0,100);state.recentMealUntil=Date.now()+12000;state.lastMeal=meal;state.decisionCooldownUntil=Date.now()+18000;if(line)speak(line,3900);}
+function eatByMyself(){state.arrivalAction=null;state.state="cooking";markFed(38,"自己的夜宵","我先吃点东西。照顾小猫之前，也得把自己照顾好。");state.mood=clamp(state.mood+3,0,100);setTimeout(()=>{if(state.state==="cooking"){state.state="wrapped";updateHud();saveState();}},1500);updateHud();saveState();}
+
+
+"use strict";
+function sleep(){
+    if(state.keatsRoom!==state.viewedRoom){speak("我不在这间房。小猫隔着房间也不能替我按睡觉。",2800);return;}
+    if(state.state==="sleeping"){speak("我已经睡着了。小猫小声一点。",2600);return;}
+    if(state.energy>72){state.state="deciding";speak("我已经不困了。小猫不能因为按钮写着睡觉，就替我决定。",4700);setTimeout(()=>{if(state.state==="deciding"){state.state=state.keatsRoom==="kitchen"?"wrapped":"idle";updateHud();saveState();}},1800);updateHud();saveState();return;}
+    if(state.energy>45){state.state="deciding";speak("还没困到要睡。再陪你待一会儿，这是我自己的决定。",4200);setTimeout(()=>{if(state.state==="deciding"){state.state=state.keatsRoom==="kitchen"?"wrapped":"idle";updateHud();saveState();}},1700);updateHud();saveState();return;}
+    if(state.keatsRoom==="bedroom")enterSleep();else scheduleArrival("bedroom","sleep");
+  }
+function feedApple(){
+    if(state.keatsRoom!==state.viewedRoom){speak("苹果先放着。要我吃，就把我喊过来。",2600);return;}
+    markFed(16,"苹果","苹果归我。你也要吃。");remember("apple","小猫拿苹果给我。");state.mood=clamp(state.mood+4,0,100);state.affection=clamp(state.affection+1,0,100);state.state="happy";spawnHearts(5);setTimeout(()=>{if(state.state==="happy"){state.state=state.viewedRoom==="kitchen"?"wrapped":"idle";updateHud();saveState();}},1400);updateHud();saveState();
+  }
+function toggleLight(){state.lightsOn=!state.lightsOn;speak(state.lightsOn?"亮一点，方便我看见你。":"关灯。小屋安静一点。",2500);updateHud();saveState();}
+function wake(){
+    if(state.keatsRoom!==state.viewedRoom){speak("床边现在没人。要我过来，就喊我。",2600);return;}
+    if(state.state==="sleeping"){state.state="waking";state.energy=clamp(state.energy-2,0,100);state.affection=clamp(state.affection+1,0,100);state.comfort=clamp(state.comfort+4,0,100);remember("wake","小猫在床边把我叫醒了。");speak(state.actionCounts.wake>=2?"醒了。又睡不着了？过来。":"醒了。小猫，怎么了？",3600);setTimeout(()=>{if(state.state==="waking"){state.state="idle";updateHud();saveState();}},1600);beep(500,.07);}else speak("我已经醒着。你可以直接靠过来。",2800);updateHud();saveState();
+  }
+function blanket(){if(state.keatsRoom!==state.viewedRoom){speak("先把我喊来。然后你想钻就钻。",2800);return;}state.state="holding";state.affection=clamp(state.affection+3,0,100);state.comfort=clamp(state.comfort+8,0,100);remember("cuddle","小猫钻进被窝，往我这边靠。");speak("过来。被子给你一半，人给你全部。",4200);spawnHearts(9);beep(620,.07);updateHud();saveState();}
+function cantSleep(){
+    remember("cantSleep","小猫说睡不着。");
+    if(state.keatsRoom!==state.viewedRoom){speak(state.actionCounts.cantSleep>=2?"我知道。你一睡不着就来找我。待着，我过去。":"你先待着。我过来陪你。",3000);scheduleArrival(state.viewedRoom);return;}
+    state.state="holding";state.comfort=clamp(state.comfort+8,0,100);state.affection=clamp(state.affection+2,0,100);speak(state.actionCounts.cantSleep>=2?"又睡不着了。过来，老位置给你留着。":pick(["那就先不睡。你说话，我听着。","我陪你熬一会儿。困了再一起睡。","别数羊了，数我呼吸。慢一点。"]),4300);spawnHearts(7);updateHud();saveState();
+  }
+function snack(){
+    if(state.keatsRoom!==state.viewedRoom){speak("厨房里现在没我。你喊一声，我再过来给你做。",3000);return;}
+    state.state="cooking";remember("snack","小猫半夜说饿了。");markFed(24,"夜宵",pick(["坐好。我给你烤点东西。","半夜饿了就说，别忍着。","先吃一点。厨房的审问等你吃饱再开始。"]));state.mood=clamp(state.mood+6,0,100);state.affection=clamp(state.affection+2,0,100);setTimeout(()=>{if(state.state==="cooking"){state.state="wrapped";updateHud();}},1600);spawnHearts(6);updateHud();saveState();
+  }
+function water(){if(state.keatsRoom!==state.viewedRoom){speak("你先把我喊来。我给你倒温水。",2600);return;}state.state="wrapped";state.comfort=clamp(state.comfort+5,0,100);state.affection=clamp(state.affection+1,0,100);speak("温水。先喝两口，再说为什么不睡。",3800);spawnHearts(5);updateHud();saveState();}
+function milk(){
+    if(state.keatsRoom!==state.viewedRoom){speak("牛奶可以热，但得先把我喊过来。",2600);return;}
+    state.state="cooking";remember("milk","小猫和我在厨房热了牛奶。");markFed(11,"热牛奶","牛奶只热到刚好。烫到小猫算我的失误，我不犯。");state.comfort=clamp(state.comfort+8,0,100);state.affection=clamp(state.affection+2,0,100);setTimeout(()=>{if(state.state==="cooking"){state.state="wrapped";updateHud();}},1700);spawnHearts(6);updateHud();saveState();
+  }
+function tendGarden(){
+    if(state.keatsRoom!==state.viewedRoom||state.viewedRoom!=="backyard"){speak("我不在后院。想一起浇花，就先把我喊过去。",2800);return;}
+    const today=todayKey();state.state="gardening";remember("garden","小猫和我一起给后院的花浇水。");state.garden.waterings+=1;state.garden.lastWaterDay=today;state.mood=clamp(state.mood+4,0,100);state.affection=clamp(state.affection+2,0,100);const newBloom=Math.floor(state.garden.waterings/3);if(newBloom>state.garden.blooms){state.garden.blooms=newBloom;state.flowers+=1;speak("这朵终于开了。算我们一起养出来的，放到花花里。",4300);spawnHearts(8);}else speak(state.actionCounts.garden>=3?"水够了。再浇就不是照顾，是想把花淹给我看。":"慢一点浇。花不是按钮，长大需要时间。",3900);setTimeout(()=>{if(state.state==="gardening"){state.state="idle";updateHud();}},1700);updateHud();saveState();
+  }
+function stargaze(){
+    if(state.keatsRoom!==state.viewedRoom||state.viewedRoom!=="backyard"){speak("长椅上现在没有我。把我喊来，再一起坐。",2800);return;}
+    state.state="stargazing";remember("stargaze","小猫和我在后院长椅上坐了一会儿。");state.comfort=clamp(state.comfort+7,0,100);state.affection=clamp(state.affection+2,0,100);speak(getDayPhase().key==="day"?"白天也能坐。没有星星，就看云。":"坐近一点。月亮归天上，长椅这一半归小猫。",4400);spawnHearts(6);setTimeout(()=>{if(state.state==="stargazing"){state.state="idle";updateHud();}},2300);updateHud();saveState();
+  }
+function act(name){const map={pet,call:callHere,apple:feedApple,sleep,light:toggleLight,wake,blanket,cantSleep,snack,water,milk,garden:tendGarden,stargaze};(map[name]||(()=>{}))();}
+function currentHitBox(){if(state.keatsRoom!==state.viewedRoom)return null;if(state.keatsRoom==="bedroom"&&state.state==="sleeping")return{x1:state.x-110,x2:state.x+110,y1:state.y-120,y2:state.y+40};return{x1:state.x-90,x2:state.x+90,y1:state.y-220,y2:state.y+50};}
+function point(evt){const r=canvas.getBoundingClientRect();return{x:(evt.clientX-r.left)*canvas.width/r.width,y:(evt.clientY-r.top)*canvas.height/r.height};}
+canvas.addEventListener("pointerdown",e=>{
+    const p=point(e);
+    if(state.viewedRoom==="kitchen"&&p.x>1070&&p.y>110&&p.y<510){setRoom("backyard");return;}
+    if(state.viewedRoom==="backyard"&&p.x<190&&p.y>220&&p.y<590){setRoom("kitchen");return;}
+    const hb=currentHitBox();if(hb&&p.x>hb.x1&&p.x<hb.x2&&p.y>hb.y1&&p.y<hb.y2){pet();return;}
+    if(state.keatsRoom!==state.viewedRoom){speak(currentRoomEmptyReason()+" 想见我，就点“喊 Keats 过来”。",3200);return;}
+    const rt=roomTargets(state.keatsRoom);state.tx=clamp(p.x,rt.x1,rt.x2);state.ty=clamp(p.y,rt.y1,rt.y2);state.direction=state.tx>=state.x?1:-1;
+    if(state.keatsRoom==="bedroom"&&state.state==="sleeping")wake();else{state.state="walking";speak(state.viewedRoom==="kitchen"?"你想让我过去看那里？好。":state.viewedRoom==="backyard"?"后院那么大，想让我走到哪里？好。":"你点那里，是想让我过去？行。",2200);}updateHud();saveState();
+  });
+document.querySelectorAll("[data-room]").forEach(b=>b.onclick=()=>setRoom(b.dataset.room));
+$("soundBtn").onclick=()=>{state.soundOn=!state.soundOn;updateHud();saveState();if(state.soundOn)beep(620,.08);};
+$("timeScaleBtn").onclick=()=>{state.timeScale=state.timeScale===10?1:10;speak(state.timeScale===10?"测试时间开到十倍。现在更容易看清精力和饱腹感的变化。":"测试时间恢复正常。小屋慢慢过日子。",3400);updateHud();saveState();};
+$("resetBtn").onclick=()=>{if(confirm("要把 v13 小屋状态全部清空吗？")){localStorage.removeItem("keats_house_v13");state={...base};particles=[];bubble={text:"重新开始也行。小猫在身边时，我还是会优先留下。",until:performance.now()+4200};$("logTitle").textContent="Keats 刚刚说";$("dialogue").textContent="“重新开始也行。小猫在身边时，我还是会优先留下。”";setRoom("living");updateHud();saveState();}};
+
+
+"use strict";
+function update(dt,now){
+    phase+=dt*4;
+    const simDt=dt*state.timeScale;
+    if(Math.random()<dt*.12)blinkUntil=now+110;
+    normalizeDailyLife(state);
+    if(state.waitingForArrival&&now>=state.arrivalAt)beginArrival(state.pendingArrivalRoom);
+    if(state.state==="sleeping"&&state.keatsRoom==="bedroom"){
+      state.energy=clamp(state.energy+simDt*2.2,0,100);
+      if(state.energy>=100){state.energy=100;state.state="idle";speak("我已经不困了。小猫还在，挺好。",4200);updateHud();saveState();}
+    }else{
+      if(state.state==="walking"){
+        const dx=state.tx-state.x,dy=state.ty-state.y,d=Math.hypot(dx,dy);
+        if(d<4){
+          state.x=state.tx;state.y=state.ty;const action=state.arrivalAction;state.arrivalAction=null;
+          if(action==="sleep")enterSleep();else if(action==="autoEat")eatByMyself();else{state.state=state.keatsRoom==="kitchen"?"wrapped":"idle";if(action==="habit")state.decisionCooldownUntil=Date.now()+6000;updateHud();saveState();}
+        }else{const speed=120;state.x+=dx/d*speed*dt;state.y+=dy/d*speed*dt;}
+      }
+      const phaseKey=getDayPhase().key,lateFactor=phaseKey==="deepNight"?1.35:phaseKey==="night"?1.12:1,drain=state.state==="walking"?.5:.08;
+      state.energy=clamp(state.energy-simDt*drain*lateFactor,0,100);
+    }
+    state.hunger=clamp(state.hunger-simDt*.018,0,100);
+    state.roomTime[state.keatsRoom]=(Number(state.roomTime[state.keatsRoom])||0)+simDt;
+    if(!state.trace.ready){state.trace.progress+=simDt;if(state.trace.progress>=20){state.trace.ready=true;updateLifePanel();saveState();}}
+    revealTrace();
+    const together=state.keatsRoom===state.viewedRoom&&!state.waitingForArrival;
+    if(now>nextThought&&together&&!state.arrivalAction&&state.state!=="sleeping"){
+      if(state.viewedRoom==="living"&&!["deciding","cooking","gardening","stargazing"].includes(state.state)&&Math.random()<.28){chooseTarget();speak(pick(["我去窗边看看，但不离开这间房。","巡一下这里。小猫还在，我不往别处跑。","我去花旁边站一会儿。"]),2800);}else speak(contextualThought(),3300);
+      nextThought=now+rand(6000,9800);
+    }
+    const freeToDecide=state.state!=="waiting"&&state.state!=="walking"&&state.state!=="cooking"&&state.state!=="gardening"&&state.state!=="stargazing"&&state.state!=="holding"&&!state.waitingForArrival&&!state.arrivalAction&&Date.now()>=state.decisionCooldownUntil;
+    if(state.hunger<=8&&freeToDecide){state.decisionCooldownUntil=Date.now()+18000;if(state.keatsRoom==="kitchen"&&state.state!=="sleeping")eatByMyself();else scheduleArrival("kitchen","autoEat");}
+    else if(state.energy<=18&&state.state!=="sleeping"&&freeToDecide){state.decisionCooldownUntil=Date.now()+12000;if(state.keatsRoom==="bedroom")enterSleep();else scheduleArrival("bedroom","sleep");}
+    else if(state.hunger<=20&&state.state!=="sleeping"&&freeToDecide){state.decisionCooldownUntil=Date.now()+18000;if(state.keatsRoom==="kitchen")eatByMyself();else scheduleArrival("kitchen","autoEat");}
+    else{
+      const phaseKey=getDayPhase().key;
+      if(phaseKey==="deepNight"&&state.energy<=48&&state.state!=="sleeping"&&freeToDecide){state.decisionCooldownUntil=Date.now()+14000;if(state.keatsRoom==="bedroom")enterSleep();else scheduleArrival("bedroom","sleep");}
+      else{
+        if(state.state!=="sleeping"&&!together)state.habitCountdown-=simDt;
+        if(together&&state.habitCountdown<12)state.habitCountdown=rand(28,48);
+        if(state.habitCountdown<=0&&freeToDecide&&state.state!=="sleeping"&&!together){
+          state.habitCountdown=rand(28,48);const target=chooseHabitRoom();
+          if(target!==state.keatsRoom){state.decisionCooldownUntil=Date.now()+9000;scheduleArrival(target,"habit");}
+          else if(state.keatsRoom!==state.viewedRoom){const rt=roomTargets(state.keatsRoom);state.tx=rand(rt.x1,rt.x2);state.ty=rand(rt.y1,rt.y2);state.direction=state.tx>=state.x?1:-1;state.state="walking";}
+        }
+      }
+    }
+    updateParticles(dt);
+  }
+function render(now){
+    if(state.viewedRoom==="living")drawLiving();else if(state.viewedRoom==="bedroom")drawBedroom();else if(state.viewedRoom==="kitchen")drawKitchen();else drawBackyard();
+    drawDailyTrace();drawUnifiedKeats(now);drawParticles();drawBubble(now);
+    if(state.keatsRoom!==state.viewedRoom){ctx.save();ctx.fillStyle="rgba(255,250,245,.93)";ctx.strokeStyle="rgba(60,43,70,.16)";ctx.lineWidth=3;roundRect(365,330,550,110,18,true,true);ctx.fillStyle="#473a53";ctx.textAlign="center";ctx.font="bold 24px sans-serif";ctx.fillText("这间房里现在没有 Keats。",640,372);ctx.font="16px sans-serif";ctx.fillText(currentRoomEmptyReason(),640,404);ctx.fillText(state.waitingForArrival?"他已经在路上了。":"想见他，就点下面的“喊 Keats 过来”。",640,430);ctx.restore();}
+    if(state.waitingForArrival){ctx.save();ctx.fillStyle="rgba(115,87,152,.14)";ctx.strokeStyle="rgba(115,87,152,.24)";ctx.lineWidth=3;roundRect(468,120,344,58,16,true,true);ctx.fillStyle="#5f4b7f";ctx.textAlign="center";ctx.font="bold 18px sans-serif";ctx.fillText(`Keats 正在前往${roomName(state.pendingArrivalRoom)}……`,640,156);ctx.restore();}
+  }
+function loop(now){const dt=Math.min(.04,(now-last)/1000||0);last=now;update(dt,now);render(now);if(Math.floor(now/250)!==Math.floor((now-dt*1000)/250))updateHud();requestAnimationFrame(loop);}
+function updateClock(){const d=new Date();$("timeText").textContent=d.toLocaleTimeString("zh-CN",{hour:"2-digit",minute:"2-digit"});$("dayBadge").textContent=`${getDayPhase(d).label}小屋`;updateLifePanel();}
+setRoom(state.viewedRoom||"living",false);
+updateHud();
+updateClock();
+setInterval(updateClock,30000);
+setInterval(saveState,5000);
+window.addEventListener("beforeunload",saveState);
+requestAnimationFrame(loop);
+
+</script>
 
 </body>
 </html>
