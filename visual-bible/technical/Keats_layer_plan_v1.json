@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "purpose": "Recommended editable layer structure for PSD/CLIP/KRA production",
+  "groups": [
+    {"group":"00_guides","layers":["canvas_grid","proportion_guides","safe_margin"]},
+    {"group":"01_body_base","layers":["skin_base","body_shadow","body_highlight"]},
+    {"group":"02_face","layers":["eyes","brows","nose","mouth","blush","face_shadow"]},
+    {"group":"03_hair","layers":["hair_back","hair_mid","hair_front","hair_shadow","hair_highlight"]},
+    {"group":"04_ears_tail","layers":["ears_outer","ears_inner","tail_base","tail_shadow","tail_highlight"]},
+    {"group":"05_outfit","layers":["inner_shirt","robe_base","robe_embroidery","trousers","shoes"]},
+    {"group":"06_accessories","layers":["collar","ring","waist_chain","mug","books_or_props"]},
+    {"group":"07_fx","layers":["rim_light_moon","warm_room_light","soft_ambient_shadow"]},
+    {"group":"08_expressions","layers":["calm","mildly_annoyed","soft_protective","secretly_pleased","drowsy"]},
+    {"group":"09_forms","layers":["awake_cat_human","drowsy_cat_human","sleeping_cat_form","wake_transition_notes"]}
+  ]
+}
