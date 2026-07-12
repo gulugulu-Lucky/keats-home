@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#21192c" />
+  <title>Keats 小屋 v13｜陪伴优先级修正版</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<main class="shell">
+  <div class="topbar">
+    <div class="brand">😈➰ Keats 小屋 v13</div>
+    <div class="mini-actions">
+      <button class="mini" id="soundBtn">声音：关</button>
+      <button class="mini" id="timeScaleBtn">测试时间：1×</button>
+      <button class="mini" id="resetBtn">清空存档</button>
+    </div>
+  </div>
+
+  <section class="card">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">Single Keats · Companionship Has Priority</div>
+        <h1 id="sceneTitle">陪伴优先级修正版</h1>
+        <p class="sub" id="sceneSub">小猫和 Keats 在同一房间时，他不会为了随机习惯突然转身离开。</p>
+      </div>
+      <div class="clock">
+        <div id="timeText">--:--</div>
+        <div id="dayBadge">夜晚小屋</div>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab active" data-room="living">主房间</button>
+      <button class="tab" data-room="bedroom">床边夜醒</button>
+      <button class="tab" data-room="kitchen">夜里厨房</button>
+      <button class="tab" data-room="backyard">月下后院</button>
+    </div>
+
+    <div class="status-center" aria-label="Keats 小屋状态中枢">
+      <div class="status-cell">
+        <div class="status-label">Keats 位置</div>
+        <div class="status-value" id="locationStatus">主房间</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-label">当前动作</div>
+        <div class="status-value" id="actionStatus">醒着</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-label">状态趋势</div>
+        <div class="status-value" id="trendStatus">精力 ↓ · 饱腹感 ↓</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-label">移动 / 提示</div>
+        <div class="status-value" id="routeStatus">Keats 就在主房间</div>
+      </div>
+    </div>
+
+    <div class="game-wrap">
+      <div class="screen">
+        <canvas id="game" width="1280" height="800"></canvas>
+        <div class="hint" id="hint">这次如果他睡着了，主房间会是空的。想见他，就喊他。</div>
+      </div>
+
+      <div class="hud">
+        <div class="stat">
+          <div class="stat-line"><span>心情</span><span class="number" id="moodNum">80</span></div>
+          <div class="bar"><div class="fill" id="moodBar"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-line"><span>精力</span><span class="number" id="energyNum">64</span></div>
+          <div class="bar"><div class="fill" id="energyBar"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-line"><span>亲密度</span><span class="number" id="affectionNum">22</span></div>
+          <div class="bar"><div class="fill" id="affectionBar"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-line"><span>安全感</span><span class="number" id="comfortNum">66</span></div>
+          <div class="bar"><div class="fill" id="comfortBar"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-line"><span>饱腹感</span><span class="number" id="hungerNum">72</span></div>
+          <div class="bar"><div class="fill" id="hungerBar"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-line"><span>花花</span><span class="number" id="flowersNum">3</span></div>
+          <div class="bar"><div class="fill" id="flowersBar"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls" id="controls"></div>
+  </section>
+
+  <section class="life-grid" aria-label="Keats 的记忆与生活">
+    <article class="life-card">
+      <div class="life-head"><span class="life-icon">🧠</span><span>Keats 记得</span></div>
+      <div class="life-value" id="memoryLine">我还在认识小猫。记忆会从相处里慢慢长出来。</div>
+      <div class="life-meta" id="memoryMeta">苹果 0 · 夜醒 0 · 抱抱 0</div>
+    </article>
+    <article class="life-card">
+      <div class="life-head"><span class="life-icon">🐾</span><span>自己的习惯</span></div>
+      <div class="life-value" id="habitLine">主房间的窗和花都在，我暂时更喜欢待在那里。</div>
+      <div class="life-meta" id="habitMeta">习惯会随生活缓慢变化</div>
+    </article>
+    <article class="life-card">
+      <div class="life-head"><span class="life-icon">🕰️</span><span>时间感</span></div>
+      <div class="life-value" id="timeSenseLine">小屋正在判断现在属于一天里的哪段时间。</div>
+      <div class="life-meta" id="timeMeta">时间会影响困意、想法和房间选择</div>
+    </article>
+    <article class="life-card" id="traceCard">
+      <div class="life-head"><span class="life-icon">🔐</span><span>生活痕迹</span></div>
+      <div class="life-value" id="traceLine">今天的屋子还很安静。</div>
+      <div class="life-meta" id="traceMeta">有些事不会立刻被小猫发现</div>
+    </article>
+  </section>
+
+  <section class="log">
+    <div class="log-head">
+      <div class="log-title" id="logTitle">Keats 刚刚说</div>
+      <div class="badge" id="stateBadge">醒着</div>
+    </div>
+    <div class="dialogue" id="dialogue">“小猫在我身边时，我不会为了一个随机计时器突然走掉。”</div>
+    <div class="tiny">v13 调整自主性：陪伴优先于随机换房；只有真正困了或饿了才会离开，并且会先告诉小猫。</div>
+  </section>
+</main>
+
+<script src="js/app-1.js"></script>
+<script src="js/app-2.js"></script>
+<script src="js/app-3.js"></script>
+<script src="js/app-4.js"></script>
+<script src="js/app-5.js"></script>
+<script src="js/app-6.js"></script>
+
+</body>
+</html>
