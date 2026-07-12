@@ -1,0 +1,154 @@
+{
+  "package": "Keats Visual Model MiniPack",
+  "version": "1.0",
+  "status": "working-lock",
+  "source_of_truth": "01_reference_master.jpeg",
+  "measurement_system": {
+    "body_coordinate_space": "normalized 0-1000",
+    "head_coordinate_space": "normalized 0-100",
+    "notes": [
+      "这些数值用于后续立绘、动画拆件与游戏资产统一。",
+      "参考图仍是最高视觉基准；数值用于复刻比例，不替代原图笔触。"
+    ]
+  },
+  "full_body": {
+    "total_height": 1000,
+    "head_height": 128,
+    "head_to_body_ratio": 7.8,
+    "shoulder_line_y": 164,
+    "chest_line_y": 270,
+    "waist_line_y": 390,
+    "hip_line_y": 458,
+    "knee_line_y": 724,
+    "ankle_line_y": 950,
+    "floor_y": 1000,
+    "shoulder_width": 192,
+    "waist_width": 138,
+    "hip_width": 158,
+    "arm_length_shoulder_to_wrist": 365,
+    "hand_length": 82,
+    "leg_length_hip_to_floor": 542,
+    "stance_foot_spacing": 112,
+    "allowed_tolerance_percent": 3
+  },
+  "head_and_face": {
+    "head_width": 72,
+    "head_height": 100,
+    "eye_line_y": 46,
+    "single_eye_width": 19,
+    "inter_eye_gap": 18,
+    "iris_diameter": 8.5,
+    "nose_y": 62,
+    "mouth_y": 73,
+    "jaw_width_at_y_82": 41,
+    "chin_y": 100,
+    "face_tilt_default_deg": -2,
+    "eye_outer_corner_tilt_deg": 5,
+    "brow_default_tilt_deg": -4
+  },
+  "hair": {
+    "overall_silhouette_width": 91,
+    "overall_silhouette_height": 118,
+    "fringe_lowest_y": 54,
+    "side_lock_length": 39,
+    "back_lock_length": 35,
+    "volume_offset_from_skull": 8,
+    "strand_group_count_target": 18,
+    "highlight_band_opacity": 0.18
+  },
+  "cat_ears": {
+    "ear_height": 28,
+    "ear_base_width": 19,
+    "left_ear_center_x": 25,
+    "right_ear_center_x": 75,
+    "default_outward_tilt_deg": 12,
+    "alert_tilt_deg": 2,
+    "annoyed_backward_tilt_deg": 24,
+    "drowsy_side_tilt_deg": 18,
+    "inner_ear_margin": 4
+  },
+  "eyes": {
+    "base_color": "#5C5E87",
+    "shadow_color": "#2F314B",
+    "light_color": "#8D90B3",
+    "specular_color": "#D9DCF0",
+    "upper_lid_thickness": 2.2,
+    "lower_lid_thickness": 0.8,
+    "blink_closed_height": 1.5
+  },
+  "skin": {
+    "base_color": "#E3D8D6",
+    "shadow_color": "#BFAFB4",
+    "warm_blush_color": "#C98F98",
+    "blush_opacity_rest": 0.0,
+    "blush_opacity_pleased": 0.18
+  },
+  "tail": {
+    "visible_length": 720,
+    "root_width": 52,
+    "mid_width": 40,
+    "tip_width": 23,
+    "default_curve": {"type":"cubic-bezier","points":[[0,0],[110,90],[180,300],[70,520]]},
+    "idle_sway_amplitude_deg": 7,
+    "idle_sway_period_sec": 3.2,
+    "annoyed_tip_swing_deg": 22
+  },
+  "collar": {
+    "band_width": 18,
+    "band_color": "#1C1B22",
+    "ring_outer_diameter": 24,
+    "ring_inner_diameter": 14,
+    "ring_color": "#B39A6B",
+    "ring_highlight": "#D3C09A",
+    "center_offset_x": 0
+  },
+  "wardrobe": {
+    "outer_robe": {
+      "hem_y": 885,
+      "shoulder_drop": 34,
+      "sleeve_opening_width": 92,
+      "main_color": "#232845",
+      "shadow_color": "#1A1F35",
+      "light_color": "#41476B",
+      "embroidery_color": "#A98F63",
+      "embroidery_coverage_percent": 9
+    },
+    "inner_shirt": {
+      "main_color": "#D8D1D4",
+      "shadow_color": "#BEB6BA",
+      "highlight_color": "#EEE8EA",
+      "neck_opening_depth": 74
+    },
+    "trousers": {
+      "waist_y": 430,
+      "main_color": "#1E2136",
+      "shadow_color": "#16192A",
+      "light_color": "#404661"
+    }
+  },
+  "rendering": {
+    "style": "refined storybook-anime 2D",
+    "line_width_px_at_2048_canvas": {"outer_contour":4.0,"inner_detail":2.0,"facial_detail":1.2},
+    "shadow_opacity": 0.24,
+    "ambient_occlusion_opacity": 0.16,
+    "moonlight_color": "#CCD5EC",
+    "warm_light_color": "#E7C28D",
+    "warm_to_cool_balance": 0.46,
+    "background_blur_radius_px": 3
+  },
+  "forms": {
+    "awake": "cat-human form from reference",
+    "drowsy": "same form, eyelids -35%, ears relaxed, shoulders lowered 3%",
+    "asleep": "full cat form",
+    "wake_transition_sec": 1.8
+  },
+  "non_negotiables": [
+    "成年、修长、非幼态",
+    "雾蓝黑头发和尾巴",
+    "冷灰紫眼睛",
+    "尖猫耳",
+    "黑色细项圈与古金属圆环",
+    "月夜轻贵族服装气质",
+    "睡着为猫态，清醒为参考图猫人态"
+  ]
+}
