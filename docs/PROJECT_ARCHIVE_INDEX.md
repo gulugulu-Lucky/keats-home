@@ -4,8 +4,14 @@
 
 - `index.html`：当前公开入口（v13 单文件版）
 - `releases/v14.4/`：主房间双端稳定原型
-- `archive/v13/`：陪伴优先级稳定版与备份
-- `visual-bible/`：Keats 正式视觉母版、SVG 与数值规格
+- `visual-bible/`：Keats 正式视觉母版预览、SVG 与数值规格
+- `docs/CORE_DESIGN_RULES.md`：不能随意破坏的核心设计规则
+- `docs/ROADMAP.md`：后续美术与系统开发顺序
+
+## 不可变归档分支
+
+- `archive/v13-companionship-priority`：v13 陪伴优先级稳定版
+- `archive/v14.4-main-room`：v14.4 主房间与当前项目资料归档
 
 ## 当前权威版本
 
