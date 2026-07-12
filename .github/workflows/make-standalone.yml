@@ -1,0 +1,52 @@
+name: Make standalone HTML
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "style.css"
+      - "js/**"
+      - ".github/workflows/make-standalone.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Merge CSS and JavaScript into index.html
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html = Path('index.html').read_text(encoding='utf-8')
+          css = Path('style.css').read_text(encoding='utf-8')
+          js_files = [Path(f'js/app-{i}.js') for i in range(1, 7)]
+          scripts = '\n\n'.join(p.read_text(encoding='utf-8') for p in js_files)
+
+          html = html.replace(
+              '<link rel="stylesheet" href="style.css">',
+              '<style>\n' + css + '\n</style>'
+          )
+
+          script_tags = '\n'.join(
+              f'<script src="js/app-{i}.js"></script>' for i in range(1, 7)
+          )
+          html = html.replace(script_tags, '<script>\n' + scripts + '\n</script>')
+
+          Path('index.html').write_text(html, encoding='utf-8')
+          PY
+      - name: Keep only the easy-to-download HTML
+        run: rm -rf style.css js
+      - name: Commit standalone file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Convert Keats Home to one standalone HTML [skip ci]"
+          git push
