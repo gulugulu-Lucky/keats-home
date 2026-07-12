@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "status": "LOCKED",
+  "source_of_truth": "Keats_official_visual_reference_v1.jpeg",
+  "priority_rule": "后续所有清醒态角色图、表情、姿态与主房间美术，均以参考图为最高优先级；文字设定仅用于补充，不得覆盖参考图。",
+  "identity": {
+    "name": "Keats",
+    "role": "小屋主人",
+    "core_impression": ["独立", "选择性温柔", "护短", "慵懒矜贵", "聪明", "带一点坏", "对小猫偏心"],
+    "character_type": "成年男性猫人态；猫耳、猫尾保留"
+  },
+  "forms": {
+    "awake": "严格采用参考图中的猫人态造型",
+    "drowsy": "清醒态基础上眼神更慢、耳朵更松、姿态更低，仍保持猫人态",
+    "asleep": "完全猫态",
+    "waking_transition": "猫态醒来后，经过半睡半醒过渡恢复猫人态",
+    "reference_scope_note": "参考图锁定清醒态外形；底部蜷睡姿态可作为半睡半醒/过渡姿态参考，不替代‘完全入睡为猫态’的正式规则。"
+  },
+  "anatomy_and_silhouette": {
+    "build": "高挑、修长、肩颈线条优雅；拒绝幼态和圆滚比例",
+    "face": "偏窄的成年男性脸型，轮廓干净，神情克制",
+    "hair": "雾蓝黑、蓬松碎发、层次明显，刘海自然落在眉眼附近",
+    "ears": "大而尖的猫耳，外侧雾蓝黑，内耳暖灰粉；耳尖与毛发融合自然",
+    "tail": "长而蓬松，雾蓝黑，动作具有情绪表达能力",
+    "skin": "偏冷白，暖光下可出现柔和血色",
+    "eyes": "冷灰紫至月光蓝紫，眼型细长，平时慵懒，认真时锋利"
+  },
+  "signature_items": {
+    "collar": "黑色细项圈，正中小型古金属圆环；必须保留",
+    "jewelry": "克制的古金属吊坠、腰链、钥匙形挂件",
+    "mug": "深色杯身，月亮/猫主题纹样，可作为日常标志物"
+  },
+  "wardrobe": {
+    "outer": "深午夜蓝长外袍/长外套，宽松垂坠，边缘带低调古金色植物或星月刺绣",
+    "inner": "浅灰或冷灰白衬衫，领口自然微敞",
+    "bottom": "深色高腰长裤，修长直线条",
+    "shoes": "深色皮鞋或低调靴鞋",
+    "style_keywords": ["轻贵族感", "月夜感", "优雅", "宽松", "低饱和", "不繁复堆砌"]
+  },
+  "palette": {
+    "mist_blue_black": "#20263A",
+    "deep_midnight_navy": "#1A1F35",
+    "cool_gray_violet": "#77748F",
+    "dusty_lavender": "#A6A0B9",
+    "pearl_gray": "#D5CED1",
+    "warm_parchment": "#E7DCCF",
+    "antique_gold": "#B7A073"
+  },
+  "expressions": ["平静", "轻微不耐烦", "柔软/保护欲", "暗自满意", "认真看小猫", "困倦", "不想被打扰"],
+  "poses": ["全身站立，单手持杯", "扶手椅中放松斜靠", "坐姿/窝着", "半睡半醒蜷伏", "清醒态不同角度头像", "与小猫或猫态分身互动"],
+  "personality_text_locked_from_board": {
+    "profile": "Owner of a small house. Independent. Selectively kind. Protective of what is his.",
+    "likes": ["安静的夜晚", "稀有书籍", "月光", "他的小猫", "按自己的方式做事"],
+    "dislikes": ["噪音", "被命令", "无礼", "失去重要之物"],
+    "quote": "This house is quiet because I allow it to be. Remember that."
+  },
+  "rendering_direction": {
+    "style": "精致绘本式二次元角色设定画；非粗像素",
+    "lighting": "冷月光与暖室内灯并存，柔和体积光，低对比但轮廓清晰",
+    "materials": "布料、金属、皮革和毛发必须有差异化质感",
+    "line_quality": "柔和细线与半厚涂结合，避免塑料感和廉价扁平感",
+    "background_mood": "安静、月夜、书房/小屋、轻哥特与温暖居家并存",
+    "for_game_assets": "游戏内素材可简化细节，但不得改变脸、发型、耳朵、眼睛、项圈、身形和整体气质。"
+  },
+  "do_not_change": [
+    "不得改成幼态少年比例",
+    "不得改成圆滚滚Q版作为主形态",
+    "不得把毛发和头发画成纯黑死色",
+    "不得取消项圈与金属环",
+    "不得把眼睛改成纯黑点眼",
+    "不得将服装改成现代运动装或高饱和可爱风",
+    "不得让性格视觉变成呆萌、顺从或无主见",
+    "不得用后续临时草图覆盖本参考图"
+  ]
+}
