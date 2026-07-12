@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "coordinate_space": "normalized full-body 0-1000",
+  "awake_pose_anchors": {
+    "head_center": [500, 86],
+    "neck_base": [500, 146],
+    "left_shoulder": [404, 164],
+    "right_shoulder": [596, 164],
+    "chest_center": [500, 258],
+    "waist_center": [500, 390],
+    "hip_center": [500, 458],
+    "left_hand_rest": [365, 438],
+    "right_hand_rest": [627, 438],
+    "left_knee": [450, 724],
+    "right_knee": [550, 724],
+    "left_ankle": [454, 950],
+    "right_ankle": [558, 950],
+    "tail_root": [560, 456]
+  },
+  "notes": [
+    "Anchors are production references for rigging / pose consistency, not exact anatomical capture.",
+    "Later room sprites may simplify but should keep relative placement logic."
+  ]
+}
