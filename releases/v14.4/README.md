@@ -2,13 +2,21 @@
 
 这是新一代小屋的主房间交互样板，用于验证清晰场景、手机/电脑触控、现实时间、灯光与窗帘、地面行走、纸条微剧情和 Keats 自主行为。
 
-## 文件
+## 最方便的打开方式
+
+直接下载：
+
+- `Keats_Home_v14.4_standalone.html`
+
+这是 GitHub Actions 自动合成的完整单文件 HTML，下载后直接打开即可。
+
+## 可维护源文件
 
 - `Keats_Home_v14.4_main_room.html`：页面结构
 - `style.css`：场景与双端样式
 - `app.js`：生活、剧情、存档与交互逻辑
 
-在 GitHub 中应保留三份文件在同一目录。打开 `Keats_Home_v14.4_main_room.html` 即可运行。
+源文件应保持在同一目录；修改后，工作流会重新生成 standalone HTML。
 
 ## 与 v13 的关系
 
