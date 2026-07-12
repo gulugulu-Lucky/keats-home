@@ -1,0 +1,50 @@
+name: Make v14.4 standalone HTML
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "releases/v14.4/Keats_Home_v14.4_main_room.html"
+      - "releases/v14.4/style.css"
+      - "releases/v14.4/app.js"
+      - ".github/workflows/make-v14-standalone.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Merge v14.4 source into one HTML
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          root = Path('releases/v14.4')
+          html = (root / 'Keats_Home_v14.4_main_room.html').read_text(encoding='utf-8')
+          css = (root / 'style.css').read_text(encoding='utf-8')
+          js = (root / 'app.js').read_text(encoding='utf-8')
+
+          html = html.replace(
+              '<link rel="stylesheet" href="style.css">',
+              '<style>\n' + css + '\n</style>'
+          )
+          html = html.replace(
+              '<script src="app.js"></script>',
+              '<script>\n' + js + '\n</script>'
+          )
+
+          (root / 'Keats_Home_v14.4_standalone.html').write_text(html, encoding='utf-8')
+          PY
+      - name: Commit standalone v14.4
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add releases/v14.4/Keats_Home_v14.4_standalone.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Build v14.4 standalone HTML [skip ci]"
+          git push
