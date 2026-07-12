@@ -1,1 +1,211 @@
-TEMP
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a2234">
+<title>Keats' Home v14.4｜双端稳定修正版</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-phase="night" data-light="on" data-curtain="open" data-keats="awake" data-note="hidden">
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><span class="brand-mark">😈➰</span><span>Keats' Home · 主房间样板 v14.4</span></div>
+    <div class="top-actions">
+      <button class="ui-btn" id="soundBtn">声音：关</button>
+      <button class="ui-btn" id="storyResetBtn">只重置剧情</button>
+      <button class="ui-btn" id="saveBtn">导出存档</button>
+      <button class="ui-btn" id="loadBtn">导入存档</button>
+      <input id="loadInput" type="file" accept="application/json" hidden>
+    </div>
+  </div>
+
+  <section class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">High-resolution room sample · real time · quiet story</div>
+        <h1>真正能生活的主房间</h1>
+        <p>清晰的分层场景、真实时间、共同控制的灯光、Keats 的自主选择，以及一段不会打断日常的微型剧情。</p>
+      </div>
+      <div class="clock-card"><div class="clock" id="clock">--:--</div><div class="phase" id="phaseLabel">读取现实时间</div></div>
+    </header>
+
+    <div class="main-grid">
+      <div class="scene-panel">
+        <div class="scene-wrap">
+          <svg id="roomSvg" viewBox="0 0 1440 900" role="img" aria-label="Keats 小屋主房间">
+            <defs>
+              <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e7d2c5"/><stop offset="1" stop-color="#d9bcae"/></linearGradient>
+              <linearGradient id="floorGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#91634f"/><stop offset="1" stop-color="#744a3e"/></linearGradient>
+              <linearGradient id="sofaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d6b91"/><stop offset="1" stop-color="#70536f"/></linearGradient>
+              <linearGradient id="lampGlow" x1=".5" y1="0" x2=".5" y2="1"><stop offset="0" stop-color="#ffe8a8" stop-opacity=".62"/><stop offset="1" stop-color="#ffe8a8" stop-opacity="0"/></linearGradient>
+              <radialGradient id="windowGlow"><stop offset="0" stop-color="#d7eff7" stop-opacity=".42"/><stop offset="1" stop-color="#d7eff7" stop-opacity="0"/></radialGradient>
+              <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#2d2036" flood-opacity=".18"/></filter>
+            </defs>
+            <!-- wall and floor -->
+            <rect width="1440" height="570" fill="url(#wallGrad)"/>
+            <g opacity=".13" fill="#fff"><rect x="0" y="0" width="80" height="570"/><rect x="170" y="0" width="54" height="570"/><rect x="360" y="0" width="70" height="570"/><rect x="600" y="0" width="52" height="570"/><rect x="820" y="0" width="62" height="570"/><rect x="1080" y="0" width="66" height="570"/><rect x="1300" y="0" width="52" height="570"/></g>
+            <rect y="570" width="1440" height="330" fill="url(#floorGrad)"/>
+            <g stroke="#684238" stroke-width="5" opacity=".48"><path d="M0 620H1440"/><path d="M0 692H1440"/><path d="M0 770H1440"/><path d="M110 570L40 900"/><path d="M330 570L300 900"/><path d="M560 570L565 900"/><path d="M800 570L830 900"/><path d="M1050 570L1100 900"/><path d="M1290 570L1380 900"/></g>
+
+            <!-- window -->
+            <g id="windowLayer" filter="url(#softShadow)">
+              <rect x="95" y="86" width="430" height="292" rx="18" fill="#6f566a"/>
+              <rect class="sky" x="115" y="106" width="390" height="252" rx="10" fill="#24305a"/>
+              <circle class="sun" cx="425" cy="165" r="43" fill="#ffe89c"/>
+              <path class="moon" d="M421 130a45 45 0 1 0 34 76 43 43 0 1 1-34-76z" fill="#eee8ff"/>
+              <g class="stars" fill="#fff7cf"><circle cx="170" cy="160" r="5"/><circle cx="245" cy="215" r="4"/><circle cx="310" cy="145" r="4"/><circle cx="380" cy="245" r="5"/><circle cx="460" cy="300" r="4"/><circle cx="210" cy="300" r="3"/></g>
+              <path d="M115 302c65-40 126-34 188 2 60 34 126 31 202-2v56H115z" fill="#6f946d" opacity=".9"/>
+              <rect x="305" y="106" width="12" height="252" fill="#6f566a"/><rect x="115" y="226" width="390" height="12" fill="#6f566a"/>
+              <circle cx="310" cy="232" r="155" fill="url(#windowGlow)" opacity=".9"/>
+              <g class="curtain-cover curtain-cover-left"><rect x="96" y="72" width="215" height="314" rx="16" fill="#9f6e87"/><path d="M132 84v286M184 84v286M236 84v286M286 84v286" stroke="#c895aa" stroke-width="11" opacity=".52"/></g>
+              <g class="curtain-cover curtain-cover-right"><rect x="310" y="72" width="215" height="314" rx="16" fill="#9f6e87"/><path d="M346 84v286M398 84v286M450 84v286M500 84v286" stroke="#c895aa" stroke-width="11" opacity=".52"/></g>
+              <g class="curtain-panel curtain-left"><path d="M74 62h66v340H58c30-88 32-248 16-340z" fill="#a16e86"/><path d="M96 70c16 110 11 220-7 324" fill="none" stroke="#c995aa" stroke-width="9" opacity=".65"/></g>
+              <g class="curtain-panel curtain-right"><path d="M480 62h66c-18 112-15 248 18 340h-84z" fill="#a16e86"/><path d="M519 70c-16 110-11 220 7 324" fill="none" stroke="#c995aa" stroke-width="9" opacity=".65"/></g>
+            </g>
+
+            <!-- bookshelf -->
+            <g id="bookshelf" filter="url(#softShadow)">
+              <rect x="1120" y="110" width="230" height="455" rx="12" fill="#604238"/>
+              <rect x="1140" y="134" width="190" height="405" rx="7" fill="#7b5648"/>
+              <g fill="#5f4137"><rect x="1140" y="230" width="190" height="14"/><rect x="1140" y="342" width="190" height="14"/><rect x="1140" y="454" width="190" height="14"/></g>
+              <g><rect x="1156" y="164" width="23" height="58" rx="3" fill="#8d6fb2"/><rect x="1183" y="150" width="25" height="72" rx="3" fill="#d48670"/><rect x="1212" y="172" width="22" height="50" rx="3" fill="#6f8d68"/><rect x="1238" y="158" width="26" height="64" rx="3" fill="#d2aa65"/><rect x="1268" y="168" width="20" height="54" rx="3" fill="#7b93b5"/><rect x="1292" y="145" width="24" height="77" rx="3" fill="#bd7e95"/></g>
+              <g><rect x="1156" y="274" width="27" height="60" rx="3" fill="#cc7f75"/><rect x="1188" y="286" width="22" height="48" rx="3" fill="#708a68"/><rect x="1214" y="258" width="25" height="76" rx="3" fill="#9273ae"/><rect x="1243" y="276" width="21" height="58" rx="3" fill="#d8b264"/><rect x="1268" y="263" width="27" height="71" rx="3" fill="#6f92a7"/></g>
+              <g><rect x="1160" y="382" width="21" height="64" rx="3" fill="#a074b8"/><rect x="1185" y="399" width="26" height="47" rx="3" fill="#d38a73"/><rect x="1215" y="370" width="23" height="76" rx="3" fill="#718f6e"/><rect x="1242" y="386" width="26" height="60" rx="3" fill="#d9b46a"/><rect x="1272" y="375" width="24" height="71" rx="3" fill="#7f91af"/></g>
+              <g transform="translate(1188 476)"><rect width="90" height="42" rx="8" fill="#3d3342"/><circle cx="25" cy="21" r="13" fill="#d9c1e8"/><path d="M17 21h16M25 13v16" stroke="#3d3342" stroke-width="4"/><rect x="48" y="12" width="29" height="18" rx="6" fill="#8c6eaa"/></g>
+            </g>
+
+            <!-- sofa -->
+            <g id="sofa" filter="url(#softShadow)">
+              <rect x="560" y="365" width="470" height="215" rx="38" fill="url(#sofaGrad)"/>
+              <rect x="600" y="330" width="390" height="122" rx="34" fill="#9b7b9c"/>
+              <rect x="600" y="438" width="390" height="104" rx="28" fill="#876787"/>
+              <rect x="540" y="395" width="75" height="168" rx="30" fill="#745772"/>
+              <rect x="975" y="395" width="75" height="168" rx="30" fill="#745772"/>
+              <rect x="607" y="365" width="138" height="84" rx="24" fill="#efe0d4"/>
+              <path d="M638 388l40 40 40-40" fill="none" stroke="#c38c91" stroke-width="10"/>
+              <rect x="818" y="362" width="130" height="86" rx="24" fill="#b893c8"/>
+              <path d="M847 397h72" stroke="#795f8b" stroke-width="10" stroke-linecap="round"/>
+              <rect x="590" y="560" width="34" height="55" rx="8" fill="#4a3435"/><rect x="966" y="560" width="34" height="55" rx="8" fill="#4a3435"/>
+            </g>
+
+            <!-- rug -->
+            <g id="rug" filter="url(#softShadow)"><ellipse cx="720" cy="735" rx="430" ry="126" fill="#d4b5a5"/><ellipse cx="720" cy="735" rx="365" ry="88" fill="#ead1c4"/><path d="M420 735h600" stroke="#b6869d" stroke-width="18" stroke-linecap="round" stroke-dasharray="30 26" opacity=".8"/></g>
+
+            <!-- table -->
+            <g id="table" filter="url(#softShadow)">
+              <ellipse cx="720" cy="647" rx="210" ry="60" fill="#6b493c"/>
+              <ellipse cx="720" cy="630" rx="210" ry="62" fill="#9d6f55"/>
+              <rect x="590" y="650" width="28" height="116" rx="8" fill="#654236"/><rect x="822" y="650" width="28" height="116" rx="8" fill="#654236"/>
+              <g id="apple"><circle cx="635" cy="604" r="31" fill="#cf6671"/><circle cx="655" cy="600" r="28" fill="#dc737a"/><path d="M646 570c2-17 13-24 23-29" fill="none" stroke="#5f6f4c" stroke-width="8" stroke-linecap="round"/><path d="M662 553c13-4 23-1 30 8-15 5-25 2-30-8z" fill="#739266"/></g>
+              <g id="cup"><rect x="758" y="579" width="58" height="63" rx="12" fill="#f4e9df"/><path d="M815 592c30 0 31 37 0 37" fill="none" stroke="#f4e9df" stroke-width="12"/><path d="M774 592c13 12 23 11 30 0" fill="none" stroke="#d98d8a" stroke-width="8" stroke-linecap="round"/><path d="M774 567c-8-17 11-20 2-36M793 567c-8-17 11-20 2-36" fill="none" stroke="#fff" stroke-width="5" opacity=".65"/></g>
+              <g class="note-layer" id="noteLayer"><rect x="690" y="585" width="76" height="48" rx="6" fill="#f6dfa2" transform="rotate(-4 728 609)"/><path d="M704 599h45M704 610h35" stroke="#8b6d79" stroke-width="5" stroke-linecap="round"/><circle class="note-glow" cx="728" cy="608" r="54" fill="#fff0a7" opacity=".24"/></g>
+            </g>
+
+            <!-- plant -->
+            <g id="plant" filter="url(#softShadow)">
+              <path d="M330 504c-20-110-5-182 56-230M345 505c33-116 80-160 130-187M350 506c-4-128 18-196 12-246" fill="none" stroke="#557a56" stroke-width="12" stroke-linecap="round"/>
+              <g fill="#6f9b68"><ellipse cx="364" cy="304" rx="42" ry="24" transform="rotate(-26 364 304)"/><ellipse cx="425" cy="340" rx="46" ry="25" transform="rotate(24 425 340)"/><ellipse cx="337" cy="378" rx="39" ry="22" transform="rotate(-18 337 378)"/><ellipse cx="405" cy="405" rx="43" ry="24" transform="rotate(18 405 405)"/><ellipse cx="330" cy="260" rx="37" ry="21" transform="rotate(-12 330 260)"/><ellipse cx="460" cy="300" rx="36" ry="20" transform="rotate(32 460 300)"/></g>
+              <path d="M286 486h137l-20 116H307z" fill="#a87361"/><path d="M296 486h117" stroke="#d09a83" stroke-width="18" stroke-linecap="round"/>
+            </g>
+
+            <!-- floor lamp -->
+            <g id="lamp" filter="url(#softShadow)">
+              <rect x="1040" y="230" width="20" height="320" rx="10" fill="#5b4542"/>
+              <path d="M990 220h120l-26-80h-68z" fill="#e7b978"/>
+              <path class="room-light" d="M970 220h160l110 330H860z" fill="url(#lampGlow)"/>
+              <ellipse cx="1050" cy="555" rx="75" ry="22" fill="#513b3a"/>
+              <circle cx="1082" cy="275" r="10" fill="#d4a75e"/>
+            </g>
+
+            <!-- door -->
+            <g id="door" filter="url(#softShadow)">
+              <rect x="20" y="205" width="90" height="365" rx="12" fill="#5c423b"/>
+              <rect x="35" y="220" width="60" height="335" rx="8" fill="#7a564b"/>
+              <circle cx="82" cy="385" r="10" fill="#d8b25f"/>
+              <text x="51" y="520" fill="#f2dfcf" font-size="16" font-weight="800">走廊</text>
+            </g>
+
+            <!-- room lighting overlay -->
+            <rect class="lit-only" x="0" y="0" width="1440" height="900" fill="#251f33" opacity="0"/>
+            <rect class="ambient-light" x="0" y="0" width="1440" height="900" fill="#ffe6b7"/>
+
+            <!-- Keats -->
+            <g class="keats-wrap" id="keatsWrap" transform="translate(720 690) scale(.72)" filter="url(#softShadow)">
+              <ellipse class="keats-shadow" cx="0" cy="92" rx="82" ry="24" fill="#291f31"/>
+              <path class="keats-tail" d="M52 44c72 0 93 54 51 76-25 13-50 3-50-16 0-14 18-15 31-9" fill="none" stroke="#33263d" stroke-width="19" stroke-linecap="round"/>
+              <ellipse cx="0" cy="42" rx="68" ry="74" fill="#35283f"/>
+              <ellipse cx="0" cy="-38" rx="78" ry="68" fill="#3d2e49"/>
+              <path d="M-63-82l21-58 36 52zM63-82l-21-58-36 52z" fill="#35283f"/>
+              <path d="M-49-91l11-28 20 25zM49-91l-11-28-20 25z" fill="#a56f8f"/>
+              <path d="M-42-138c-8-26 6-38 17-48M42-138c8-26-6-38-17-48" fill="none" stroke="#7f5aaa" stroke-width="12" stroke-linecap="round"/>
+              <g class="keats-eye"><ellipse cx="-28" cy="-45" rx="18" ry="14" fill="#dfc9ef"/><ellipse cx="28" cy="-45" rx="18" ry="14" fill="#dfc9ef"/><ellipse cx="-24" cy="-45" rx="6" ry="11" fill="#261e2e"/><ellipse cx="24" cy="-45" rx="6" ry="11" fill="#261e2e"/></g>
+              <path d="M-5-20h10l-5 7z" fill="#d58aa8"/>
+              <path d="M-16-5c8 7 24 7 32 0" fill="none" stroke="#cf9eb5" stroke-width="6" stroke-linecap="round"/>
+              <rect x="-57" y="4" width="114" height="15" rx="8" fill="#8156ad"/>
+              <circle cx="0" cy="24" r="11" fill="#e3b65e"/>
+              <path d="M-54 52c-34 20-38 53-18 65M54 52c34 20 38 53 18 65" fill="none" stroke="#35283f" stroke-width="20" stroke-linecap="round"/>
+              <text class="zmark" x="78" y="-115" fill="#f2e5ff" font-size="38" font-weight="900">Z</text>
+            </g>
+          </svg>
+
+          <div class="hotspot" data-zone="window" data-label="窗边 / 窗帘" style="left:6%;top:7%;width:31%;height:38%"></div>
+          <div class="hotspot" data-zone="plant" data-label="植物" style="left:18%;top:28%;width:16%;height:39%"></div>
+          <div class="hotspot" data-zone="sofa" data-label="沙发" style="left:37%;top:34%;width:37%;height:33%"></div>
+          <div class="hotspot" data-zone="table" data-label="矮桌 / 苹果 / 杯子" style="left:36%;top:61%;width:31%;height:21%"></div>
+          <div class="hotspot note-hotspot" data-zone="note" data-label="桌上的纸条" style="left:45.5%;top:60.5%;width:11%;height:12%"></div>
+          <div class="hotspot" data-zone="lamp" data-label="落地灯" style="left:69%;top:16%;width:12%;height:51%"></div>
+          <div class="hotspot" data-zone="bookshelf" data-label="书架" style="left:77%;top:10%;width:18%;height:52%"></div>
+          <div class="hotspot" data-zone="rug" data-label="地毯" style="left:21%;top:69%;width:58%;height:25%"></div>
+          <div class="hotspot" data-zone="door" data-label="走廊门" style="left:0%;top:22%;width:9%;height:45%"></div>
+          <div class="hotspot" data-zone="keats" data-label="Keats" style="left:43%;top:50.5%;width:14.5%;height:39%"></div>
+          <div class="room-hint">房间里有 9 个固定互动位置，纸条出现后会增加第 10 个；没有闪烁任务标记。</div>
+        </div>
+
+        <div class="status-strip">
+          <div class="status"><div class="status-label">Keats 位置</div><div class="status-value" id="locationValue">主房间</div></div>
+          <div class="status"><div class="status-label">当前状态</div><div class="status-value" id="stateValue">醒着</div></div>
+          <div class="status"><div class="status-label">灯光控制</div><div class="status-value" id="lightValue">小猫刚刚开灯</div></div>
+          <div class="status"><div class="status-label">现实时间</div><div class="status-value" id="timeValue">同步中</div></div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <section class="card">
+          <h2>刚刚发生了</h2>
+          <div class="speaker" id="speaker">Keats</div>
+          <div class="dialogue" id="dialogue">“我把挡住纸条的点击层和乱飞的尾巴都收拾好了。现在点到哪里，就该回应哪里。”</div>
+          <div class="choice-list" id="choices"></div>
+        </section>
+
+        <section class="card">
+          <h2>和 Keats 相处</h2>
+          <div class="action-grid">
+            <button class="action primary" id="callBtn">喊 Keats</button>
+            <button class="action" id="petBtn">摸摸</button>
+            <button class="action" id="sitBtn">坐到沙发</button>
+            <button class="action" id="lightBtn">切换落地灯</button>
+            <button class="action" id="curtainBtn">拉动窗帘</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Keats 的状态</h2>
+          <div class="meter"><div class="meter-line"><span>精力</span><span id="energyNum">68</span></div><div class="track"><div class="fill" id="energyFill"></div></div></div>
+          <div class="meter"><div class="meter-line"><span>心情</span><span id="moodNum">76</span></div><div class="track"><div class="fill" id="moodFill"></div></div></div>
+          <div class="meter"><div class="meter-line"><span>亲密</span><span id="trustNum">24</span></div><div class="track"><div class="fill" id="trustFill"></div></div></div>
+        </section>
+
+        <section class="card rule">
+          <h2>这版已经写进规则</h2>
+          <strong>现实时间</strong>跟随设备；<strong>灯</strong>由小猫随时控制；Keats 只有在同一房间、醒着、愿意时才可能帮忙；<strong>重置剧情</strong>不会清掉生活存档。
+        </section>
+        <div class="footer-note">v14.4：手机和电脑共用同一套生活逻辑；修复行走中摸摸、重复计数、睡眠交互、纸条亲密重复增加与回房位置。</div>
+      </aside>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
