@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600">
+<style>.bg{fill:#f4efe8}.p{fill:#fbf8f3;stroke:#cdbca6;stroke-width:2}.t{font:700 34px Georgia;fill:#20263A}.h{font:700 22px Arial;fill:#20263A}.b{font:16px Arial;fill:#4b4860}.s{font:13px Arial;fill:#6b677c}.g{stroke:#c48f8f;stroke-width:2;stroke-dasharray:8 8}.sil{fill:#20263A;opacity:.85}.gold{stroke:#B7A073;fill:none;stroke-width:4}</style>
+<rect class="bg" width="1200" height="1600"/><rect class="p" x="35" y="35" width="1130" height="1530" rx="26"/>
+<text class="t" x="75" y="95">KEATS · TECHNICAL MODEL SHEET · V1</text>
+<text class="s" x="78" y="124">Professional vector specification · visual lock</text>
+<rect class="p" x="70" y="160" width="540" height="930" rx="20"/><text class="h" x="95" y="205">Awake form proportion guide</text>
+<line class="g" x1="110" y1="310" x2="570" y2="310"/><line class="g" x1="110" y1="420" x2="570" y2="420"/><line class="g" x1="110" y1="670" x2="570" y2="670"/><line class="g" x1="110" y1="820" x2="570" y2="820"/><line class="g" x1="110" y1="1010" x2="570" y2="1010"/>
+<!-- simplified technical silhouette, not a replacement for raster master -->
+<circle class="sil" cx="340" cy="275" r="52"/><path class="sil" d="M295 235l18-62 34 48 35-48 18 62z"/><path class="sil" d="M305 330c-38 70-52 170-38 300l-34 315h86l21-250 21 250h86l-34-315c14-130 0-230-38-300z"/><path class="sil" d="M410 445c100 45 140 160 70 250-40 50-82 35-56-5 34-52 12-115-35-140z"/>
+<text class="b" x="95" y="1130">Head-to-body ratio: 7.8</text><text class="b" x="95" y="1160">Shoulder width: 192 / 1000</text><text class="b" x="95" y="1190">Waist width: 138 / 1000</text><text class="b" x="95" y="1220">Hip width: 158 / 1000</text><text class="b" x="95" y="1250">Leg length: 542 / 1000</text>
+<rect class="p" x="640" y="160" width="490" height="530" rx="20"/><text class="h" x="665" y="205">Visual locks</text>
+<text class="b" x="675" y="250">• adult cat-human form when awake</text><text class="b" x="675" y="285">• full cat form when fully asleep</text><text class="b" x="675" y="320">• misty blue-black hair and tail</text><text class="b" x="675" y="355">• cold gray-violet eyes</text><text class="b" x="675" y="390">• thin black collar + antique ring</text><text class="b" x="675" y="425">• moonlit aristocratic wardrobe</text><text class="b" x="675" y="460">• tall, slender, adult proportions</text>
+<text class="h" x="665" y="520">Expression set</text><text class="b" x="675" y="560">calm · mildly annoyed · protective</text><text class="b" x="675" y="595">secretly pleased · drowsy · do not disturb</text>
+<rect class="p" x="640" y="720" width="490" height="370" rx="20"/><text class="h" x="665" y="765">Palette</text>
+<g transform="translate(675 805)"><rect width="52" height="52" rx="10" fill="#20263A"/><text class="s" x="65" y="23">Misty blue-black #20263A</text><rect y="70" width="52" height="52" rx="10" fill="#1A1F35"/><text class="s" x="65" y="93">Deep midnight navy #1A1F35</text><rect y="140" width="52" height="52" rx="10" fill="#77748F"/><text class="s" x="65" y="163">Cool gray-violet #77748F</text><rect y="210" width="52" height="52" rx="10" fill="#D9DCF0"/><text class="s" x="65" y="233">Moonlight highlight #D9DCF0</text><rect y="280" width="52" height="52" rx="10" fill="#B7A073"/><text class="s" x="65" y="303">Antique gold #B7A073</text></g>
+<rect class="p" x="70" y="1120" width="1060" height="385" rx="20"/><text class="h" x="95" y="1165">Production structure</text>
+<text class="b" x="105" y="1210">00 guides · 01 body base · 02 face · 03 hair · 04 ears/tail · 05 outfit · 06 accessories · 07 FX · 08 expressions · 09 forms</text>
+<text class="b" x="105" y="1260">Naming: Keats_[state]_[view]_[variant]_v1.ext</text><text class="b" x="105" y="1310">Raster master remains the highest visual authority. SVG and JSON preserve reproducible structure.</text>
+<text class="b" x="105" y="1360">Wake transition: cat form → drowsy transition → awake cat-human form, approx. 1.8 sec.</text>
+<text class="b" x="105" y="1410">Non-negotiable: no childlike redesign, no Q-form as primary, no removal of collar/ring.</text>
+<text class="s" x="105" y="1470">Repository folder: visual-bible · version 1.0</text>
+</svg>
