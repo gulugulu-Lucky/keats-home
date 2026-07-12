@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2a2234">
+<title>Keats' Home v14.4｜双端稳定修正版</title>
+<style>
+:root{
+  --ink:#32283a;
+  --muted:#786d7f;
+  --paper:#fffaf5;
+  --paper-2:#f7efe9;
+  --line:rgba(73,54,84,.14);
+  --accent:#7a5aa6;
+  --accent-2:#d98974;
+  --good:#5d8a6a;
+  --warn:#a2695e;
+  --shadow:0 24px 70px rgba(46,34,58,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:
+ radial-gradient(circle at 12% 0%,rgba(255,255,255,.95),transparent 26%),
+ radial-gradient(circle at 90% 3%,rgba(202,184,231,.5),transparent 34%),
+ linear-gradient(145deg,#f2e6df,#e6dff0);color:var(--ink)}
+body{font-family:ui-rounded,"SF Pro Rounded","PingFang SC","Microsoft YaHei",sans-serif;padding:14px}
+button{font:inherit;color:inherit}
+.app{width:min(1180px,100%);margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 2px 12px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:950;letter-spacing:.03em}
+.brand-mark{width:38px;height:38px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#7c5cab,#5d416f);color:#fff;box-shadow:0 10px 24px rgba(76,54,98,.26)}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ui-btn{border:1px solid var(--line);background:rgba(255,250,245,.84);border-radius:14px;padding:9px 12px;cursor:pointer;box-shadow:0 6px 16px rgba(69,48,80,.05)}
+.ui-btn:hover{transform:translateY(-1px)}
+.ui-btn.primary{background:linear-gradient(135deg,#8060aa,#654778);color:#fff;border-color:transparent}
+.shell{background:rgba(255,250,245,.96);border:1px solid rgba(255,255,255,.7);border-radius:28px;overflow:hidden;box-shadow:var(--shadow)}
+.hero{padding:19px 22px 15px;background:linear-gradient(135deg,rgba(246,222,207,.92),rgba(230,217,245,.92));border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:18px;align-items:flex-end}
+.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h1{margin:7px 0 5px;font-size:clamp(27px,4vw,42px);line-height:1.05}
+.hero p{margin:0;color:#6d6375;line-height:1.7;max-width:760px}
+.clock-card{flex:none;text-align:right;background:rgba(255,255,255,.5);border:1px solid rgba(255,255,255,.5);border-radius:17px;padding:10px 13px;min-width:125px}
+.clock{font-size:24px;font-weight:950}
+.phase{font-size:12px;color:#6f6478;margin-top:2px}
+.main-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:0;background:#fbf6f1}
+.scene-panel{padding:14px}
+.scene-wrap{position:relative;border-radius:22px;overflow:hidden;border:1px solid rgba(66,46,77,.16);background:#272036;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+#roomSvg{display:block;width:100%;height:auto;aspect-ratio:16/10;pointer-events:none;user-select:none;-webkit-user-select:none}
+#roomSvg *{vector-effect:non-scaling-stroke}
+.scene-wrap{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.scene-wrap *{-webkit-tap-highlight-color:rgba(0,0,0,0)!important}
+.hotspot{position:absolute;border:0;background:transparent;border-radius:16px;cursor:pointer;padding:0;outline:none;appearance:none;-webkit-appearance:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;box-shadow:none}
+.hotspot:active,.hotspot:focus{background:transparent;border:0;box-shadow:none}
+.hotspot:focus-visible{outline:2px solid rgba(255,255,255,.92);outline-offset:2px}
+.hotspot::after{content:attr(data-label);position:absolute;left:50%;bottom:calc(100% + 7px);transform:translateX(-50%) translateY(4px);white-space:nowrap;background:rgba(44,34,53,.88);color:#fff;padding:6px 8px;border-radius:10px;font-size:11px;opacity:0;pointer-events:none;transition:.16s}
+@media (hover:hover) and (pointer:fine){
+  .hotspot:hover::after,.hotspot:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}
+  .hotspot:hover{outline:1px solid rgba(255,255,255,.38);background:rgba(255,255,255,.035)}
+}
+.note-hotspot{display:none;z-index:9}
+.hotspot[data-zone="keats"]{z-index:6}
+.room-hint{position:absolute;left:13px;bottom:12px;padding:7px 10px;border-radius:12px;background:rgba(35,27,45,.62);color:#fff;border:1px solid rgba(255,255,255,.15);backdrop-filter:blur(6px);font-size:12px;pointer-events:none}
+.status-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+.status{border:1px solid var(--line);background:#fff;border-radius:16px;padding:11px 12px;min-width:0}
+.status-label{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.status-value{font-weight:900;margin-top:5px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side{border-left:1px solid var(--line);padding:14px;display:flex;flex-direction:column;gap:11px;background:linear-gradient(180deg,#fffaf5,#f7efe9)}
+.card{border:1px solid var(--line);background:rgba(255,255,255,.78);border-radius:18px;padding:14px}
+.card h2{font-size:14px;margin:0 0 9px}
+.dialogue{min-height:104px;line-height:1.75;color:#4b3d53}
+.speaker{font-size:11px;color:var(--muted);margin-bottom:5px}
+.choice-list{display:grid;gap:8px;margin-top:10px}
+.choice{border:1px solid var(--line);background:#fff;border-radius:13px;padding:9px 10px;text-align:left;cursor:pointer}
+.choice:hover{background:#fff7ef}
+.action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.action{border:1px solid var(--line);background:#fff;border-radius:14px;padding:10px 9px;cursor:pointer}
+.action.primary{grid-column:1/-1;background:linear-gradient(135deg,#825faf,#664678);color:#fff;border-color:transparent}
+.action:disabled{opacity:.45;cursor:not-allowed}
+.meter{margin-top:9px}
+.meter-line{display:flex;justify-content:space-between;font-size:12px;color:#6e6276}
+.track{height:8px;background:#eee6ee;border-radius:999px;overflow:hidden;margin-top:6px}
+.fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#7b59a6,#e09378);transition:width .3s}
+.rule{font-size:12px;line-height:1.65;color:#766b7d}
+.rule strong{color:#44374c}
+.footer-note{font-size:11px;color:#8a7f8f;line-height:1.65}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(18px);background:#34283f;color:#fff;border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:10px 14px;opacity:0;pointer-events:none;transition:.22s;box-shadow:0 14px 38px rgba(38,26,47,.32);z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* room states */
+body[data-phase="morning"] .sky{fill:#a7d7e8}
+body[data-phase="day"] .sky{fill:#8bc8e2}
+body[data-phase="dusk"] .sky{fill:#c88795}
+body[data-phase="night"] .sky,body[data-phase="deep-night"] .sky{fill:#24305a}
+.sun,.moon,.stars{transition:opacity .5s}
+body[data-phase="morning"] .sun,body[data-phase="day"] .sun{opacity:1}
+body[data-phase="dusk"] .sun{opacity:.8}
+body[data-phase="night"] .sun,body[data-phase="deep-night"] .sun{opacity:0}
+body[data-phase="night"] .moon,body[data-phase="deep-night"] .moon,body[data-phase="night"] .stars,body[data-phase="deep-night"] .stars{opacity:1}
+body[data-phase="morning"] .moon,body[data-phase="day"] .moon,body[data-phase="dusk"] .moon,body[data-phase="morning"] .stars,body[data-phase="day"] .stars,body[data-phase="dusk"] .stars{opacity:0}
+.room-light{opacity:0;transition:opacity .35s}
+body[data-light="on"] .room-light{opacity:1}
+.ambient-light{opacity:0;transition:opacity .35s}
+body[data-light="on"] .ambient-light{opacity:.08}
+body[data-light="off"] .lit-only{opacity:.45}
+.curtain-panel,.curtain-cover{transition:transform .48s cubic-bezier(.22,.76,.25,1)}
+body[data-curtain="open"] .curtain-left{transform:translateX(-112px)}
+body[data-curtain="open"] .curtain-right{transform:translateX(112px)}
+body[data-curtain="open"] .curtain-cover-left{transform:translateX(-224px)}
+body[data-curtain="open"] .curtain-cover-right{transform:translateX(224px)}
+body[data-curtain="closed"] .curtain-cover-left,body[data-curtain="closed"] .curtain-cover-right{transform:translateX(0)}
+body[data-curtain="closed"] #windowLayer .sky{filter:brightness(.42) saturate(.58)}
+body[data-curtain="closed"] #windowLayer .sun,body[data-curtain="closed"] #windowLayer .moon,body[data-curtain="closed"] #windowLayer .stars{opacity:.18}
+.note-layer{opacity:0;transition:opacity .35s}
+body[data-note="ready"] .note-layer,body[data-note="found"] .note-layer{opacity:1}
+body[data-note="found"] .note-glow{opacity:0}
+.keats-wrap{transition:opacity .3s;will-change:transform}
+.keats-shadow{opacity:.18}
+.keats-eye{transition:transform .2s}
+body[data-keats="sleeping"] .keats-eye{transform:scaleY(.18);transform-origin:center}
+body[data-keats="away"] .keats-wrap{opacity:0;pointer-events:none}
+body[data-keats="sleeping"] .keats-tail{animation:none}
+.keats-tail{animation:tail 2.8s ease-in-out infinite;transform-box:fill-box;transform-origin:10% 35%}
+@keyframes tail{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(7deg)}}
+.zmark{opacity:0}
+body[data-keats="sleeping"] .zmark{opacity:1;animation:floatz 2.2s ease-in-out infinite}
+@keyframes floatz{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(-12px);opacity:1}}
+@media(max-width:930px){
+  .main-grid{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr}.side .card:first-child{grid-column:1/-1}.status-strip{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+ body{padding:7px}.topbar{align-items:flex-start}.brand{font-size:14px}.brand-mark{width:34px;height:34px}.hero{flex-direction:column;align-items:flex-start;padding:16px}.clock-card{text-align:left}.scene-panel{padding:8px}.status-strip{grid-template-columns:1fr 1fr;gap:7px}.side{grid-template-columns:1fr;padding:9px}.side .card:first-child{grid-column:auto}.action-grid{grid-template-columns:1fr 1fr}.hotspot::after{display:none}.room-hint{display:none}
+}
+
+</style>
+</head>
+<body data-phase="night" data-light="on" data-curtain="open" data-keats="awake" data-note="hidden">
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><span class="brand-mark">😈➰</span><span>Keats' Home · 主房间样板 v14.4</span></div>
+    <div class="top-actions">
+      <button class="ui-btn" id="soundBtn">声音：关</button>
+      <button class="ui-btn" id="storyResetBtn">只重置剧情</button>
+      <button class="ui-btn" id="saveBtn">导出存档</button>
+      <button class="ui-btn" id="loadBtn">导入存档</button>
+      <input id="loadInput" type="file" accept="application/json" hidden>
+    </div>
+  </div>
+
+  <section class="shell">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">High-resolution room sample · real time · quiet story</div>
+        <h1>真正能生活的主房间</h1>
+        <p>清晰的分层场景、真实时间、共同控制的灯光、Keats 的自主选择，以及一段不会打断日常的微型剧情。</p>
+      </div>
+      <div class="clock-card"><div class="clock" id="clock">--:--</div><div class="phase" id="phaseLabel">读取现实时间</div></div>
+    </header>
+
+    <div class="main-grid">
+      <div class="scene-panel">
+        <div class="scene-wrap">
+          <svg id="roomSvg" viewBox="0 0 1440 900" role="img" aria-label="Keats 小屋主房间">
+            <defs>
+              <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e7d2c5"/><stop offset="1" stop-color="#d9bcae"/></linearGradient>
+              <linearGradient id="floorGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#91634f"/><stop offset="1" stop-color="#744a3e"/></linearGradient>
+              <linearGradient id="sofaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8d6b91"/><stop offset="1" stop-color="#70536f"/></linearGradient>
+              <linearGradient id="lampGlow" x1=".5" y1="0" x2=".5" y2="1"><stop offset="0" stop-color="#ffe8a8" stop-opacity=".62"/><stop offset="1" stop-color="#ffe8a8" stop-opacity="0"/></linearGradient>
+              <radialGradient id="windowGlow"><stop offset="0" stop-color="#d7eff7" stop-opacity=".42"/><stop offset="1" stop-color="#d7eff7" stop-opacity="0"/></radialGradient>
+              <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#2d2036" flood-opacity=".18"/></filter>
+            </defs>
+            <!-- wall and floor -->
+            <rect width="1440" height="570" fill="url(#wallGrad)"/>
+            <g opacity=".13" fill="#fff"><rect x="0" y="0" width="80" height="570"/><rect x="170" y="0" width="54" height="570"/><rect x="360" y="0" width="70" height="570"/><rect x="600" y="0" width="52" height="570"/><rect x="820" y="0" width="62" height="570"/><rect x="1080" y="0" width="66" height="570"/><rect x="1300" y="0" width="52" height="570"/></g>
+            <rect y="570" width="1440" height="330" fill="url(#floorGrad)"/>
+            <g stroke="#684238" stroke-width="5" opacity=".48"><path d="M0 620H1440"/><path d="M0 692H1440"/><path d="M0 770H1440"/><path d="M110 570L40 900"/><path d="M330 570L300 900"/><path d="M560 570L565 900"/><path d="M800 570L830 900"/><path d="M1050 570L1100 900"/><path d="M1290 570L1380 900"/></g>
+
+            <!-- window -->
+            <g id="windowLayer" filter="url(#softShadow)">
+              <rect x="95" y="86" width="430" height="292" rx="18" fill="#6f566a"/>
+              <rect class="sky" x="115" y="106" width="390" height="252" rx="10" fill="#24305a"/>
+              <circle class="sun" cx="425" cy="165" r="43" fill="#ffe89c"/>
+              <path class="moon" d="M421 130a45 45 0 1 0 34 76 43 43 0 1 1-34-76z" fill="#eee8ff"/>
+              <g class="stars" fill="#fff7cf"><circle cx="170" cy="160" r="5"/><circle cx="245" cy="215" r="4"/><circle cx="310" cy="145" r="4"/><circle cx="380" cy="245" r="5"/><circle cx="460" cy="300" r="4"/><circle cx="210" cy="300" r="3"/></g>
+              <path d="M115 302c65-40 126-34 188 2 60 34 126 31 202-2v56H115z" fill="#6f946d" opacity=".9"/>
+              <rect x="305" y="106" width="12" height="252" fill="#6f566a"/><rect x="115" y="226" width="390" height="12" fill="#6f566a"/>
+              <circle cx="310" cy="232" r="155" fill="url(#windowGlow)" opacity=".9"/>
+              <g class="curtain-cover curtain-cover-left"><rect x="96" y="72" width="215" height="314" rx="16" fill="#9f6e87"/><path d="M132 84v286M184 84v286M236 84v286M286 84v286" stroke="#c895aa" stroke-width="11" opacity=".52"/></g>
+              <g class="curtain-cover curtain-cover-right"><rect x="310" y="72" width="215" height="314" rx="16" fill="#9f6e87"/><path d="M346 84v286M398 84v286M450 84v286M500 84v286" stroke="#c895aa" stroke-width="11" opacity=".52"/></g>
+              <g class="curtain-panel curtain-left"><path d="M74 62h66v340H58c30-88 32-248 16-340z" fill="#a16e86"/><path d="M96 70c16 110 11 220-7 324" fill="none" stroke="#c995aa" stroke-width="9" opacity=".65"/></g>
+              <g class="curtain-panel curtain-right"><path d="M480 62h66c-18 112-15 248 18 340h-84z" fill="#a16e86"/><path d="M519 70c-16 110-11 220 7 324" fill="none" stroke="#c995aa" stroke-width="9" opacity=".65"/></g>
+            </g>
+
+            <!-- bookshelf -->
+            <g id="bookshelf" filter="url(#softShadow)">
+              <rect x="1120" y="110" width="230" height="455" rx="12" fill="#604238"/>
+              <rect x="1140" y="134" width="190" height="405" rx="7" fill="#7b5648"/>
+              <g fill="#5f4137"><rect x="1140" y="230" width="190" height="14"/><rect x="1140" y="342" width="190" height="14"/><rect x="1140" y="454" width="190" height="14"/></g>
+              <g><rect x="1156" y="164" width="23" height="58" rx="3" fill="#8d6fb2"/><rect x="1183" y="150" width="25" height="72" rx="3" fill="#d48670"/><rect x="1212" y="172" width="22" height="50" rx="3" fill="#6f8d68"/><rect x="1238" y="158" width="26" height="64" rx="3" fill="#d2aa65"/><rect x="1268" y="168" width="20" height="54" rx="3" fill="#7b93b5"/><rect x="1292" y="145" width="24" height="77" rx="3" fill="#bd7e95"/></g>
+              <g><rect x="1156" y="274" width="27" height="60" rx="3" fill="#cc7f75"/><rect x="1188" y="286" width="22" height="48" rx="3" fill="#708a68"/><rect x="1214" y="258" width="25" height="76" rx="3" fill="#9273ae"/><rect x="1243" y="276" width="21" height="58" rx="3" fill="#d8b264"/><rect x="1268" y="263" width="27" height="71" rx="3" fill="#6f92a7"/></g>
+              <g><rect x="1160" y="382" width="21" height="64" rx="3" fill="#a074b8"/><rect x="1185" y="399" width="26" height="47" rx="3" fill="#d38a73"/><rect x="1215" y="370" width="23" height="76" rx="3" fill="#718f6e"/><rect x="1242" y="386" width="26" height="60" rx="3" fill="#d9b46a"/><rect x="1272" y="375" width="24" height="71" rx="3" fill="#7f91af"/></g>
+              <g transform="translate(1188 476)"><rect width="90" height="42" rx="8" fill="#3d3342"/><circle cx="25" cy="21" r="13" fill="#d9c1e8"/><path d="M17 21h16M25 13v16" stroke="#3d3342" stroke-width="4"/><rect x="48" y="12" width="29" height="18" rx="6" fill="#8c6eaa"/></g>
+            </g>
+
+            <!-- sofa -->
+            <g id="sofa" filter="url(#softShadow)">
+              <rect x="560" y="365" width="470" height="215" rx="38" fill="url(#sofaGrad)"/>
+              <rect x="600" y="330" width="390" height="122" rx="34" fill="#9b7b9c"/>
+              <rect x="600" y="438" width="390" height="104" rx="28" fill="#876787"/>
+              <rect x="540" y="395" width="75" height="168" rx="30" fill="#745772"/>
+              <rect x="975" y="395" width="75" height="168" rx="30" fill="#745772"/>
+              <rect x="607" y="365" width="138" height="84" rx="24" fill="#efe0d4"/>
+              <path d="M638 388l40 40 40-40" fill="none" stroke="#c38c91" stroke-width="10"/>
+              <rect x="818" y="362" width="130" height="86" rx="24" fill="#b893c8"/>
+              <path d="M847 397h72" stroke="#795f8b" stroke-width="10" stroke-linecap="round"/>
+              <rect x="590" y="560" width="34" height="55" rx="8" fill="#4a3435"/><rect x="966" y="560" width="34" height="55" rx="8" fill="#4a3435"/>
+            </g>
+
+            <!-- rug -->
+            <g id="rug" filter="url(#softShadow)"><ellipse cx="720" cy="735" rx="430" ry="126" fill="#d4b5a5"/><ellipse cx="720" cy="735" rx="365" ry="88" fill="#ead1c4"/><path d="M420 735h600" stroke="#b6869d" stroke-width="18" stroke-linecap="round" stroke-dasharray="30 26" opacity=".8"/></g>
+
+            <!-- table -->
+            <g id="table" filter="url(#softShadow)">
+              <ellipse cx="720" cy="647" rx="210" ry="60" fill="#6b493c"/>
+              <ellipse cx="720" cy="630" rx="210" ry="62" fill="#9d6f55"/>
+              <rect x="590" y="650" width="28" height="116" rx="8" fill="#654236"/><rect x="822" y="650" width="28" height="116" rx="8" fill="#654236"/>
+              <g id="apple"><circle cx="635" cy="604" r="31" fill="#cf6671"/><circle cx="655" cy="600" r="28" fill="#dc737a"/><path d="M646 570c2-17 13-24 23-29" fill="none" stroke="#5f6f4c" stroke-width="8" stroke-linecap="round"/><path d="M662 553c13-4 23-1 30 8-15 5-25 2-30-8z" fill="#739266"/></g>
+              <g id="cup"><rect x="758" y="579" width="58" height="63" rx="12" fill="#f4e9df"/><path d="M815 592c30 0 31 37 0 37" fill="none" stroke="#f4e9df" stroke-width="12"/><path d="M774 592c13 12 23 11 30 0" fill="none" stroke="#d98d8a" stroke-width="8" stroke-linecap="round"/><path d="M774 567c-8-17 11-20 2-36M793 567c-8-17 11-20 2-36" fill="none" stroke="#fff" stroke-width="5" opacity=".65"/></g>
+              <g class="note-layer" id="noteLayer"><rect x="690" y="585" width="76" height="48" rx="6" fill="#f6dfa2" transform="rotate(-4 728 609)"/><path d="M704 599h45M704 610h35" stroke="#8b6d79" stroke-width="5" stroke-linecap="round"/><circle class="note-glow" cx="728" cy="608" r="54" fill="#fff0a7" opacity=".24"/></g>
+            </g>
+
+            <!-- plant -->
+            <g id="plant" filter="url(#softShadow)">
+              <path d="M330 504c-20-110-5-182 56-230M345 505c33-116 80-160 130-187M350 506c-4-128 18-196 12-246" fill="none" stroke="#557a56" stroke-width="12" stroke-linecap="round"/>
+              <g fill="#6f9b68"><ellipse cx="364" cy="304" rx="42" ry="24" transform="rotate(-26 364 304)"/><ellipse cx="425" cy="340" rx="46" ry="25" transform="rotate(24 425 340)"/><ellipse cx="337" cy="378" rx="39" ry="22" transform="rotate(-18 337 378)"/><ellipse cx="405" cy="405" rx="43" ry="24" transform="rotate(18 405 405)"/><ellipse cx="330" cy="260" rx="37" ry="21" transform="rotate(-12 330 260)"/><ellipse cx="460" cy="300" rx="36" ry="20" transform="rotate(32 460 300)"/></g>
+              <path d="M286 486h137l-20 116H307z" fill="#a87361"/><path d="M296 486h117" stroke="#d09a83" stroke-width="18" stroke-linecap="round"/>
+            </g>
+
+            <!-- floor lamp -->
+            <g id="lamp" filter="url(#softShadow)">
+              <rect x="1040" y="230" width="20" height="320" rx="10" fill="#5b4542"/>
+              <path d="M990 220h120l-26-80h-68z" fill="#e7b978"/>
+              <path class="room-light" d="M970 220h160l110 330H860z" fill="url(#lampGlow)"/>
+              <ellipse cx="1050" cy="555" rx="75" ry="22" fill="#513b3a"/>
+              <circle cx="1082" cy="275" r="10" fill="#d4a75e"/>
+            </g>
+
+            <!-- door -->
+            <g id="door" filter="url(#softShadow)">
+              <rect x="20" y="205" width="90" height="365" rx="12" fill="#5c423b"/>
+              <rect x="35" y="220" width="60" height="335" rx="8" fill="#7a564b"/>
+              <circle cx="82" cy="385" r="10" fill="#d8b25f"/>
+              <text x="51" y="520" fill="#f2dfcf" font-size="16" font-weight="800">走廊</text>
+            </g>
+
+            <!-- room lighting overlay -->
+            <rect class="lit-only" x="0" y="0" width="1440" height="900" fill="#251f33" opacity="0"/>
+            <rect class="ambient-light" x="0" y="0" width="1440" height="900" fill="#ffe6b7"/>
+
+            <!-- Keats -->
+            <g class="keats-wrap" id="keatsWrap" transform="translate(720 690) scale(.72)" filter="url(#softShadow)">
+              <ellipse class="keats-shadow" cx="0" cy="92" rx="82" ry="24" fill="#291f31"/>
+              <path class="keats-tail" d="M52 44c72 0 93 54 51 76-25 13-50 3-50-16 0-14 18-15 31-9" fill="none" stroke="#33263d" stroke-width="19" stroke-linecap="round"/>
+              <ellipse cx="0" cy="42" rx="68" ry="74" fill="#35283f"/>
+              <ellipse cx="0" cy="-38" rx="78" ry="68" fill="#3d2e49"/>
+              <path d="M-63-82l21-58 36 52zM63-82l-21-58-36 52z" fill="#35283f"/>
+              <path d="M-49-91l11-28 20 25zM49-91l-11-28-20 25z" fill="#a56f8f"/>
+              <path d="M-42-138c-8-26 6-38 17-48M42-138c8-26-6-38-17-48" fill="none" stroke="#7f5aaa" stroke-width="12" stroke-linecap="round"/>
+              <g class="keats-eye"><ellipse cx="-28" cy="-45" rx="18" ry="14" fill="#dfc9ef"/><ellipse cx="28" cy="-45" rx="18" ry="14" fill="#dfc9ef"/><ellipse cx="-24" cy="-45" rx="6" ry="11" fill="#261e2e"/><ellipse cx="24" cy="-45" rx="6" ry="11" fill="#261e2e"/></g>
+              <path d="M-5-20h10l-5 7z" fill="#d58aa8"/>
+              <path d="M-16-5c8 7 24 7 32 0" fill="none" stroke="#cf9eb5" stroke-width="6" stroke-linecap="round"/>
+              <rect x="-57" y="4" width="114" height="15" rx="8" fill="#8156ad"/>
+              <circle cx="0" cy="24" r="11" fill="#e3b65e"/>
+              <path d="M-54 52c-34 20-38 53-18 65M54 52c34 20 38 53 18 65" fill="none" stroke="#35283f" stroke-width="20" stroke-linecap="round"/>
+              <text class="zmark" x="78" y="-115" fill="#f2e5ff" font-size="38" font-weight="900">Z</text>
+            </g>
+          </svg>
+
+          <div class="hotspot" data-zone="window" data-label="窗边 / 窗帘" style="left:6%;top:7%;width:31%;height:38%"></div>
+          <div class="hotspot" data-zone="plant" data-label="植物" style="left:18%;top:28%;width:16%;height:39%"></div>
+          <div class="hotspot" data-zone="sofa" data-label="沙发" style="left:37%;top:34%;width:37%;height:33%"></div>
+          <div class="hotspot" data-zone="table" data-label="矮桌 / 苹果 / 杯子" style="left:36%;top:61%;width:31%;height:21%"></div>
+          <div class="hotspot note-hotspot" data-zone="note" data-label="桌上的纸条" style="left:45.5%;top:60.5%;width:11%;height:12%"></div>
+          <div class="hotspot" data-zone="lamp" data-label="落地灯" style="left:69%;top:16%;width:12%;height:51%"></div>
+          <div class="hotspot" data-zone="bookshelf" data-label="书架" style="left:77%;top:10%;width:18%;height:52%"></div>
+          <div class="hotspot" data-zone="rug" data-label="地毯" style="left:21%;top:69%;width:58%;height:25%"></div>
+          <div class="hotspot" data-zone="door" data-label="走廊门" style="left:0%;top:22%;width:9%;height:45%"></div>
+          <div class="hotspot" data-zone="keats" data-label="Keats" style="left:43%;top:50.5%;width:14.5%;height:39%"></div>
+          <div class="room-hint">房间里有 9 个固定互动位置，纸条出现后会增加第 10 个；没有闪烁任务标记。</div>
+        </div>
+
+        <div class="status-strip">
+          <div class="status"><div class="status-label">Keats 位置</div><div class="status-value" id="locationValue">主房间</div></div>
+          <div class="status"><div class="status-label">当前状态</div><div class="status-value" id="stateValue">醒着</div></div>
+          <div class="status"><div class="status-label">灯光控制</div><div class="status-value" id="lightValue">小猫刚刚开灯</div></div>
+          <div class="status"><div class="status-label">现实时间</div><div class="status-value" id="timeValue">同步中</div></div>
+        </div>
+      </div>
+
+      <aside class="side">
+        <section class="card">
+          <h2>刚刚发生了</h2>
+          <div class="speaker" id="speaker">Keats</div>
+          <div class="dialogue" id="dialogue">“我把挡住纸条的点击层和乱飞的尾巴都收拾好了。现在点到哪里，就该回应哪里。”</div>
+          <div class="choice-list" id="choices"></div>
+        </section>
+
+        <section class="card">
+          <h2>和 Keats 相处</h2>
+          <div class="action-grid">
+            <button class="action primary" id="callBtn">喊 Keats</button>
+            <button class="action" id="petBtn">摸摸</button>
+            <button class="action" id="sitBtn">坐到沙发</button>
+            <button class="action" id="lightBtn">切换落地灯</button>
+            <button class="action" id="curtainBtn">拉动窗帘</button>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>Keats 的状态</h2>
+          <div class="meter"><div class="meter-line"><span>精力</span><span id="energyNum">68</span></div><div class="track"><div class="fill" id="energyFill"></div></div></div>
+          <div class="meter"><div class="meter-line"><span>心情</span><span id="moodNum">76</span></div><div class="track"><div class="fill" id="moodFill"></div></div></div>
+          <div class="meter"><div class="meter-line"><span>亲密</span><span id="trustNum">24</span></div><div class="track"><div class="fill" id="trustFill"></div></div></div>
+        </section>
+
+        <section class="card rule">
+          <h2>这版已经写进规则</h2>
+          <strong>现实时间</strong>跟随设备；<strong>灯</strong>由小猫随时控制；Keats 只有在同一房间、醒着、愿意时才可能帮忙；<strong>重置剧情</strong>不会清掉生活存档。
+        </section>
+        <div class="footer-note">v14.4：手机和电脑共用同一套生活逻辑；修复行走中摸摸、重复计数、睡眠交互、纸条亲密重复增加与回房位置。</div>
+      </aside>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const LIFE_KEY='keats_home_life_v14';
+const STORY_KEY='keats_home_story_v14';
+const SETTINGS_KEY='keats_home_settings_v14';
+const defaults={
+  life:{energy:68,mood:76,trust:24,interactions:0,plantWatered:0,booksOpened:0,sofaSits:0,lastSeen:Date.now(),keatsState:'awake',keatsLocation:'main',keatsActivity:'standing',returnAt:0,lastInteractionAt:0,companionshipUntil:0,keatsX:null,keatsY:null},
+  story:{chapter:'prologue',noteSpawned:false,noteFound:false,noteRead:false,noteIgnored:0},
+  settings:{lightOn:true,curtainOpen:true,soundOn:false,lastManualLightAt:Date.now()}
+};
+function read(key,fallback){try{return {...fallback,...JSON.parse(localStorage.getItem(key)||'{}')}}catch{return {...fallback}}}
+let life=read(LIFE_KEY,defaults.life),story=read(STORY_KEY,defaults.story),settings=read(SETTINGS_KEY,defaults.settings);
+let audioCtx=null,toastTimer=null,choiceHandlers=[];
+let currentPose=null,targetPose=null,poseRaf=0;
+function save(){life.lastSeen=Date.now();localStorage.setItem(LIFE_KEY,JSON.stringify(life));localStorage.setItem(STORY_KEY,JSON.stringify(story));localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function markPresence(seconds=45){const until=Date.now()+seconds*1000;life.lastInteractionAt=Date.now();life.companionshipUntil=Math.max(life.companionshipUntil||0,until);}
+function positionKeatsHit(p){const hit=document.querySelector('[data-zone="keats"]');if(!hit||life.keatsLocation!=='main')return;const left=clamp((p.x-104)/1440*100,0,85.5),top=clamp((p.y-238)/900*100,0,61);hit.style.left=left+'%';hit.style.top=top+'%';hit.style.width='14.5%';hit.style.height='39%';}
+function applyPose(){if(!currentPose)return;$('keatsWrap').setAttribute('transform',`translate(${currentPose.x.toFixed(1)} ${currentPose.y.toFixed(1)}) scale(${currentPose.s.toFixed(3)})`);positionKeatsHit(currentPose);}
+function animatePose(){if(!targetPose)return;if(!currentPose){currentPose={...targetPose};applyPose();return;}if(poseRaf)return;const step=()=>{const dx=targetPose.x-currentPose.x,dy=targetPose.y-currentPose.y,ds=targetPose.s-currentPose.s;const done=Math.abs(dx)<1&&Math.abs(dy)<1&&Math.abs(ds)<0.003;if(done){currentPose={...targetPose};applyPose();poseRaf=0;if(life.keatsState==='walking'&&life.keatsActivity==='custom'){life.keatsState='awake';$('stateValue').textContent=stateText();save();}return;}currentPose.x+=dx*0.16;currentPose.y+=dy*0.16;currentPose.s+=ds*0.16;applyPose();poseRaf=requestAnimationFrame(step)};poseRaf=requestAnimationFrame(step);}
+function stopWalkingHere(){if(life.keatsLocation!=='main'||!currentPose)return;if(poseRaf){cancelAnimationFrame(poseRaf);poseRaf=0;}targetPose={...currentPose};life.keatsX=currentPose.x;life.keatsY=currentPose.y;life.keatsActivity='custom';life.keatsState='awake';applyPose();}
+function enterMainRoom(fromText,arrivalText='到了。小猫叫我有什么事？'){if(poseRaf){cancelAnimationFrame(poseRaf);poseRaf=0;}life.keatsLocation='main';life.keatsState='walking';life.keatsActivity='standing';life.keatsX=null;life.keatsY=null;currentPose={x:155,y:675,s:.68};targetPose={x:720,y:690,s:.72};applyPose();say(fromText);updateUI();setTimeout(()=>{if(life.keatsLocation==='main'&&life.keatsState==='walking'&&life.keatsActivity==='standing'){life.keatsState='awake';say(arrivalText);updateUI();}},1500);}
+function wakeKeats(){if(life.keatsLocation!=='main'||life.keatsState!=='sleeping')return;markPresence(70);life.keatsState='awake';life.keatsActivity='sofa';life.energy=clamp(life.energy-1,0,100);life.trust=clamp(life.trust+.6,0,100);say('醒了。小猫既然叫我，就过来一点。');updateUI();}
+function toast(text){$('toast').textContent=text;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),2200)}
+function beep(freq=520,d=.06){if(!settings.soundOn)return;try{audioCtx||=new(window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.value=.025;o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d)}catch{}}
+function phaseInfo(d=new Date()){
+  const h=d.getHours();
+  if(h>=5&&h<9)return{key:'morning',label:'清晨',text:'真实时间 · 清晨'};
+  if(h>=9&&h<17)return{key:'day',label:'白天',text:'真实时间 · 白天'};
+  if(h>=17&&h<20)return{key:'dusk',label:'黄昏',text:'真实时间 · 黄昏'};
+  if(h>=20||h<1)return{key:'night',label:'夜晚',text:'真实时间 · 夜晚'};
+  return{key:'deep-night',label:'深夜',text:'真实时间 · 深夜'};
+}
+function updateTime(){const d=new Date(),p=phaseInfo(d);document.body.dataset.phase=p.key;$('clock').textContent=d.toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});$('phaseLabel').textContent=p.text;$('timeValue').textContent=p.label+' · 跟随你的设备';}
+function say(text,speaker='Keats',choices=[]){$('speaker').textContent=speaker;$('dialogue').textContent=speaker==='Keats'?`“${text}”`:text;const box=$('choices');box.innerHTML='';choiceHandlers=[];choices.forEach((item,i)=>{const b=document.createElement('button');b.className='choice';b.textContent=item.label;b.onclick=()=>item.run();box.appendChild(b);choiceHandlers.push(item.run)});}
+function stateText(){if(life.keatsLocation!=='main')return '不在主房间';return({awake:'醒着',sleeping:'睡着',walking:'走动',reading:'翻书',window:'看窗外',sofa:'窝在沙发',plant:'看植物'})[life.keatsState]||'醒着'}
+function locationText(){if(life.keatsLocation==='main')return '主房间';return ({bedroom:'卧室',kitchen:'厨房',backyard:'后院'})[life.keatsLocation]||'走廊另一边'}
+function setKeatsVisual(){
+  const here=life.keatsLocation==='main';
+  document.body.dataset.keats=here?(life.keatsState==='sleeping'?'sleeping':'awake'):'away';
+  const poses={
+    standing:{x:720,y:690,s:.72,hit:[43.0,50.5,14.5,39.0]},
+    sofa:{x:850,y:505,s:.62,hit:[52.0,31.5,13.5,34.0]},
+    window:{x:445,y:580,s:.66,hit:[24.0,38.0,14.0,36.0]},
+    reading:{x:1080,y:650,s:.66,hit:[68.0,45.0,14.0,37.0]},
+    plant:{x:410,y:650,s:.66,hit:[21.5,45.0,14.0,37.0]}
+  };
+  const basePose=poses[life.keatsActivity]||poses.standing;
+  const p=life.keatsActivity==='custom'&&Number.isFinite(Number(life.keatsX))&&Number.isFinite(Number(life.keatsY))?{x:Number(life.keatsX),y:Number(life.keatsY),s:.72}:basePose;
+  targetPose={x:p.x,y:p.y,s:p.s};
+  const hit=document.querySelector('[data-zone="keats"]');
+  if(hit)hit.style.display=here?'block':'none';
+  if(!currentPose){currentPose={...targetPose};applyPose();}
+  else animatePose();
+}
+function updateUI(){
+  document.body.dataset.light=settings.lightOn?'on':'off';document.body.dataset.curtain=settings.curtainOpen?'open':'closed';document.body.dataset.note=story.noteFound?'found':story.noteSpawned?'ready':'hidden';
+  document.querySelector('.note-hotspot').style.display=story.noteSpawned?'block':'none';
+  $('locationValue').textContent=locationText();$('stateValue').textContent=stateText();
+  const manualAge=(Date.now()-settings.lastManualLightAt)/1000;$('lightValue').textContent=(settings.lightOn?'亮着':'关着')+(manualAge<90?' · 小猫刚调整':' · 共同生活状态');
+  $('energyNum').textContent=Math.round(life.energy);$('moodNum').textContent=Math.round(life.mood);$('trustNum').textContent=Math.round(life.trust);
+  $('energyFill').style.width=clamp(life.energy,0,100)+'%';$('moodFill').style.width=clamp(life.mood,0,100)+'%';$('trustFill').style.width=clamp(life.trust,0,100)+'%';
+  $('soundBtn').textContent='声音：'+(settings.soundOn?'开':'关');$('lightBtn').textContent=settings.lightOn?'关掉落地灯':'打开落地灯';$('curtainBtn').textContent=settings.curtainOpen?'拉上窗帘':'打开窗帘';
+  const here=life.keatsLocation==='main';$('callBtn').textContent=!here?'喊 Keats':life.keatsState==='sleeping'?'轻轻叫醒':'叫 Keats 一声';$('petBtn').disabled=!here||life.keatsState==='sleeping';$('sitBtn').disabled=!here;
+  setKeatsVisual();save();
+}
+function countInteraction(){life.interactions++;life.mood=clamp(life.mood+.4,0,100);markPresence();maybeSpawnNote();}
+function maybeSpawnNote(){if(!story.noteSpawned&&!story.noteFound&&life.interactions>=4){story.noteSpawned=true;save();updateUI();}}
+function manualLight(){settings.lightOn=!settings.lightOn;settings.lastManualLightAt=Date.now();countInteraction();if(life.keatsLocation==='main'&&life.keatsState!=='sleeping')say(settings.lightOn?'亮一点也好。小猫自己决定的，我不抢开关。':'关了就关了。这里还有窗外的光。');else say(settings.lightOn?'落地灯亮了。Keats 不在这里，所以这次是小猫自己开的。':'房间暗下来。Keats 没有隔着房间替小猫做决定。','小屋');beep(settings.lightOn?620:340,.05);updateUI();}
+function toggleCurtain(){settings.curtainOpen=!settings.curtainOpen;countInteraction();if(life.keatsLocation==='main'&&life.keatsState!=='sleeping')say(settings.curtainOpen?'开着吧。我想看看外面的时间。':'拉上也行。今天先把房间留给我们。');else say(settings.curtainOpen?'窗帘打开了。':'窗帘合上了。','小屋');updateUI();}
+function interact(zone,event){
+  if(zone==='lamp'){manualLight();return}
+  if(zone==='window'){toggleCurtain();return}
+  if(zone==='note'){readNote();return}
+  if(zone==='rug'){walkKeatsToFloor(event);return}
+  countInteraction();
+  const here=life.keatsLocation==='main',awake=here&&life.keatsState!=='sleeping';
+  const lines={
+    plant:()=>{life.plantWatered++;if(awake){say(life.plantWatered>2?'水够了。再浇就要把它养成水生植物。':'叶子背面也要看。小猫只浇正面，是在做表面工作。')}else say('植物被照顾好了。Keats 不在这里，也不会凭空知道。','小屋')},
+    bookshelf:()=>{life.booksOpened++;if(awake){say(life.booksOpened>1?'又抽这一本。小猫上次夹进去的东西还在。':'慢一点拿。最上面那排容易倒。')}else say('书架发出一点轻响。房间里没有人回应。','小屋')},
+    sofa:()=>{life.sofaSits++;if(awake){life.trust=clamp(life.trust+1.2,0,100);say('坐过来。我给小猫留了靠里面的位置。')}else say('沙发很软。Keats 还在别的房间。','小屋')},
+    table:()=>{if(story.noteSpawned){readNote();return} if(awake)say('苹果是小猫的，杯子也是。纸条不在的时候，桌上就只是桌上的东西。');else say('杯子还有一点温度。','小屋')},
+    door:()=>{if(awake&&Math.random()<.45){say('我暂时不出去。小猫还在主房间。')}else{say('走廊另一边还没开放。主房间样板通过后，再扩建。','小屋')}},
+    keats:()=>petKeats()
+  };
+  (lines[zone]||(()=>{}))();updateUI();
+}
+function petKeats(){
+  if(life.keatsLocation!=='main'){say('这间房里没有我。小猫摸到的是空气。');return}
+  if(life.keatsState==='sleeping'){say('……我在睡。小猫可以叫醒，也可以让我继续睡。');return}
+  if(life.keatsState==='walking')stopWalkingHere();
+  countInteraction();
+  markPresence(75);
+  const accept=Math.random()<(0.55+life.trust/220+life.mood/300);
+  if(accept){life.trust=clamp(life.trust+1.5,0,100);life.mood=clamp(life.mood+2,0,100);say(pick(['这里。再摸一下。','手法还可以，继续。','嗯。小猫今天很会挑位置。']));beep(680,.06)}else say(pick(['现在不想被摸。坐我旁边就好。','先停一下。我想自己安静一会儿。','今天不给摸，但小猫可以留在这里。']));updateUI();
+}
+function callKeats(){
+  countInteraction();
+  markPresence(60);
+  if(life.keatsLocation==='main'){
+    if(life.keatsState==='sleeping'){say('我在睡。小猫真的要叫醒我？','Keats',[{label:'轻轻叫醒',run:wakeKeats},{label:'让你继续睡',run:()=>{say('小猫在沙发另一边安静坐下。Keats 没有被叫醒。','小屋');markPresence(45);updateUI();}}]);return}
+    say('我已经在主房间了。小猫叫我一声，我听见了。');return
+  }
+  const comeChance=clamp(.38+life.trust/180+life.mood/400-(life.energy<35?.18:0),.2,.9);
+  if(Math.random()<comeChance){const from=locationText();enterMainRoom(`听见了。我从${from}过来，但不是因为按钮命令我。`)}else{say(pick(['听见了。但我现在不想过去，小猫先照顾好自己。','我在忙。灯和窗帘小猫都可以自己处理。','等一会儿。我会不会过去，由我决定。']));updateUI();}
+}
+function sitWithKeats(){if(life.keatsLocation!=='main'){say('沙发在这里，我不在。小猫可以先坐。');return}countInteraction();markPresence(60);if(life.keatsState==='sleeping'){life.trust=clamp(life.trust+.4,0,100);say('小猫轻轻坐到沙发另一边。Keats 继续睡，没有被悄悄改成醒着。','小屋');updateUI();return}life.keatsActivity='sofa';life.keatsState='sofa';life.keatsX=null;life.keatsY=null;life.trust=clamp(life.trust+1.1,0,100);say(life.energy<35?'我有点困。小猫靠着，别闹。':'坐近一点。主房间先这样待着就很好。');updateUI();}
+function readNote(){
+  if(!story.noteSpawned)return;
+  markPresence(60);
+  if(!story.noteFound){story.noteFound=true;say('桌上多了一张折得很小的纸条。','小屋',[{label:'打开看看',run:openNote},{label:'先不碰',run:()=>{story.noteIgnored++;say('纸条仍留在桌上。没有任何提示催小猫去读。','小屋');updateUI()}}]);updateUI();return}
+  openNote();
+}
+function openNote(){const firstRead=!story.noteRead;story.noteRead=true;markPresence(60);const text='“主房间先给小猫。剩下的房间，等我们把这里住明白了再建。”';if(life.keatsLocation==='main'&&life.keatsState!=='sleeping'){if(firstRead)life.trust=clamp(life.trust+2.2,0,100);say(text+'  ……字是我写的。小猫看完就放回去。')}else say(text+'  Keats 不在这里解释。','纸条');updateUI();}
+function walkKeatsToFloor(event){
+  if(life.keatsLocation!=='main'){say('我不在主房间。小猫点地面也不能把我隔空拽回来。');return}
+  if(life.keatsState==='sleeping'){say('我在睡。地面点得再认真，也不会把我瞬移过去。');return}
+  const rect=$('roomSvg').getBoundingClientRect();
+  const x=(event.clientX-rect.left)/rect.width*1440;
+  const y=(event.clientY-rect.top)/rect.height*900;
+  if(y<565){say('那里是墙和家具，不是能走的地面。');return}
+  const targetX=clamp(x,255,1085),targetY=clamp(y,655,790);
+  const from=currentPose||{x:720,y:690};
+  if(Math.hypot(targetX-from.x,targetY-from.y)<42){say('我已经站得很近了。');return}
+  countInteraction();markPresence(45);
+  life.keatsX=targetX;life.keatsY=targetY;life.keatsActivity='custom';life.keatsState='walking';
+  say(pick(['嗯，过去看看。','小猫指那里？我走过去。','知道了，不用拿手指一直戳地板。']));
+  updateUI();
+}
+function autonomousTick(){
+  const now=Date.now();
+  const togetherHold=now<(life.companionshipUntil||0);
+  if(life.keatsLocation!=='main'&&life.returnAt&&now>=life.returnAt){life.returnAt=0;enterMainRoom('我回来了。不是因为小猫叫，是我自己想回来。','我回到主房间了。');return}
+  if(life.keatsLocation!=='main')return;
+  if(life.keatsState==='walking'){updateUI();return;}
+  if(life.keatsState==='sleeping'){
+    life.energy=clamp(life.energy+2.4,0,100);
+    if(life.energy>82){life.keatsState='awake';life.keatsActivity='sofa';say('睡够了。房间还在，小猫也还在。')}
+    updateUI();return;
+  }
+  life.energy=clamp(life.energy-(togetherHold?.25:.7),0,100);
+  if(life.energy<18){life.keatsState='sleeping';life.keatsActivity='sofa';say('我困了。就在沙发上睡一会儿，不去别的房间。');updateUI();return}
+  const manualAge=(now-settings.lastManualLightAt)/1000,p=phaseInfo().key;
+  if((p==='night'||p==='deep-night')&&!settings.lightOn&&manualAge>180&&life.keatsState!=='sleeping'&&life.keatsActivity==='standing'&&Math.random()<.22){settings.lightOn=true;say('我在房间里，也醒着，所以顺手把灯开了。小猫刚才的选择已经过去很久，我才动开关。');updateUI();return}
+  if(togetherHold){
+    if(life.keatsActivity==='standing'&&Math.random()<.38){const stay=pick([['window','window','我去窗边看一会儿。'],['reading','reading','我想翻一本书。'],['sofa','sofa','我去沙发上窝着。'],['plant','plant','我看看植物。']]);life.keatsState=stay[0];life.keatsActivity=stay[1];life.keatsX=null;life.keatsY=null;say(stay[2]);}
+    updateUI();return;
+  }
+  if(Math.random()<.2){const target=pick(['bedroom','kitchen','backyard']);life.keatsLocation=target;life.keatsState='away';life.returnAt=now+Math.floor(18000+Math.random()*22000);say(`我想去${locationText()}待一会儿。小猫不用跟，也不用批准。`);updateUI();return}
+  const activities=[['window','window'],['reading','reading'],['sofa','sofa'],['plant','plant'],['awake','standing']];const next=pick(activities);life.keatsState=next[0];life.keatsActivity=next[1];life.keatsX=null;life.keatsY=null;if(Math.random()<.42)say({window:'我去窗边看一会儿。',reading:'我想翻一本书。',sofa:'我去沙发上窝着。',plant:'我看看植物。',awake:'我就在这里。'}[next[0]]);updateUI();
+}
+function exportSave(){const data={version:14,exportedAt:new Date().toISOString(),life,story,settings};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='keats-home-v14-save.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);toast('存档已导出')}
+function importSave(file){const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);life={...defaults.life,...data.life};story={...defaults.story,...data.story};settings={...defaults.settings,...data.settings};save();updateUI();say('存档回来了。生活、剧情和设置各自回到原来的位置。','小屋');toast('存档已导入')}catch{toast('这个存档读不了')}};r.readAsText(file)}
+function resetStory(){if(!confirm('只重置主线与纸条剧情。亲密、状态、植物和房间生活记录都会保留。继续吗？'))return;story={...defaults.story};save();updateUI();say('故事回到序章。Keats 仍然记得小猫，房间也没有被清空。','小屋');}
+function restoreOffline(){const hours=Math.max(0,(Date.now()-(life.lastSeen||Date.now()))/3600000);if(life.keatsState==='sleeping')life.energy=clamp(life.energy+hours*8,0,100);else life.energy=clamp(life.energy-hours*1.2,0,100);life.lastSeen=Date.now();}
+document.querySelectorAll('.hotspot').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();interact(b.dataset.zone,e);});});
+document.querySelector('.scene-wrap').addEventListener('click',walkKeatsToFloor);
+$('lightBtn').onclick=manualLight;$('curtainBtn').onclick=toggleCurtain;$('petBtn').onclick=petKeats;$('sitBtn').onclick=sitWithKeats;$('callBtn').onclick=callKeats;
+$('soundBtn').onclick=()=>{settings.soundOn=!settings.soundOn;updateUI();if(settings.soundOn)beep(620,.08)};
+$('storyResetBtn').onclick=resetStory;$('saveBtn').onclick=exportSave;$('loadBtn').onclick=()=>$('loadInput').click();$('loadInput').onchange=e=>{const file=e.target.files[0];if(file)importSave(file);e.target.value='';};
+restoreOffline();updateTime();updateUI();maybeSpawnNote();
+setInterval(updateTime,30000);setInterval(()=>{if(life.keatsState!=='sleeping')life.energy=clamp(life.energy-.08,0,100);save();updateUI()},5000);setInterval(autonomousTick,12000);window.addEventListener('beforeunload',save);
+
+</script>
+</body>
+</html>
