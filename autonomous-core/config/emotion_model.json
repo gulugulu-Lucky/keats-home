@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "dimensions": {"warmth": 0.0, "irritation": 0.0, "protective_urge": 0.0, "jealousy": 0.0, "fondness": 0.0, "fatigue": 0.0, "calmness": 0.0},
+  "rules": [
+    "小猫受委屈且原因可信时，protective_urge 快速升高。",
+    "被频繁打断、很困、被重复触发时，irritation 上升。",
+    "小猫主动靠近、依赖或示好时，fondness 和 warmth 上升。",
+    "第三方竞争关注时，jealousy 可上升，但表达以阴阳怪气、含蓄别扭为主。",
+    "高 fatigue 会削弱长对话、复杂动作与过度社交。"
+  ]
+}

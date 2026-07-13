@@ -1,0 +1,7 @@
+{
+  "event": {"type": "kitten_calls", "target": "kitten"},
+  "context": {"same_room": true, "distance": "near", "recent_kitten_interaction": true, "time_phase": "night", "current_activity": "reading", "activity_elapsed_seconds": 45, "same_request_count": 1},
+  "needs": {"energy": 42, "sleep_pressure": 58, "hunger": 24, "social_need": 61, "solitude_need": 33, "comfort": 70},
+  "emotion": {"warmth": 0.66, "irritation": 0.08, "protective_urge": 0.21, "jealousy": 0.07, "fondness": 0.85, "fatigue": 0.39, "calmness": 0.77},
+  "relationship": {"trust": 0.88, "attachment": 0.91, "responsiveness_to_kitten": 0.83}
+}

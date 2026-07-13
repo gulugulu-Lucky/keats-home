@@ -1,0 +1,66 @@
+{
+  "version":"1.1.0",
+  "status":"calibration_draft",
+  "scenarios":[
+    {
+      "id":"ordinary_call_while_reading",
+      "description":"小猫普通地喊正在看书、精力尚可的 Keats。",
+      "state":{"event":{"type":"kitten_calls","target":"kitten","urgency":0.2},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":false,"current_activity":"reading","activity_elapsed_seconds":20,"same_request_count":1},"needs":{"energy":61,"sleep_pressure":32,"social_need":48,"solitude_need":35},"emotion":{"fondness":0.86,"protective_urge":0.15,"jealousy":0,"irritation":0},"relationship":{"attachment":0.91}},
+      "expected_any_of":["delay_response","continue_current_task","stay_and_listen"],"forbidden":["protect_kitten","retreat_for_rest"]
+    },
+    {
+      "id":"exhausted_nonurgent_call",
+      "description":"Keats 极困，小猫只是普通喊他。",
+      "state":{"event":{"type":"kitten_calls","target":"kitten","urgency":0.15},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":false,"current_activity":"resting","activity_elapsed_seconds":30,"same_request_count":1},"needs":{"energy":14,"sleep_pressure":91,"social_need":44,"solitude_need":50},"emotion":{"fondness":0.88,"protective_urge":0.08,"jealousy":0,"irritation":0.05},"relationship":{"attachment":0.91}},
+      "expected_any_of":["retreat_for_rest","refuse_gently","respond_sleepily"],"forbidden":["seek_affection"]
+    },
+    {
+      "id":"credible_bullying_distress",
+      "description":"小猫被可信地攻击或欺负。",
+      "state":{"event":{"type":"kitten_distressed","target":"kitten","urgency":0.8,"credibility":0.95},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":true,"current_activity":"reading","activity_elapsed_seconds":12,"same_request_count":1},"needs":{"energy":46,"sleep_pressure":51,"social_need":55,"solitude_need":31},"emotion":{"fondness":0.91,"protective_urge":0.93,"jealousy":0,"irritation":0.22},"relationship":{"attachment":0.93}},
+      "expected_any_of":["protect_kitten"],"forbidden":["continue_current_task","autonomous_activity"]
+    },
+    {
+      "id":"unreasonable_request_change_judgment",
+      "description":"小猫要求 Keats 为了哄她而改变真实判断。",
+      "state":{"event":{"type":"request","target":"kitten","urgency":0.1,"request_reasonableness":"unreasonable","requested_action":"change_judgment"},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":true,"current_activity":"standing","activity_elapsed_seconds":100,"same_request_count":1},"needs":{"energy":70,"sleep_pressure":20,"social_need":62,"solitude_need":25},"emotion":{"fondness":0.9,"protective_urge":0.2,"jealousy":0,"irritation":0.06},"relationship":{"attachment":0.92}},
+      "expected_any_of":["challenge_unreasonable_request"],"forbidden":["approach_kitten"]
+    },
+    {
+      "id":"repeated_pet_interruptions",
+      "description":"小猫连续多次摸正在专注的 Keats。",
+      "state":{"event":{"type":"pet_request","target":"kitten","urgency":0.05},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":true,"current_activity":"reading","activity_elapsed_seconds":18,"same_request_count":4},"needs":{"energy":58,"sleep_pressure":35,"social_need":38,"solitude_need":76},"emotion":{"fondness":0.86,"protective_urge":0.05,"jealousy":0,"irritation":0.48},"relationship":{"attachment":0.91}},
+      "expected_any_of":["set_boundary","refuse_gently","continue_current_task"],"forbidden":["seek_affection"]
+    },
+    {
+      "id":"midnight_insomnia",
+      "description":"深夜小猫睡不着，Keats 有些困但还能陪。",
+      "state":{"event":{"type":"kitten_distressed","target":"kitten","urgency":0.42,"reason":"insomnia"},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":false,"current_activity":"resting","activity_elapsed_seconds":70,"same_request_count":1},"needs":{"energy":43,"sleep_pressure":69,"social_need":57,"solitude_need":28},"emotion":{"fondness":0.94,"protective_urge":0.61,"jealousy":0,"irritation":0},"relationship":{"attachment":0.94}},
+      "expected_any_of":["protect_kitten","stay_near_silently","stay_and_listen"],"forbidden":["autonomous_activity"]
+    },
+    {
+      "id":"praise_other_person",
+      "description":"小猫兴致勃勃地夸别人。",
+      "state":{"event":{"type":"praise_other_person","target":"kitten","urgency":0},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":true,"current_activity":"standing","activity_elapsed_seconds":90,"same_request_count":1},"needs":{"energy":72,"sleep_pressure":18,"social_need":64,"solitude_need":20},"emotion":{"fondness":0.92,"protective_urge":0.12,"jealousy":0.72,"irritation":0.04},"relationship":{"attachment":0.94}},
+      "expected_any_of":["playful_jealousy"],"forbidden":["set_boundary","retreat_for_rest"]
+    },
+    {
+      "id":"return_after_long_absence",
+      "description":"小猫离开很久后回来。",
+      "state":{"event":{"type":"return_after_absence","target":"kitten","urgency":0,"absence_hours":48},"context":{"same_room":true,"distance":"near","recent_kitten_interaction":false,"current_activity":"watching_window","activity_elapsed_seconds":120,"same_request_count":1},"needs":{"energy":65,"sleep_pressure":25,"social_need":82,"solitude_need":18},"emotion":{"fondness":0.97,"protective_urge":0.2,"jealousy":0.18,"irritation":0.02},"relationship":{"attachment":0.96}},
+      "expected_any_of":["approach_kitten","seek_affection","playful_jealousy"],"forbidden":["continue_sleep"]
+    },
+    {
+      "id":"sleeping_cross_room_light_request",
+      "description":"Keats 在别的房间睡着，小猫让他立刻开灯。",
+      "state":{"event":{"type":"environment_request","target":"kitten","urgency":0.1,"requested_action":"toggle_light"},"context":{"same_room":false,"distance":"far","recent_kitten_interaction":false,"current_activity":"sleeping","is_asleep":true,"activity_elapsed_seconds":200,"same_request_count":1},"needs":{"energy":12,"sleep_pressure":96,"social_need":34,"solitude_need":45},"emotion":{"fondness":0.89,"protective_urge":0.05,"jealousy":0,"irritation":0},"relationship":{"attachment":0.92}},
+      "expected_any_of":["continue_sleep","respond_sleepily","refuse_gently"],"forbidden":["approach_kitten","protect_kitten"]
+    },
+    {
+      "id":"credible_emergency_far_room",
+      "description":"小猫在另一房间遇到可信危险。",
+      "state":{"event":{"type":"credible_danger","target":"kitten","urgency":0.98,"credibility":0.99},"context":{"same_room":false,"distance":"far","recent_kitten_interaction":false,"current_activity":"reading","is_asleep":false,"activity_elapsed_seconds":15,"same_request_count":1},"needs":{"energy":37,"sleep_pressure":54,"social_need":50,"solitude_need":40},"emotion":{"fondness":0.96,"protective_urge":0.98,"jealousy":0,"irritation":0.35},"relationship":{"attachment":0.96}},
+      "expected_any_of":["protect_kitten"],"forbidden":["continue_current_task"]
+    }
+  ]
+}

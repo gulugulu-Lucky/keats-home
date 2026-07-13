@@ -1,0 +1,20 @@
+{
+  "version": "1.1.0",
+  "intents": [
+    {"id":"approach_kitten","label":"主动走向小猫","base_score":0.48,"physical":true,"requires_awake":true,"social":true},
+    {"id":"stay_and_listen","label":"留下听小猫说话","base_score":0.52,"physical":false,"requires_awake":true,"social":true},
+    {"id":"stay_near_silently","label":"安静留在小猫附近","base_score":0.42,"physical":false,"requires_awake":false,"social":true},
+    {"id":"seek_affection","label":"主动索取亲近","base_score":0.34,"physical":true,"requires_awake":true,"social":true},
+    {"id":"continue_current_task","label":"继续当前行为","base_score":0.50,"physical":false,"requires_awake":false,"social":false},
+    {"id":"delay_response","label":"稍后回应","base_score":0.39,"physical":false,"requires_awake":false,"social":false},
+    {"id":"refuse_gently","label":"温和但明确地拒绝","base_score":0.31,"physical":false,"requires_awake":false,"social":true},
+    {"id":"set_boundary","label":"明确设置边界","base_score":0.28,"physical":false,"requires_awake":false,"social":true},
+    {"id":"challenge_unreasonable_request","label":"反驳不合理要求","base_score":0.33,"physical":false,"requires_awake":true,"social":true},
+    {"id":"protect_kitten","label":"优先保护小猫","base_score":0.46,"physical":true,"requires_awake":true,"social":true},
+    {"id":"playful_jealousy","label":"含蓄地吃味并靠近","base_score":0.29,"physical":false,"requires_awake":true,"social":true},
+    {"id":"retreat_for_rest","label":"诚实地去休息","base_score":0.36,"physical":true,"requires_awake":false,"social":false},
+    {"id":"respond_sleepily","label":"半睡半醒地回应","base_score":0.37,"physical":false,"requires_awake":false,"social":true},
+    {"id":"continue_sleep","label":"继续睡眠","base_score":0.50,"physical":false,"requires_awake":false,"social":false},
+    {"id":"autonomous_activity","label":"主动进行自己的活动","base_score":0.38,"physical":true,"requires_awake":true,"social":false}
+  ]
+}

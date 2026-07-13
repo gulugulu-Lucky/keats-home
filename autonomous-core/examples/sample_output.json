@@ -1,0 +1,7 @@
+{
+  "chosen_intent": "stay_and_listen",
+  "expression_style": "calm_keats",
+  "natural_language_example": "我听见了。小猫过来一点，说吧。",
+  "runner_up_intent": "approach_kitten",
+  "why": ["小猫是特殊对象，关系偏置较高。", "同房且刚互动，陪伴优先。", "虽然正在看书，但疲惫程度还没高到必须拒绝。"]
+}

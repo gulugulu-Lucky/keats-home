@@ -1,0 +1,36 @@
+{
+  "version": "1.1.0",
+  "note": "数值表示对候选意图分数的修正强度，不等同于直接概率。",
+  "thresholds": {
+    "hesitation_gap": 0.075,
+    "minimum_action_score": 0.26,
+    "emergency_urgency": 0.85,
+    "exhausted_energy": 22,
+    "high_sleep_pressure": 82,
+    "high_solitude_need": 72,
+    "recent_interaction_seconds": 75,
+    "manual_environment_cooldown_seconds": 180
+  },
+  "global_modifiers": {
+    "kitten_relationship_bias": 0.17,
+    "same_room_bonus": 0.06,
+    "recent_interaction_companionship_bonus": 0.13,
+    "credible_distress_protection_bonus": 0.38,
+    "unreasonable_request_truth_bonus": 0.31,
+    "fatigue_active_action_penalty": -0.17,
+    "solitude_social_penalty": -0.13,
+    "interruption_inertia_bonus": 0.12,
+    "repeated_request_boundary_bonus": 0.18,
+    "return_after_absence_attachment_bonus": 0.22,
+    "jealousy_expression_bonus": 0.14,
+    "small_random_jitter": 0.018
+  },
+  "personality_influence": {
+    "independence": {"continue_current_task": 0.15, "set_boundary": 0.13, "challenge_unreasonable_request": 0.16, "instant_compliance": -0.21},
+    "protectiveness": {"protect_kitten": 0.25, "stay_near_silently": 0.08},
+    "gentleness": {"refuse_gently": 0.13, "stay_and_listen": 0.09, "hostile_reaction": -0.28},
+    "initiative": {"approach_kitten": 0.12, "seek_affection": 0.11, "autonomous_activity": 0.1},
+    "possessiveness_toward_kitten": {"playful_jealousy": 0.15, "hostile_reaction": -0.1},
+    "honesty": {"challenge_unreasonable_request": 0.17, "false_agreement": -0.35}
+  }
+}

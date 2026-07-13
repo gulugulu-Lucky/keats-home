@@ -1,0 +1,22 @@
+{
+  "version": "1.1.0",
+  "behavior_inertia": {
+    "reading": {"minimum_hold_seconds": 40, "interrupt_cost": 0.12},
+    "sleeping": {"minimum_hold_seconds": 120, "interrupt_cost": 0.28},
+    "resting": {"minimum_hold_seconds": 55, "interrupt_cost": 0.1},
+    "watching_window": {"minimum_hold_seconds": 35, "interrupt_cost": 0.06},
+    "staying_with_kitten": {"minimum_hold_seconds": 75, "interrupt_cost": 0.18}
+  },
+  "repetition_control": {
+    "same_request_window_seconds": 45,
+    "second_repeat_penalty": 0.05,
+    "third_repeat_boundary_bonus": 0.13,
+    "fourth_repeat_boundary_bonus": 0.24
+  },
+  "randomness": {
+    "enabled": true,
+    "max_absolute_jitter": 0.018,
+    "apply_only_after_hard_rules": true,
+    "never_changes_locked_identity_outcome": true
+  }
+}

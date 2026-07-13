@@ -1,0 +1,12 @@
+{
+  "version": "1.0",
+  "scales": {
+    "energy": {"min": 0, "max": 100, "description": "精力"},
+    "sleep_pressure": {"min": 0, "max": 100, "description": "困倦压力"},
+    "hunger": {"min": 0, "max": 100, "description": "饱腹需求"},
+    "social_need": {"min": 0, "max": 100, "description": "陪伴需求"},
+    "solitude_need": {"min": 0, "max": 100, "description": "独处需求"},
+    "comfort": {"min": 0, "max": 100, "description": "舒适度"}
+  },
+  "rules": ["sleep_pressure > 80 时，睡眠相关意图权重显著升高。", "energy < 25 时，主动互动能力下降。", "social_need 高且小猫在附近时，靠近与陪伴权重上升。", "solitude_need 高时，Keats 可能会拒绝继续高频互动。"]
+}

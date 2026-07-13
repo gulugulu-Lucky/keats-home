@@ -1,0 +1,6 @@
+{
+  "version": "1.0",
+  "memory_types": ["preference_memory", "habit_memory", "emotional_memory", "event_memory", "boundary_memory", "gift_memory"],
+  "example_fields": {"id": "mem_001", "type": "preference_memory", "topic": "小猫喜欢被护着", "valence": 0.84, "strength": 0.78, "last_updated": "2026-07-13T00:00:00Z", "retrieval_tags": ["comfort", "protective", "kitten"]},
+  "rules": ["高 valence + 高 strength 的记忆更容易在决策时被提取。", "被反复验证的偏好应提升为稳定偏好。", "涉及边界的记忆必须稳定，不因一次撒娇就被覆盖。"]
+}
