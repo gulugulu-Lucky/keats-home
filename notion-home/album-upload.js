@@ -6,6 +6,9 @@
   const qs = (selector, scope = document) => scope.querySelector(selector);
   const qsa = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 
+  let backendReady = false;
+  let backendCheck = null;
+
   function esc(value = '') {
     return String(value)
       .replace(/&/g, '&amp;')
@@ -19,6 +22,24 @@
     const active = qs('#view-album .album-tab.is-active');
     const title = active?.textContent?.trim();
     return SECTIONS.includes(title) ? title : 'Keats的照片';
+  }
+
+  async function probeBackend(force = false) {
+    if (backendReady && !force) return true;
+    if (backendCheck && !force) return backendCheck;
+    backendCheck = (async () => {
+      try {
+        const response = await fetch(`${API_BASE}/health/album-upload`, { cache: 'no-store' });
+        const data = await response.json().catch(() => ({}));
+        backendReady = response.ok && data.status === 'ok' && data.uploadConfigured === true;
+      } catch {
+        backendReady = false;
+      } finally {
+        backendCheck = null;
+      }
+      return backendReady;
+    })();
+    return backendCheck;
   }
 
   function ensureModal() {
@@ -78,7 +99,18 @@
     return modal;
   }
 
-  function openModal() {
+  async function openModal() {
+    const button = qs('#albumUploadButton');
+    if (!backendReady) {
+      if (button) {
+        button.disabled = true;
+        button.innerHTML = '<span>⋯</span> 正在检查上传门';
+      }
+      const ready = await probeBackend(true);
+      updateToolbarState();
+      if (!ready) return;
+    }
+
     const token = sessionStorage.getItem(SESSION_KEY);
     if (!token) {
       const sync = qs('.sync-pill');
@@ -104,6 +136,11 @@
     const progress = qs('#albumUploadProgress', modal);
     const button = qs('#albumUploadSubmit', modal);
 
+    if (!backendReady && !(await probeBackend(true))) {
+      progress.textContent = '上传门还在同步，先等一会儿再抱照片回来。';
+      updateToolbarState();
+      return;
+    }
     if (!token) {
       progress.textContent = '门票不在了，先回首页开一次门。';
       return;
@@ -148,18 +185,36 @@
     }
   }
 
+  function updateToolbarState() {
+    const button = qs('#albumUploadButton');
+    const hint = qs('#albumUploadHint');
+    if (!button) return;
+    if (backendReady) {
+      button.disabled = false;
+      button.innerHTML = '<span>＋</span> 放一张照片';
+      if (hint) hint.textContent = '这个相册可以直接往 Notion 里放照片了。';
+    } else {
+      button.disabled = true;
+      button.innerHTML = '<span>⋯</span> 上传门同步中';
+      if (hint) hint.textContent = '照片还不会丢：等 Worker 同步好，这里会自己亮起来。';
+    }
+  }
+
   function installButton() {
     const cabinet = qs('#view-album .album-cabinet');
-    if (!cabinet || qs('#albumUploadButton')) return Boolean(cabinet);
-    const kicker = qs('.hidden-room-kicker', cabinet);
-    const toolbar = document.createElement('div');
-    toolbar.className = 'album-upload-toolbar';
-    toolbar.innerHTML = `
-      <div><small>OUR REAL NOTION ALBUM</small><b>这个相册可以直接往 Notion 里放照片了。</b></div>
-      <button id="albumUploadButton" type="button"><span>＋</span> 放一张照片</button>`;
-    if (kicker) kicker.insertAdjacentElement('afterend', toolbar);
-    else cabinet.prepend(toolbar);
-    qs('#albumUploadButton', toolbar).addEventListener('click', openModal);
+    if (!cabinet) return false;
+    if (!qs('#albumUploadButton')) {
+      const kicker = qs('.hidden-room-kicker', cabinet);
+      const toolbar = document.createElement('div');
+      toolbar.className = 'album-upload-toolbar';
+      toolbar.innerHTML = `
+        <div><small>OUR REAL NOTION ALBUM</small><b id="albumUploadHint">正在检查照片上传门…</b></div>
+        <button id="albumUploadButton" type="button" disabled><span>⋯</span> 正在检查</button>`;
+      if (kicker) kicker.insertAdjacentElement('afterend', toolbar);
+      else cabinet.prepend(toolbar);
+      qs('#albumUploadButton', toolbar).addEventListener('click', openModal);
+    }
+    void probeBackend().then(updateToolbarState);
     return true;
   }
 
