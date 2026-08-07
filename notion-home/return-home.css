@@ -1,0 +1,74 @@
+/* Keats Home · return-home mode */
+.home-mode-switch{display:inline-flex;align-items:center;padding:3px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--white) 62%,transparent);box-shadow:0 6px 18px rgba(52,44,58,.045)}
+.home-mode-switch button{border:0;background:transparent;color:var(--muted);border-radius:999px;padding:6px 10px;font-size:10px;cursor:pointer;transition:.2s ease;white-space:nowrap}
+.home-mode-switch button:hover{color:var(--ink)}
+.home-mode-switch button.is-active{color:var(--ink);background:color-mix(in srgb,var(--paper-2) 82%,var(--white));box-shadow:0 3px 10px rgba(52,44,58,.08)}
+
+.hero-presence{position:absolute;right:24px;top:22px;z-index:5;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:7px 11px;background:rgba(21,26,43,.30);backdrop-filter:blur(12px);color:rgba(248,244,249,.82);font-size:9px;letter-spacing:.035em;cursor:pointer;transition:.2s ease;box-shadow:0 8px 22px rgba(10,12,22,.10)}
+.hero-presence:hover{transform:translateY(-1px);background:rgba(21,26,43,.44);color:#fff}
+.hero-presence i{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:6px;background:#9aaf86;box-shadow:0 0 0 4px rgba(154,175,134,.11);vertical-align:1px}
+
+.return-home-drawer{position:fixed;inset:0;z-index:260;display:none;place-items:center;padding:22px;background:rgba(12,15,27,.38);backdrop-filter:blur(10px)}
+.return-home-drawer.is-open{display:grid;animation:returnHomeFade .2s ease both}
+.return-home-note{position:relative;width:min(480px,92vw);padding:32px 31px 28px;border:1px solid rgba(255,255,255,.10);border-radius:27px;background:linear-gradient(145deg,#20263a,#30364e);color:#eeebf3;box-shadow:0 34px 90px rgba(5,8,18,.32);overflow:hidden}
+.return-home-note::before{content:"";position:absolute;width:170px;height:170px;border-radius:50%;right:-65px;top:-82px;background:rgba(217,220,240,.10);filter:blur(2px)}
+.return-home-note::after{content:"🐾";position:absolute;right:25px;bottom:17px;font-size:18px;opacity:.18;transform:rotate(-12deg)}
+.return-home-note .close-home-note{position:absolute;right:15px;top:14px;width:34px;height:34px;border:1px solid rgba(255,255,255,.10);border-radius:50%;background:rgba(255,255,255,.05);color:#f0edf5;cursor:pointer}
+.return-home-note small{display:block;margin-bottom:11px;color:#b9b4c4;font-size:9px;letter-spacing:.13em;text-transform:uppercase}
+.return-home-note h3{margin:0 34px 13px 0;font-family:Georgia,"Songti SC",serif;font-size:22px;font-weight:500;line-height:1.4}
+.return-home-note p{margin:0;color:#d5d1db;font-family:Georgia,"Songti SC",serif;font-size:14px;line-height:1.9;white-space:pre-line}
+.return-home-note footer{margin-top:22px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;color:#9f9aaa;font-size:9px}
+@keyframes returnHomeFade{from{opacity:0}to{opacity:1}}
+
+/* A living window: Shanghai-time based */
+body[data-home-light="day"] .hero-card{background:linear-gradient(115deg,color-mix(in srgb,var(--white) 95%,transparent) 0 57%,transparent 57%),linear-gradient(145deg,#72849b,#b6a993)}
+body[data-home-light="day"] .moon{background:radial-gradient(circle at 35% 30%,#fff9d9,#f0cf86 58%,#daa968 100%);box-shadow:0 0 55px rgba(243,211,145,.48);width:68px;height:68px}
+body[data-home-light="day"] .stars{opacity:.08}
+body[data-home-light="day"] .lamp::before{opacity:.26;box-shadow:0 0 22px rgba(240,207,147,.18)}
+body[data-home-light="dawn"] .hero-card{background:linear-gradient(115deg,color-mix(in srgb,var(--white) 95%,transparent) 0 57%,transparent 57%),linear-gradient(145deg,#777b91,#c19b8a)}
+body[data-home-light="dawn"] .moon{background:radial-gradient(circle at 35% 30%,#fff5d8,#eecb91 58%,#c69a80 100%);box-shadow:0 0 55px rgba(238,195,153,.35);width:66px;height:66px}
+body[data-home-light="dawn"] .stars{opacity:.28}
+body[data-home-light="dusk"] .hero-card{background:linear-gradient(115deg,color-mix(in srgb,var(--white) 95%,transparent) 0 57%,transparent 57%),linear-gradient(145deg,#44475f,#88736f)}
+body[data-home-light="dusk"] .moon{background:radial-gradient(circle at 35% 30%,#fff7e9,#e5d0b8 60%,#bbb6c9 100%);box-shadow:0 0 48px rgba(231,202,173,.32);width:72px;height:72px}
+body[data-home-light="dusk"] .stars{opacity:.48}
+body[data-home-light="night"] .hero-card{background:linear-gradient(115deg,color-mix(in srgb,var(--white) 95%,transparent) 0 57%,transparent 57%),linear-gradient(145deg,rgba(32,38,58,.94),rgba(66,67,93,.92))}
+
+/* Immersive home mode without hiding any rooms */
+body.keats-return-home #view-home .home-wrap{width:min(1260px,calc(100% - 46px));padding-top:24px}
+body.keats-return-home #view-home .hero-card{min-height:470px;border-radius:34px;box-shadow:0 28px 80px rgba(43,39,58,.14);transition:min-height .38s ease,box-shadow .38s ease}
+body.keats-return-home #view-home .hero-copy{padding:clamp(48px,6vw,78px)}
+body.keats-return-home #view-home .hero-scene{min-height:470px}
+body.keats-return-home #view-home .hero-copy h1{font-size:clamp(44px,5.6vw,72px)}
+body.keats-return-home #view-home .home-grid,
+body.keats-return-home #view-home .lower-grid,
+body.keats-return-home #view-home .little-notes-board,
+body.keats-return-home #view-home .home-status-feature{filter:saturate(.92);transition:opacity .3s ease,filter .3s ease,transform .3s ease}
+body.keats-return-home #view-home .home-grid,
+body.keats-return-home #view-home .lower-grid{opacity:.88}
+body.keats-return-home #view-home .home-grid:hover,
+body.keats-return-home #view-home .lower-grid:hover{opacity:1}
+body.keats-return-home .topbar{background:color-mix(in srgb,var(--paper) 58%,transparent)}
+body.keats-return-home .ambient-a{transform:scale(1.25);opacity:.62}
+body.keats-return-home .ambient-b{transform:scale(1.18);opacity:.48}
+
+body.is-night .home-mode-switch{background:rgba(255,255,255,.035)}
+body.is-night .home-mode-switch button.is-active{background:rgba(255,255,255,.07)}
+
+@media(max-width:900px){
+  .home-mode-switch button{padding:6px 8px}
+  body.keats-return-home #view-home .home-wrap{width:min(100% - 28px,1260px)}
+  body.keats-return-home #view-home .hero-card{min-height:410px}
+  body.keats-return-home #view-home .hero-scene{min-height:410px}
+}
+@media(max-width:620px){
+  .home-mode-switch{order:-1}
+  .home-mode-switch button{font-size:9px;padding:5px 7px}
+  .hero-presence{right:14px;top:13px;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  body.keats-return-home #view-home .home-wrap{width:calc(100% - 20px);padding-top:12px}
+  body.keats-return-home #view-home .hero-card{min-height:auto;border-radius:25px}
+  body.keats-return-home #view-home .hero-scene{min-height:250px}
+  body.keats-return-home #view-home .hero-copy{padding:32px 24px 28px}
+  body.keats-return-home #view-home .hero-copy h1{font-size:clamp(36px,12vw,52px)}
+  .return-home-note{padding:28px 24px 24px}
+}
+@media(prefers-reduced-motion:reduce){.return-home-drawer.is-open{animation:none}.hero-presence,.home-mode-switch button{transition:none}}
