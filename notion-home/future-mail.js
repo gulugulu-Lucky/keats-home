@@ -113,7 +113,9 @@
         method: 'POST',
         body: JSON.stringify({ title, content, recipient, author: '小猫', method: state.method, openDate })
       });
-      qs('#futureMailModal').classList.remove('is-open');
+      const modal = qs('#futureMailModal');
+      modal.classList.remove('is-open');
+      modal.setAttribute('aria-hidden', 'true');
       state.loaded = false;
       await loadMail(true);
       const toast = qs('#toast');
@@ -186,7 +188,11 @@
 
   function boot() {
     if (!qs('#view-futuremail')) return;
-    qs('#futureMailCompose')?.addEventListener('click', openComposer, { once: true });
+    const compose = qs('#futureMailCompose');
+    if (compose && compose.dataset.futureComposeBound !== '1') {
+      compose.dataset.futureComposeBound = '1';
+      compose.addEventListener('click', openComposer);
+    }
     qsa('[data-view="futuremail"]').forEach(button => {
       if (button.dataset.futureMailBound === '1') return;
       button.dataset.futureMailBound = '1';
