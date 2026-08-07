@@ -27,6 +27,14 @@
     return `${match[1]} 年 ${Number(match[2])} 月 ${Number(match[3])} 日`;
   }
 
+  function receiptLabel(item) {
+    const recipient = item.recipient === 'Keats' ? 'Keats' : '小猫';
+    if (item.receiptStatus === '已收件') {
+      return `${recipient} 已收件${item.receivedDate ? ` · ${dateLabel(item.receivedDate)}` : ''}`;
+    }
+    return `等待 ${recipient} 收件`;
+  }
+
   async function api(path, init = {}) {
     const token = sessionStorage.getItem(SESSION_KEY);
     if (!token) throw Object.assign(new Error('先用小家钥匙开门。'), { status: 401 });
@@ -51,7 +59,7 @@
           <label id="futureMailDateRow">开封日期<input id="futureMailOpenDate" type="date" /></label>
           <label>正文<textarea id="futureMailContent" maxlength="2000" placeholder="这段话，等时间到了再给它看。"></textarea></label>
           <p class="future-mail-error" id="futureMailError"></p>
-          <footer><small>寄件人固定为 🐈 小猫。日期没到以前，API 不返回正文。</small><div><button class="soft-button" id="futureMailCancel" type="button">取消</button><button class="primary-button" id="futureMailSend" type="button">封好并投递</button></div></footer>
+          <footer><small>网页寄件人固定为 🐈 小猫；🐆 Keats 的信由 Keats 自己投递。未来信日期没到以前，双方都拿不到正文。</small><div><button class="soft-button" id="futureMailCancel" type="button">取消</button><button class="primary-button" id="futureMailSend" type="button">封好并投递</button></div></footer>
         </section>
       </div>`);
 
@@ -111,7 +119,7 @@
     try {
       await api('/api/future-mail', {
         method: 'POST',
-        body: JSON.stringify({ title, content, recipient, author: '小猫', method: state.method, openDate })
+        body: JSON.stringify({ title, content, recipient, method: state.method, openDate })
       });
       const modal = qs('#futureMailModal');
       modal.classList.remove('is-open');
@@ -121,7 +129,9 @@
       const toast = qs('#toast');
       if (toast) {
         qs('b', toast).textContent = state.method === '现在寄出' ? '信已经寄到了' : '信封好啦';
-        qs('small', toast).textContent = state.method === '现在寄出' ? '现在就可以拆' : `等 ${dateLabel(openDate)} 再开封`;
+        qs('small', toast).textContent = recipient === 'Keats'
+          ? '邮局会等 Keats 来收件。'
+          : (state.method === '现在寄出' ? '现在就可以拆' : `等 ${dateLabel(openDate)} 再开封`);
         toast.classList.remove('is-visible'); void toast.offsetWidth; toast.classList.add('is-visible');
       }
     } catch (err) {
@@ -150,6 +160,7 @@
         <header><span>${esc(item.author || '')} → ${esc(item.recipient || '')}</span><span>${esc(dateLabel(item.openDate))}</span></header>
         <h3>${esc(item.title || '一封已经到达的信')}</h3>
         <p>这封信已经到达。点一下拆开。</p>
+        <span class="future-receipt ${item.receiptStatus === '已收件' ? 'is-received' : ''}">${esc(receiptLabel(item))}</span>
         <div class="future-letter-body">${esc(item.content || '')}</div>
       </article>` : `
       <article class="future-envelope sealed">
@@ -157,6 +168,7 @@
         <h3>${esc(item.title || '一封封存中的信')}</h3>
         <p>开封日：${esc(dateLabel(item.openDate))}</p>
         <span class="future-countdown">还有 ${Number(item.daysLeft) || 0} 天开封</span>
+        <span class="future-receipt ${item.receiptStatus === '已收件' ? 'is-received' : ''}">${esc(receiptLabel(item))}</span>
       </article>`).join('');
 
     qsa('.future-envelope.arrived', grid).forEach(card => {
