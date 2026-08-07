@@ -1,0 +1,19 @@
+/* Reader extras */
+.diary-state-panel{margin:8px 0 4px;padding:18px;border:1px solid rgba(32,38,58,.10);border-radius:20px;background:rgba(183,160,115,.07)}
+.diary-state-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.diary-state-title b{font-family:Georgia,"Songti SC",serif;font-size:15px}
+.diary-state-title small{font-size:9px;color:#9a8661;letter-spacing:.1em}
+.diary-state-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.diary-state-cell{padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.43);border:1px solid rgba(32,38,58,.08)}
+.diary-state-cell span{display:block;font-size:9px;color:#8b8490;margin-bottom:4px}
+.diary-state-cell strong{font-size:12px;font-weight:650;color:#252b40}
+.diary-state-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.diary-state-chips i{font-style:normal;padding:4px 7px;border-radius:999px;border:1px solid rgba(32,38,58,.08);font-size:9px;color:#626274;background:rgba(255,255,255,.4)}
+.diary-energy{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;margin-top:11px;font-size:9px;color:#8b8490}
+.diary-energy-track{height:7px;border-radius:999px;background:rgba(32,38,58,.08);overflow:hidden}
+.diary-energy-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,#b7a073,#d9dcf0)}
+body.is-night .diary-state-cell{background:rgba(255,255,255,.035)}
+body.is-night .diary-state-cell strong{color:#ece9f4}
+body.is-night .diary-state-panel{border-color:rgba(225,222,240,.09);background:rgba(183,160,115,.06)}
+body.is-night .diary-state-chips i{color:#bbb6c8;border-color:rgba(225,222,240,.08);background:rgba(255,255,255,.03)}
+@media(max-width:680px){.diary-state-grid{grid-template-columns:1fr}.diary-state-panel{padding:15px}}
