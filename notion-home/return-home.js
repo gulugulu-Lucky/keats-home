@@ -54,42 +54,59 @@
     if (home) goHomeView();
   }
 
-  function ensureSwitcher() {
-    if (switcher && document.body.contains(switcher)) return switcher;
-    const host = qs('.topbar-right');
-    if (!host) return null;
-    switcher = document.createElement('div');
-    switcher.className = 'home-mode-switch';
-    switcher.setAttribute('aria-label', '小家显示模式');
-    switcher.innerHTML = `
-      <button type="button" data-home-mode="organize" aria-pressed="false">▦ 整理</button>
-      <button type="button" data-home-mode="home" aria-pressed="false">⌂ 回家</button>`;
-    host.insertBefore(switcher, host.firstChild);
-    switcher.addEventListener('click', event => {
+  function bindSwitcher(node) {
+    if (!node || node.dataset.returnHomeBound === '1') return;
+    node.dataset.returnHomeBound = '1';
+    node.addEventListener('click', event => {
       const button = event.target.closest('[data-home-mode]');
       if (!button) return;
       setMode(button.dataset.homeMode);
     });
+  }
+
+  function ensureSwitcher() {
+    if (!switcher || !document.body.contains(switcher)) switcher = qs('.home-mode-switch');
+    if (!switcher) {
+      const host = qs('.topbar-right');
+      if (!host) return null;
+      switcher = document.createElement('div');
+      switcher.className = 'home-mode-switch';
+      switcher.setAttribute('aria-label', '小家显示模式');
+      switcher.innerHTML = `
+        <button type="button" data-home-mode="organize" aria-pressed="false">▦ 整理</button>
+        <button type="button" data-home-mode="home" aria-pressed="false">⌂ 回家</button>`;
+      host.insertBefore(switcher, host.firstChild);
+    }
+    bindSwitcher(switcher);
     paintSwitcher(currentMode());
     return switcher;
+  }
+
+  function bindPresence(button) {
+    if (!button || button.dataset.returnHomeBound === '1') return;
+    button.dataset.returnHomeBound = '1';
+    button.addEventListener('click', openDrawer);
   }
 
   function ensurePresence() {
     const hero = qs('#view-home .hero-card');
     if (!hero) return null;
     let button = qs('.hero-presence', hero);
-    if (button) return button;
-    button = document.createElement('button');
-    button.className = 'hero-presence';
-    button.type = 'button';
-    button.innerHTML = '<i></i>🐆 Keats 今天也在家。';
-    button.addEventListener('click', openDrawer);
-    hero.appendChild(button);
+    if (!button) {
+      button = document.createElement('button');
+      button.className = 'hero-presence';
+      button.type = 'button';
+      button.innerHTML = '<i></i>🐆 Keats 今天也在家。';
+      hero.appendChild(button);
+    }
+    bindPresence(button);
     return button;
   }
 
   function ensureDrawer() {
     if (drawer && document.body.contains(drawer)) return drawer;
+    drawer = qs('#returnHomeDrawer');
+    if (drawer) return drawer;
     drawer = document.createElement('div');
     drawer.className = 'return-home-drawer';
     drawer.id = 'returnHomeDrawer';
@@ -165,5 +182,6 @@
   window.addEventListener('pageshow', boot);
   window.addEventListener('hashchange', () => setTimeout(() => { ensureSwitcher(); ensurePresence(); }, 120));
   setInterval(updateLight, 5 * 60 * 1000);
-  setTimeout(boot, 520);
+  setTimeout(boot, 120);
+  setTimeout(boot, 700);
 })();
