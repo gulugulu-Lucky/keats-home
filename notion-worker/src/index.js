@@ -13,6 +13,7 @@ const SOURCES = {
 
 const PAWPRINT_PAGE_ID = '3b5f5826-81e2-8112-aa55-e63efec1f9b6';
 const DEFAULT_ORIGIN = 'https://gulugulu-lucky.github.io';
+const APP_PATH = '/keats-home';
 
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
@@ -21,14 +22,22 @@ function json(data, status = 200, headers = {}) {
   });
 }
 
+function frontendOrigin(env) {
+  return (env.FRONTEND_ORIGIN || DEFAULT_ORIGIN).replace(/\/$/, '');
+}
+
+function frontendAppBase(env) {
+  return `${frontendOrigin(env)}${APP_PATH}`;
+}
+
 function corsHeaders(request, env) {
   const origin = request.headers.get('Origin');
-  const allowed = (env.FRONTEND_ORIGIN || DEFAULT_ORIGIN).replace(/\/$/, '');
+  const allowed = frontendOrigin(env);
   const headers = {
     'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
     'Access-Control-Allow-Headers': 'Authorization,Content-Type',
     'Access-Control-Max-Age': '86400',
-    'Vary': 'Origin'
+    Vary: 'Origin'
   };
   if (origin && origin.replace(/\/$/, '') === allowed) {
     headers['Access-Control-Allow-Origin'] = origin;
@@ -67,7 +76,9 @@ async function sign(value, secret) {
 }
 
 async function issueSession(env) {
-  if (!env.HOME_ACCESS_KEY) throw Object.assign(new Error('HOME_ACCESS_KEY is not configured'), { status: 503 });
+  if (!env.HOME_ACCESS_KEY) {
+    throw Object.assign(new Error('HOME_ACCESS_KEY is not configured'), { status: 503 });
+  }
   const now = Math.floor(Date.now() / 1000);
   const payload = {
     iat: now,
@@ -118,7 +129,11 @@ async function notion(path, env, init = {}) {
   });
   const text = await response.text();
   let data;
-  try { data = text ? JSON.parse(text) : null; } catch { data = { message: text }; }
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = { message: text };
+  }
   if (!response.ok) {
     const error = new Error(data?.message || `Notion request failed: ${response.status}`);
     error.status = response.status;
@@ -184,8 +199,20 @@ function pick(page, name) {
   return propertyValue(page.properties?.[name]);
 }
 
-function normalizePage(page, kind) {
-  const base = { id: page.id, url: page.url, createdTime: page.created_time, editedTime: page.last_edited_time };
+function readerUrl(page, kind, env) {
+  const params = new URLSearchParams({ id: page.id, kind });
+  return `${frontendAppBase(env)}/reader.html?${params.toString()}`;
+}
+
+function normalizePage(page, kind, env) {
+  const base = {
+    id: page.id,
+    url: readerUrl(page, kind, env),
+    notionUrl: page.url,
+    createdTime: page.created_time,
+    editedTime: page.last_edited_time
+  };
+
   if (kind === 'diary') return {
     ...base,
     title: pick(page, '标题'), date: pick(page, '日期'), author: pick(page, '作者'),
@@ -225,8 +252,15 @@ async function querySource(kind, env, limit = 50) {
   const body = { page_size: Math.max(1, Math.min(Number(limit) || 50, 100)) };
   const dateProperty = { diary: '日期', letters: '日期', memories: '来源日期', timeline: '日期', quotes: '日期' }[kind];
   if (dateProperty) body.sorts = [{ property: dateProperty, direction: 'descending' }];
-  const data = await notion(`/data_sources/${sourceId}/query`, env, { method: 'POST', body: JSON.stringify(body) });
-  return { items: (data.results || []).map(page => normalizePage(page, kind)), hasMore: data.has_more, nextCursor: data.next_cursor };
+  const data = await notion(`/data_sources/${sourceId}/query`, env, {
+    method: 'POST',
+    body: JSON.stringify(body)
+  });
+  return {
+    items: (data.results || []).map(page => normalizePage(page, kind, env)),
+    hasMore: data.has_more,
+    nextCursor: data.next_cursor
+  };
 }
 
 async function listBlocks(blockId, env) {
@@ -248,6 +282,75 @@ function blockText(block) {
   return plainRich(value.rich_text || value.caption || []);
 }
 
+function normalizeRich(items = []) {
+  return items.map(item => ({
+    text: item.plain_text ?? item.text?.content ?? item.equation?.expression ?? '',
+    href: item.href || item.text?.link?.url || null,
+    annotations: {
+      bold: Boolean(item.annotations?.bold),
+      italic: Boolean(item.annotations?.italic),
+      strikethrough: Boolean(item.annotations?.strikethrough),
+      underline: Boolean(item.annotations?.underline),
+      code: Boolean(item.annotations?.code),
+      color: item.annotations?.color || 'default'
+    }
+  }));
+}
+
+function blockRichValue(block) {
+  const value = block?.[block.type] || {};
+  return normalizeRich(value.rich_text || value.caption || []);
+}
+
+async function normalizeBlock(block, env, depth = 0) {
+  const type = block.type;
+  const value = block?.[type] || {};
+  const normalized = {
+    id: block.id,
+    type,
+    text: blockRichValue(block),
+    children: []
+  };
+
+  if (type === 'to_do') normalized.checked = Boolean(value.checked);
+  if (type === 'code') normalized.language = value.language || 'plain text';
+  if (type === 'equation') normalized.expression = value.expression || '';
+  if (type === 'callout') {
+    normalized.icon = value.icon?.emoji || value.icon?.external?.url || null;
+  }
+  if (type === 'image' || type === 'video' || type === 'file' || type === 'pdf' || type === 'audio') {
+    normalized.url = value.file?.url || value.external?.url || null;
+    normalized.caption = plainRich(value.caption || []);
+  }
+  if (type === 'bookmark' || type === 'embed' || type === 'link_preview') {
+    normalized.url = value.url || null;
+    normalized.caption = plainRich(value.caption || []);
+  }
+  if (type === 'child_page' || type === 'child_database') normalized.title = value.title || '';
+  if (type === 'table_row') normalized.cells = (value.cells || []).map(cell => normalizeRich(cell));
+
+  if (block.has_children && depth < 5) {
+    const children = await listBlocks(block.id, env);
+    normalized.children = await Promise.all(children.map(child => normalizeBlock(child, env, depth + 1)));
+  }
+  return normalized;
+}
+
+async function getPageContent(pageId, kind, env) {
+  if (!/^[0-9a-f-]{32,36}$/i.test(pageId)) {
+    throw Object.assign(new Error('Invalid page id'), { status: 400 });
+  }
+  const page = await notion(`/pages/${pageId}`, env, { method: 'GET' });
+  const blocks = await listBlocks(pageId, env);
+  const normalizedBlocks = await Promise.all(blocks.map(block => normalizeBlock(block, env)));
+  const allowedKinds = new Set(['diary', 'letters', 'memories', 'timeline', 'quotes', 'songs']);
+  const safeKind = allowedKinds.has(kind) ? kind : 'diary';
+  return {
+    item: normalizePage(page, safeKind, env),
+    blocks: normalizedBlocks
+  };
+}
+
 async function getPawprints(env) {
   const blocks = await listBlocks(PAWPRINT_PAGE_ID, env);
   const items = [];
@@ -256,7 +359,11 @@ async function getPawprints(env) {
     const text = blockText(block).trim();
     if (block.type === 'heading_3' && text.startsWith('🐾')) {
       if (current) items.push(current);
-      current = { id: block.id, title: text.replace(/^🐾\s*\d+\s*[｜|]\s*/, '').trim(), body: '' };
+      current = {
+        id: block.id,
+        title: text.replace(/^🐾\s*\d+\s*[｜|]\s*/, '').trim(),
+        body: ''
+      };
       continue;
     }
     if (current && ['paragraph', 'quote', 'bulleted_list_item'].includes(block.type) && text) {
@@ -268,15 +375,24 @@ async function getPawprints(env) {
 }
 
 function paragraphBlocks(content = '') {
-  const parts = String(content).split(/\n{2,}|\n/).map(text => text.trim()).filter(Boolean).slice(0, 80);
+  const parts = String(content)
+    .split(/\n{2,}|\n/)
+    .map(text => text.trim())
+    .filter(Boolean)
+    .slice(0, 80);
   return (parts.length ? parts : ['']).map(text => ({
-    object: 'block', type: 'paragraph', paragraph: { rich_text: richText(text) }
+    object: 'block',
+    type: 'paragraph',
+    paragraph: { rich_text: richText(text) }
   }));
 }
 
 function shanghaiDate() {
   const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit'
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
   }).formatToParts(new Date());
   const map = Object.fromEntries(parts.map(part => [part.type, part.value]));
   return `${map.year}-${map.month}-${map.day}`;
@@ -337,7 +453,7 @@ async function createDatabaseEntry(kind, payload, env) {
       children: paragraphBlocks(content)
     })
   });
-  return { item: normalizePage(created, kind) };
+  return { item: normalizePage(created, kind, env) };
 }
 
 async function createPawprint(payload, env) {
@@ -350,7 +466,11 @@ async function createPawprint(payload, env) {
     body: JSON.stringify({
       position: { type: 'end' },
       children: [
-        { object: 'block', type: 'heading_3', heading_3: { rich_text: richText(`🐾 ${number}｜${title}`) } },
+        {
+          object: 'block',
+          type: 'heading_3',
+          heading_3: { rich_text: richText(`🐾 ${number}｜${title}`) }
+        },
         ...paragraphBlocks(content)
       ]
     })
@@ -389,7 +509,9 @@ async function route(request, env) {
   }
 
   if (request.method === 'POST' && url.pathname === '/auth/login') {
-    if (!env.HOME_ACCESS_KEY) throw Object.assign(new Error('HOME_ACCESS_KEY is not configured'), { status: 503 });
+    if (!env.HOME_ACCESS_KEY) {
+      throw Object.assign(new Error('HOME_ACCESS_KEY is not configured'), { status: 503 });
+    }
     const payload = await request.json().catch(() => ({}));
     if (String(payload.key || '') !== String(env.HOME_ACCESS_KEY)) {
       throw Object.assign(new Error('小家钥匙不对。'), { status: 401 });
@@ -398,11 +520,22 @@ async function route(request, env) {
     return { status: 'ok', ...session };
   }
 
-  if (!url.pathname.startsWith('/api/')) throw Object.assign(new Error('Not found'), { status: 404 });
-  if (!(await authorized(request, env))) throw Object.assign(new Error('小家钥匙不对。'), { status: 401 });
+  if (!url.pathname.startsWith('/api/')) {
+    throw Object.assign(new Error('Not found'), { status: 404 });
+  }
+  if (!(await authorized(request, env))) {
+    throw Object.assign(new Error('小家钥匙不对。'), { status: 401 });
+  }
 
   if (request.method === 'GET') {
     if (url.pathname === '/api/pawprints') return getPawprints(env);
+
+    if (url.pathname.startsWith('/api/page/')) {
+      const pageId = decodeURIComponent(url.pathname.slice('/api/page/'.length));
+      const kind = url.searchParams.get('kind') || 'diary';
+      return getPageContent(pageId, kind, env);
+    }
+
     const match = url.pathname.match(/^\/api\/(diary|letters|memories|timeline|quotes|songs)$/);
     if (match) return querySource(match[1], env, url.searchParams.get('limit'));
   }
@@ -421,13 +554,22 @@ async function route(request, env) {
 export default {
   async fetch(request, env) {
     const cors = corsHeaders(request, env);
-    if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: cors });
+    }
     try {
       const data = await route(request, env);
       return json(data, 200, cors);
     } catch (error) {
       const status = Number(error.status) || 500;
-      return json({ error: error.message || 'Unexpected error', detail: status >= 500 ? undefined : error.detail }, status, cors);
+      return json(
+        {
+          error: error.message || 'Unexpected error',
+          detail: status >= 500 ? undefined : error.detail
+        },
+        status,
+        cors
+      );
     }
   }
 };
