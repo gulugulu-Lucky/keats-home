@@ -1,5 +1,6 @@
 const NOTION_VERSION = '2026-03-11';
 const NOTION_API = 'https://api.notion.com/v1';
+const SESSION_TTL_SECONDS = 60 * 60 * 12;
 
 const SOURCES = {
   diary: '4147771d-6a7d-4221-ab49-17cd62ca96df',
@@ -35,11 +36,73 @@ function corsHeaders(request, env) {
   return headers;
 }
 
-function authorized(request, env) {
+function bytesToBase64Url(bytes) {
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function stringToBase64Url(value) {
+  return bytesToBase64Url(new TextEncoder().encode(value));
+}
+
+function base64UrlToString(value) {
+  const normalized = value.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = normalized + '='.repeat((4 - (normalized.length % 4 || 4)) % 4);
+  const binary = atob(padded);
+  const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+async function sign(value, secret) {
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(value));
+  return bytesToBase64Url(new Uint8Array(signature));
+}
+
+async function issueSession(env) {
+  if (!env.HOME_ACCESS_KEY) throw Object.assign(new Error('HOME_ACCESS_KEY is not configured'), { status: 503 });
+  const now = Math.floor(Date.now() / 1000);
+  const payload = {
+    iat: now,
+    exp: now + SESSION_TTL_SECONDS,
+    aud: 'keats-home',
+    nonce: crypto.randomUUID()
+  };
+  const encoded = stringToBase64Url(JSON.stringify(payload));
+  const signature = await sign(encoded, env.HOME_ACCESS_KEY);
+  return { token: `${encoded}.${signature}`, expiresAt: payload.exp * 1000 };
+}
+
+async function verifySession(token, env) {
+  if (!token || !env.HOME_ACCESS_KEY) return false;
+  const [encoded, suppliedSignature, extra] = token.split('.');
+  if (!encoded || !suppliedSignature || extra) return false;
+  const expectedSignature = await sign(encoded, env.HOME_ACCESS_KEY);
+  if (suppliedSignature !== expectedSignature) return false;
+  try {
+    const payload = JSON.parse(base64UrlToString(encoded));
+    const now = Math.floor(Date.now() / 1000);
+    return payload.aud === 'keats-home' && Number(payload.exp) > now;
+  } catch {
+    return false;
+  }
+}
+
+async function authorized(request, env) {
   const expected = env.HOME_ACCESS_KEY;
   if (!expected) return false;
   const header = request.headers.get('Authorization') || '';
-  return header === `Bearer ${expected}`;
+  if (!header.startsWith('Bearer ')) return false;
+  const bearer = header.slice(7);
+  if (bearer === expected) return true;
+  return verifySession(bearer, env);
 }
 
 async function notion(path, env, init = {}) {
@@ -297,12 +360,46 @@ async function createPawprint(payload, env) {
 
 async function route(request, env) {
   const url = new URL(request.url);
-  if (url.pathname === '/health') {
-    return { status: 'ok', notionConfigured: Boolean(env.NOTION_TOKEN), accessConfigured: Boolean(env.HOME_ACCESS_KEY), version: NOTION_VERSION };
+
+  if (request.method === 'GET' && url.pathname === '/health') {
+    return {
+      status: 'ok',
+      notionConfigured: Boolean(env.NOTION_TOKEN),
+      accessConfigured: Boolean(env.HOME_ACCESS_KEY),
+      version: NOTION_VERSION
+    };
+  }
+
+  if (request.method === 'GET' && url.pathname === '/health/notion') {
+    try {
+      await notion(`/data_sources/${SOURCES.diary}/query`, env, {
+        method: 'POST',
+        body: JSON.stringify({ page_size: 1 })
+      });
+      return { status: 'ok', notionReachable: true, diaryVisible: true };
+    } catch (error) {
+      return {
+        status: 'error',
+        notionReachable: false,
+        diaryVisible: false,
+        code: Number(error.status) || 500,
+        message: error.message || 'Notion connection failed'
+      };
+    }
+  }
+
+  if (request.method === 'POST' && url.pathname === '/auth/login') {
+    if (!env.HOME_ACCESS_KEY) throw Object.assign(new Error('HOME_ACCESS_KEY is not configured'), { status: 503 });
+    const payload = await request.json().catch(() => ({}));
+    if (String(payload.key || '') !== String(env.HOME_ACCESS_KEY)) {
+      throw Object.assign(new Error('小家钥匙不对。'), { status: 401 });
+    }
+    const session = await issueSession(env);
+    return { status: 'ok', ...session };
   }
 
   if (!url.pathname.startsWith('/api/')) throw Object.assign(new Error('Not found'), { status: 404 });
-  if (!authorized(request, env)) throw Object.assign(new Error('小家钥匙不对。'), { status: 401 });
+  if (!(await authorized(request, env))) throw Object.assign(new Error('小家钥匙不对。'), { status: 401 });
 
   if (request.method === 'GET') {
     if (url.pathname === '/api/pawprints') return getPawprints(env);
