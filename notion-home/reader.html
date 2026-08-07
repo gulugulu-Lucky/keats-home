@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f1e9e1" />
+  <meta name="description" content="Keats Home · 小家的阅读页" />
+  <title>正在翻开这一页 · Keats Home</title>
+  <link rel="stylesheet" href="./reader.css" />
+</head>
+<body>
+  <div class="reader-ambient reader-ambient-a" aria-hidden="true"></div>
+  <div class="reader-ambient reader-ambient-b" aria-hidden="true"></div>
+  <div class="reader-grain" aria-hidden="true"></div>
+
+  <header class="reader-topbar">
+    <button class="back-button" id="backButton" type="button" aria-label="回到小家">
+      <span>←</span><b>回到小家</b>
+    </button>
+    <div class="reader-brand"><span>⌂</span><b>Keats Home</b></div>
+    <a class="notion-link is-hidden" id="notionLink" target="_blank" rel="noopener">在 Notion 看 ↗</a>
+  </header>
+
+  <main class="reader-shell">
+    <section class="reader-paper" id="readerPaper">
+      <div class="paper-corner" aria-hidden="true"></div>
+      <div class="reader-status" id="readerStatus">
+        <div class="tiny-moon"></div>
+        <p>正在从小家的书架上把这一页拿下来……</p>
+      </div>
+
+      <article class="reader-article is-hidden" id="readerArticle">
+        <header class="article-header">
+          <div class="article-kicker"><span id="kindIcon">✎</span><span id="kindLabel">DIARY</span></div>
+          <h1 id="pageTitle">这一页</h1>
+          <p class="article-summary" id="pageSummary"></p>
+          <div class="article-meta" id="pageMeta"></div>
+          <div class="article-tags" id="pageTags"></div>
+        </header>
+
+        <div class="soft-divider"><span>✦</span></div>
+        <div class="notion-content" id="notionContent"></div>
+        <footer class="article-footer" id="articleFooter"></footer>
+      </article>
+
+      <section class="reader-error is-hidden" id="readerError">
+        <span class="error-paw">🐾</span>
+        <h1>这一页暂时没翻开。</h1>
+        <p id="readerErrorText">可能是门票过期了。</p>
+        <a href="./" class="home-button">回首页重新开门</a>
+      </section>
+    </section>
+  </main>
+
+  <script src="./reader.js"></script>
+</body>
+</html>
