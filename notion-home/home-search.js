@@ -305,11 +305,21 @@
     }, 180);
   }
 
+  function showHome() {
+    if (location.hash === '#home' || !location.hash) {
+      location.hash = 'home';
+    } else {
+      location.hash = 'home';
+    }
+    setTimeout(() => {
+      if (location.hash === '#home') history.replaceState(null, '', location.pathname);
+    }, 180);
+  }
+
   function goToRoom(view) {
     close();
     if (view === 'home') {
-      history.replaceState(null, '', location.pathname);
-      window.dispatchEvent(new HashChangeEvent('hashchange'));
+      showHome();
       return;
     }
     location.hash = view;
@@ -329,13 +339,12 @@
     if (item.kind === 'notes') {
       const needle = normalize(item.raw?.content || item.title);
       close();
-      history.replaceState(null, '', location.pathname);
-      window.dispatchEvent(new HashChangeEvent('hashchange'));
+      showHome();
       setTimeout(() => {
         const details = qs('#pastNotes');
         if (details) details.open = true;
         glowTarget('#littleNotesBoard .little-note, #littleNotesBoard .past-note-row', text => text.includes(needle.slice(0, Math.min(needle.length, 28))));
-      }, 260);
+      }, 300);
       return;
     }
     if (item.kind === 'pawprints') {
