@@ -34,6 +34,16 @@ jobs:
       - name: Apply mobile access fix
         run: cat ./notion-home/mobile-overrides.css >> ./notion-home/styles.css
 
+      - name: Prepare Keats Home assets
+        run: |
+          mkdir -p ./notion-home/assets
+          cp ./visual-bible/previews/Keats_visual_lock_preview_v1.jpg ./notion-home/assets/Keats_avatar.jpg
+          cp ./visual-bible/previews/Keats_design_sheet_preview_v1.jpg ./notion-home/assets/Keats_design_sheet.jpg
+          sed -i 's#../visual-bible/previews/Keats_visual_lock_preview_v1.jpg#./assets/Keats_avatar.jpg#g' ./notion-home/index.html
+          sed -i 's#../visual-bible/previews/Keats_design_sheet_preview_v1.jpg#./assets/Keats_design_sheet.jpg#g' ./notion-home/index.html
+          sed -i 's#前端样板 · API 待接入#Notion 已接入 · Worker 守门#g' ./notion-home/index.html
+          sed -i "s#window.open(node.dataset.openUrl, '_blank', 'noopener');#window.location.href = node.dataset.openUrl;#g" ./notion-home/app.js
+
       - name: Upload Notion Home
         uses: actions/upload-pages-artifact@v4
         with:
