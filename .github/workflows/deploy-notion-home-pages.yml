@@ -53,12 +53,13 @@ jobs:
           cat ./notion-home/home-search.css >> ./notion-home/styles.css
           cat ./notion-home/letter-open.css >> ./notion-home/styles.css
           cat ./notion-home/album-polaroid.css >> ./notion-home/styles.css
+          cat ./notion-home/return-home.css >> ./notion-home/styles.css
           cat ./notion-home/reader-enhancements.css >> ./notion-home/reader.css
           python - <<'PY'
           from pathlib import Path
           index = Path('./notion-home/index.html')
           text = index.read_text(encoding='utf-8')
-          text = text.replace('<script src="./app.js"></script>', '<script src="./app.js"></script>\n  <script src="./enhancements.js"></script>\n  <script src="./album-upload.js"></script>\n  <script src="./home-status-polish.js"></script>\n  <script src="./little-notes.js"></script>\n  <script src="./home-search.js"></script>\n  <script src="./letter-open.js"></script>\n  <script src="./album-polaroid.js"></script>')
+          text = text.replace('<script src="./app.js"></script>', '<script src="./app.js"></script>\n  <script src="./enhancements.js"></script>\n  <script src="./album-upload.js"></script>\n  <script src="./home-status-polish.js"></script>\n  <script src="./little-notes.js"></script>\n  <script src="./home-search.js"></script>\n  <script src="./letter-open.js"></script>\n  <script src="./album-polaroid.js"></script>\n  <script src="./return-home.js"></script>')
           index.write_text(text, encoding='utf-8')
 
           reader = Path('./notion-home/reader.html')
