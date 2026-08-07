@@ -170,7 +170,12 @@ async function createNote(request, env) {
         '日期': { type: 'date', date: { start: date } },
         '作者': { type: 'select', select: { name: author } },
         '内容': { type: 'rich_text', rich_text: richText(content) }
-      }
+      },
+      children: [{
+        object: 'block',
+        type: 'paragraph',
+        paragraph: { rich_text: richText(content) }
+      }]
     })
   });
   return { status: 'ok', item: normalizeNote(created) };
