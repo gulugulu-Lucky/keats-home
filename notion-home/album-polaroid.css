@@ -1,0 +1,67 @@
+/* Keats Home · album dual view */
+.album-view-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:2px 0 18px;padding:14px 16px;border:1px solid var(--line);border-radius:19px;background:color-mix(in srgb,var(--white) 68%,transparent);box-shadow:var(--shadow-soft)}
+.album-view-copy{display:grid;gap:3px;min-width:0}
+.album-view-copy small{font-size:8px;font-weight:800;letter-spacing:.13em;color:var(--gold)}
+.album-view-copy b{font-family:Georgia,"Songti SC",serif;font-size:14px;font-weight:600;color:var(--ink)}
+.album-view-copy span{font-size:9px;line-height:1.5;color:var(--muted)}
+.album-view-switch{display:flex;align-items:center;padding:3px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--paper-2) 78%,transparent);white-space:nowrap}
+.album-view-switch button{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:8px 11px;background:transparent;color:var(--muted);font-size:9px;cursor:pointer;transition:.18s ease}
+.album-view-switch button span{font-size:12px}
+.album-view-switch button:hover{color:var(--ink)}
+.album-view-switch button.is-active{background:color-mix(in srgb,var(--white) 88%,transparent);color:var(--ink);box-shadow:0 3px 12px rgba(40,35,42,.08)}
+
+.album-cabinet.album-view-desk .notion-photo-grid{position:relative;display:flex;flex-wrap:wrap;align-items:flex-start;gap:26px 22px;min-height:320px;padding:34px 30px 40px;border:1px solid color-mix(in srgb,var(--gold) 16%,var(--line));border-radius:28px;background:
+  radial-gradient(circle at 18% 22%,color-mix(in srgb,var(--gold) 7%,transparent) 0 1px,transparent 1.6px),
+  radial-gradient(circle at 80% 65%,color-mix(in srgb,var(--violet) 5%,transparent) 0 1px,transparent 1.8px),
+  linear-gradient(135deg,color-mix(in srgb,var(--paper-2) 90%,var(--white)),color-mix(in srgb,var(--paper-3) 72%,var(--white)));
+background-size:34px 34px,46px 46px,auto;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),var(--shadow-soft);overflow:hidden}
+.album-cabinet.album-view-desk .notion-photo-grid::before{content:"PHOTOS LEFT ON THE TABLE · 🐈  ×  🐆";position:absolute;right:24px;top:15px;font-size:8px;letter-spacing:.14em;color:color-mix(in srgb,var(--muted) 72%,transparent)}
+.album-cabinet.album-view-desk .notion-photo{grid-column:auto;width:min(29%,280px);min-width:190px;margin:5px 0 12px;padding:11px 11px 30px;border:0;border-radius:3px;background:#f8f5ee;box-shadow:0 12px 26px rgba(36,31,36,.16),0 2px 5px rgba(36,31,36,.08);overflow:visible;transform-origin:50% 20%;transition:transform .22s ease,box-shadow .22s ease;z-index:1}
+.album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+1){transform:rotate(-3.2deg) translateY(4px)}
+.album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+2){transform:rotate(2.5deg) translateY(-2px)}
+.album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+3){transform:rotate(-1.4deg) translateY(10px)}
+.album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+4){transform:rotate(3.4deg) translateY(2px)}
+.album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+5){transform:rotate(-2.1deg) translateY(-4px)}
+.album-cabinet.album-view-desk .notion-photo:nth-of-type(6n){transform:rotate(1.2deg) translateY(8px)}
+.album-cabinet.album-view-desk .notion-photo:hover{transform:rotate(0deg) translateY(-7px) scale(1.025);box-shadow:0 21px 38px rgba(36,31,36,.2),0 4px 8px rgba(36,31,36,.1);z-index:4}
+.album-cabinet.album-view-desk .notion-photo::before{content:"";position:absolute;left:50%;top:-10px;width:72px;height:21px;transform:translateX(-50%) rotate(-2deg);background:rgba(219,203,168,.58);border:1px solid rgba(151,130,91,.10);box-shadow:0 1px 3px rgba(50,44,37,.08);z-index:3}
+.album-cabinet.album-view-desk .notion-photo:nth-of-type(even)::before{transform:translateX(-50%) rotate(2deg);background:rgba(205,197,211,.52)}
+.album-cabinet.album-view-desk .notion-photo img{height:235px;border-radius:1px;filter:saturate(.95) contrast(.98)}
+.album-cabinet.album-view-desk .notion-photo figcaption{position:absolute;left:11px;right:11px;bottom:7px;padding:0;text-align:center;color:#766f6d;font-family:"Comic Sans MS","Songti SC",cursive;font-size:9px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.album-cabinet.album-view-desk .album-note{flex:1 1 100%;order:99;margin-top:5px;border-radius:18px;transform:rotate(-.35deg)}
+.album-cabinet.album-view-desk .album-empty{flex:1 1 100%;min-height:220px;background:rgba(255,255,255,.32)}
+
+body.is-night .album-view-toolbar{background:rgba(255,255,255,.035)}
+body.is-night .album-view-switch{background:rgba(255,255,255,.03)}
+body.is-night .album-view-switch button.is-active{background:rgba(255,255,255,.09)}
+body.is-night .album-cabinet.album-view-desk .notion-photo-grid{background:
+  radial-gradient(circle at 18% 22%,rgba(197,177,130,.05) 0 1px,transparent 1.6px),
+  radial-gradient(circle at 80% 65%,rgba(166,151,189,.05) 0 1px,transparent 1.8px),
+  linear-gradient(135deg,rgba(35,35,47,.88),rgba(42,39,50,.82))}
+body.is-night .album-cabinet.album-view-desk .notion-photo{background:#ebe6dc}
+
+@media(max-width:900px){
+  .album-view-toolbar{align-items:flex-start;flex-direction:column}
+  .album-view-switch{width:100%}
+  .album-view-switch button{flex:1;justify-content:center}
+  .album-cabinet.album-view-desk .notion-photo-grid{gap:22px 16px;padding:31px 20px 34px}
+  .album-cabinet.album-view-desk .notion-photo{width:calc(50% - 10px);min-width:0}
+  .album-cabinet.album-view-desk .notion-photo img{height:220px}
+}
+
+@media(max-width:560px){
+  .album-view-copy span{display:none}
+  .album-view-switch button{padding:8px 8px;font-size:8px}
+  .album-cabinet.album-view-desk .notion-photo-grid{gap:18px 10px;padding:30px 12px 28px;border-radius:20px}
+  .album-cabinet.album-view-desk .notion-photo-grid::before{right:13px;top:13px;font-size:7px}
+  .album-cabinet.album-view-desk .notion-photo{width:calc(50% - 5px);padding:7px 7px 25px}
+  .album-cabinet.album-view-desk .notion-photo img{height:175px;max-height:none}
+  .album-cabinet.album-view-desk .notion-photo::before{width:54px;height:17px;top:-8px}
+  .album-cabinet.album-view-desk .notion-photo figcaption{left:7px;right:7px;bottom:6px;font-size:8px}
+  .album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+1){transform:rotate(-2deg)}
+  .album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+2){transform:rotate(1.7deg)}
+  .album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+3){transform:rotate(-1deg)}
+  .album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+4){transform:rotate(2deg)}
+  .album-cabinet.album-view-desk .notion-photo:nth-of-type(6n+5){transform:rotate(-1.4deg)}
+  .album-cabinet.album-view-desk .notion-photo:nth-of-type(6n){transform:rotate(1deg)}
+}
