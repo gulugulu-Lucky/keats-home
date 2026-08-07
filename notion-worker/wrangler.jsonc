@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "keats-home-notion",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-07",
+  "observability": { "enabled": true },
+  "vars": {
+    "FRONTEND_ORIGIN": "https://gulugulu-lucky.github.io"
+  }
+}
