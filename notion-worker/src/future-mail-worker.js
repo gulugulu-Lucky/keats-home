@@ -130,6 +130,8 @@ function normalize(page) {
     author: prop(page, '寄件人') || '',
     recipient: prop(page, '收件人') || '',
     method: prop(page, '投递方式') || '封存到某一天',
+    receiptStatus: prop(page, '收件状态') || '等待收件',
+    receivedDate: prop(page, '收件时间') || '',
     createdTime: page.created_time,
     opened,
     daysLeft: diff,
@@ -153,7 +155,7 @@ async function createMail(request, env) {
   const openDate = method === '现在寄出' ? today : String(payload.openDate || '');
   const title = String(payload.title || '').trim() || '写给未来的一封信';
   const content = String(payload.content || '').trim();
-  const author = payload.author === 'Keats' ? 'Keats' : '小猫';
+  const author = '小猫';
   const recipient = payload.recipient === 'Keats' ? 'Keats' : '小猫';
 
   if (!content) throw Object.assign(new Error('信纸还是空的。'), { status: 400 });
@@ -173,7 +175,8 @@ async function createMail(request, env) {
         '寄件人': { type: 'select', select: { name: author } },
         '收件人': { type: 'select', select: { name: recipient } },
         '正文': { type: 'rich_text', rich_text: richText(content) },
-        '投递方式': { type: 'select', select: { name: method } }
+        '投递方式': { type: 'select', select: { name: method } },
+        '收件状态': { type: 'select', select: { name: '等待收件' } }
       }
     })
   });
