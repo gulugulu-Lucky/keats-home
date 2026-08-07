@@ -177,7 +177,12 @@ async function createMail(request, env) {
         '正文': { type: 'rich_text', rich_text: richText(content) },
         '投递方式': { type: 'select', select: { name: method } },
         '收件状态': { type: 'select', select: { name: '等待收件' } }
-      }
+      },
+      children: [{
+        object: 'block',
+        type: 'paragraph',
+        paragraph: { rich_text: richText(content) }
+      }]
     })
   });
   return { status: 'ok', item: normalize(created) };
