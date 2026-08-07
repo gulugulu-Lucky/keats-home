@@ -96,6 +96,15 @@ jobs:
           )
           app.write_text(app_text, encoding='utf-8')
 
+          search = Path('./notion-home/home-search.js')
+          search_text = search.read_text(encoding='utf-8')
+          search_text = search_text.replace(
+              "    { kind: 'room', view: 'album', icon: '▣', room: '相册', title: '相册', text: '照片、形象图、表情包和专属区' },",
+              "    { kind: 'room', view: 'magazine', icon: '▤', room: '小家月刊', title: '小家月刊', text: '每个月自动装订起来的生活册' },\n    { kind: 'room', view: 'album', icon: '▣', room: '相册', title: '相册', text: '照片、形象图、表情包和专属区' },",
+              1,
+          )
+          search.write_text(search_text, encoding='utf-8')
+
           reader = Path('./notion-home/reader.html')
           text = reader.read_text(encoding='utf-8')
           text = text.replace('<script src="./reader.js"></script>', '<script src="./reader.js"></script>\n  <script src="./reader-enhancements.js"></script>\n  <script src="./home-status-polish.js"></script>')
