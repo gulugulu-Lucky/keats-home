@@ -1,0 +1,9 @@
+/* Keats Home · magazine reading polish */
+body.magazine-room-active .ambient-a{opacity:.075!important;transform:scale(.56)!important;filter:blur(8px)}
+body.magazine-room-active .ambient-b{opacity:.06!important;transform:scale(.72)!important;filter:blur(10px)}
+body.magazine-room-active .magazine-photo-strip figure{transition:opacity .18s ease,transform .18s ease}
+@media(max-width:620px){
+  body.magazine-room-active .ambient-a{opacity:.055!important;transform:scale(.46)!important}
+  body.magazine-room-active .ambient-b{opacity:.045!important;transform:scale(.58)!important}
+}
+@media(prefers-reduced-motion:reduce){body.magazine-room-active .magazine-photo-strip figure{transition:none}}
