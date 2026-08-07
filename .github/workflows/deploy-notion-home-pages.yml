@@ -59,6 +59,11 @@ jobs:
           text = reader.read_text(encoding='utf-8')
           text = text.replace('<script src="./reader.js"></script>', '<script src="./reader.js"></script>\n  <script src="./reader-enhancements.js"></script>')
           reader.write_text(text, encoding='utf-8')
+
+          enhancer = Path('./notion-home/enhancements.js')
+          text = enhancer.read_text(encoding='utf-8')
+          text = text.replace('    draw(0);', '    const firstFilled = ordered.findIndex(section => section.images.length || section.notes.length);\n    draw(firstFilled >= 0 ? firstFilled : 0);')
+          enhancer.write_text(text, encoding='utf-8')
           PY
 
       - name: Upload Notion Home
