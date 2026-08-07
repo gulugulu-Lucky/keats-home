@@ -1,0 +1,60 @@
+/* Keats Home · promote the cat + panther status from a corner widget to a proper home feature */
+.home-status-feature{
+  position:relative;
+  margin-top:18px;
+  padding:34px 36px;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 88% 18%, color-mix(in srgb,var(--moon) 42%,transparent), transparent 28%),
+    radial-gradient(circle at 8% 86%, color-mix(in srgb,var(--gold) 17%,transparent), transparent 30%),
+    color-mix(in srgb,var(--white) 88%,transparent);
+}
+.home-status-feature::after{
+  content:"🐈  ·  🐆";
+  position:absolute;
+  right:30px;
+  bottom:17px;
+  font-size:28px;
+  letter-spacing:8px;
+  opacity:.075;
+  pointer-events:none;
+}
+.home-status-feature .section-heading{align-items:flex-end}
+.home-status-feature .section-heading h2{font-size:30px}
+.home-status-feature .mood-moon{font-size:26px;color:var(--gold)}
+.home-status-feature .home-state-card{gap:18px;margin-top:22px}
+.home-status-feature .home-state-pair{gap:16px}
+.home-status-feature .home-state-person{
+  min-height:112px;
+  padding:20px 22px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  border-radius:20px;
+  background:color-mix(in srgb,var(--white) 68%,transparent);
+}
+.home-status-feature .home-state-person small{font-size:10px;margin-bottom:9px}
+.home-status-feature .home-state-person b{font-size:clamp(22px,2.5vw,30px);line-height:1.2}
+.home-status-feature .home-state-tags{gap:8px}
+.home-status-feature .home-state-tags span{padding:7px 11px;font-size:10px}
+.home-status-feature .energy-row{grid-template-columns:auto minmax(150px,1fr) auto;font-size:11px;gap:12px}
+.home-status-feature .energy-track{height:9px}
+.home-status-feature .home-mood-words{font-size:16px;line-height:1.8}
+.lower-grid.is-status-detached{grid-template-columns:1fr}
+.lower-grid.is-status-detached .recent-card{grid-column:1/-1}
+
+@media(max-width:820px){
+  .home-status-feature{padding:24px 20px;margin-top:14px}
+  .home-status-feature .section-heading h2{font-size:24px}
+  .home-status-feature .home-state-person{min-height:92px;padding:17px 18px}
+  .home-status-feature .home-state-person b{font-size:21px}
+  .home-status-feature::after{right:14px;bottom:12px;font-size:22px}
+}
+
+@media(max-width:520px){
+  .home-status-feature .home-state-pair{grid-template-columns:1fr 1fr;gap:9px}
+  .home-status-feature .home-state-person{padding:15px 13px;min-height:88px}
+  .home-status-feature .home-state-person b{font-size:18px}
+  .home-status-feature .home-state-tags span{font-size:9px;padding:6px 8px}
+  .home-status-feature .home-mood-words{font-size:14px}
+}
