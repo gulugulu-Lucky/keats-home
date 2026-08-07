@@ -1,0 +1,84 @@
+/* Keats Home · hidden rooms from Notion */
+.hidden-room-kicker{display:flex;align-items:center;gap:8px;margin-bottom:12px;color:var(--gold);font-size:10px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}
+
+/* Home mood */
+.home-state-card{display:grid;gap:14px;margin-top:16px}
+.home-state-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.home-state-person{padding:13px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--white) 55%,transparent)}
+.home-state-person small{display:block;color:var(--muted);font-size:9px;margin-bottom:5px;letter-spacing:.08em}
+.home-state-person b{font-family:Georgia,"Songti SC",serif;font-size:15px;font-weight:600}
+.home-state-tags{display:flex;flex-wrap:wrap;gap:6px}
+.home-state-tags span{padding:5px 8px;border-radius:999px;background:color-mix(in srgb,var(--paper-2) 78%,transparent);border:1px solid var(--line);font-size:9px;color:var(--ink-soft)}
+.energy-row{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;font-size:10px;color:var(--muted)}
+.energy-track{height:7px;border-radius:999px;background:color-mix(in srgb,var(--paper-3) 75%,transparent);overflow:hidden}
+.energy-fill{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--gold),color-mix(in srgb,var(--gold) 55%,var(--moon)));transition:width .7s ease}
+.home-mood-words{font-family:Georgia,"Songti SC",serif;font-size:13px;color:var(--ink-soft);line-height:1.75}
+
+/* Mailbox drawers */
+.mailbox-drawers{margin:6px 0 26px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mailbox-drawer{position:relative;min-height:155px;padding:19px;border:1px solid var(--line);border-radius:22px;background:color-mix(in srgb,var(--white) 76%,transparent);box-shadow:var(--shadow-soft);cursor:pointer;text-align:left;overflow:hidden;transition:.22s ease}
+.mailbox-drawer:hover{transform:translateY(-3px);border-color:var(--line-strong)}
+.mailbox-drawer::after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-35px;bottom:-42px;background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.mailbox-drawer .drawer-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:color-mix(in srgb,var(--paper-2) 85%,transparent);margin-bottom:24px;font-size:18px}
+.mailbox-drawer small{display:block;color:var(--gold);font-size:9px;letter-spacing:.1em;margin-bottom:5px}
+.mailbox-drawer b{display:block;font-family:Georgia,"Songti SC",serif;font-size:16px;font-weight:600;line-height:1.35}
+.mailbox-drawer em{display:block;margin-top:8px;color:var(--muted);font-style:normal;font-size:10px}
+.mail-tip-card{margin:-8px 0 24px;padding:17px 19px;border:1px dashed color-mix(in srgb,var(--gold) 45%,var(--line));border-radius:18px;background:color-mix(in srgb,var(--gold) 7%,var(--white));color:var(--ink-soft)}
+.mail-tip-card summary{cursor:pointer;font-weight:700;font-size:11px;color:var(--ink)}
+.mail-tip-card ul{margin:12px 0 0;padding-left:20px;line-height:1.8;font-size:10px;color:var(--muted)}
+
+/* Album */
+.album-cabinet{margin-top:8px}
+.album-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.album-tab{border:1px solid var(--line);background:color-mix(in srgb,var(--white) 65%,transparent);border-radius:999px;padding:8px 12px;cursor:pointer;color:var(--muted);font-size:10px;transition:.18s ease}
+.album-tab:hover,.album-tab.is-active{color:var(--ink);border-color:color-mix(in srgb,var(--gold) 55%,var(--line));background:color-mix(in srgb,var(--gold) 10%,var(--white))}
+.notion-photo-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.notion-photo{grid-column:span 4;margin:0;position:relative;border:1px solid var(--line);border-radius:22px;padding:9px;background:color-mix(in srgb,var(--white) 82%,transparent);box-shadow:var(--shadow-soft);overflow:hidden;cursor:zoom-in}
+.notion-photo:nth-child(5n+1){grid-column:span 7}
+.notion-photo:nth-child(5n+2){grid-column:span 5}
+.notion-photo img{display:block;width:100%;height:300px;object-fit:cover;border-radius:16px;background:var(--paper-2)}
+.notion-photo figcaption{padding:10px 6px 5px;color:var(--muted);font-size:9px}
+.album-empty{grid-column:1/-1;min-height:230px;display:grid;place-items:center;text-align:center;border:1px dashed var(--line-strong);border-radius:24px;background:color-mix(in srgb,var(--white) 48%,transparent);color:var(--muted)}
+.album-empty span{display:block;font-size:34px;margin-bottom:8px}
+.album-empty b{display:block;color:var(--ink);font-family:Georgia,"Songti SC",serif;font-size:18px}
+.album-note{grid-column:1/-1;padding:22px 24px;border-radius:22px;background:linear-gradient(135deg,color-mix(in srgb,var(--navy) 93%,transparent),color-mix(in srgb,var(--violet) 68%,var(--navy)));color:#f3ecf1;box-shadow:var(--shadow)}
+.album-note small{display:block;opacity:.58;font-size:9px;letter-spacing:.13em;margin-bottom:10px}
+.album-note p{margin:0;font-family:Georgia,"Songti SC",serif;font-size:clamp(17px,2vw,24px);line-height:1.7}
+.album-lightbox{position:fixed;inset:0;z-index:200;display:none;place-items:center;padding:24px;background:rgba(12,15,28,.82);backdrop-filter:blur(14px)}
+.album-lightbox.is-open{display:grid}
+.album-lightbox img{max-width:min(1100px,94vw);max-height:88vh;border-radius:20px;box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.album-lightbox button{position:fixed;right:22px;top:22px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);color:white;font-size:22px;cursor:pointer}
+
+/* Diary property panel, injected into reader */
+.diary-state-panel{margin:6px 0 4px;padding:18px;border:1px solid rgba(32,38,58,.10);border-radius:20px;background:rgba(183,160,115,.07)}
+.diary-state-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.diary-state-title b{font-family:Georgia,"Songti SC",serif;font-size:15px}
+.diary-state-title small{font-size:9px;color:#9a8661;letter-spacing:.1em}
+.diary-state-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.diary-state-cell{padding:11px 12px;border-radius:14px;background:rgba(255,255,255,.43);border:1px solid rgba(32,38,58,.08)}
+.diary-state-cell span{display:block;font-size:9px;color:#8b8490;margin-bottom:4px}
+.diary-state-cell strong{font-size:12px;font-weight:650;color:#252b40}
+.diary-state-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.diary-state-chips i{font-style:normal;padding:4px 7px;border-radius:999px;border:1px solid rgba(32,38,58,.08);font-size:9px;color:#626274;background:rgba(255,255,255,.4)}
+body.is-night .diary-state-cell{background:rgba(255,255,255,.035)}
+body.is-night .diary-state-cell strong{color:#ece9f4}
+body.is-night .diary-state-panel{border-color:rgba(225,222,240,.09);background:rgba(183,160,115,.06)}
+body.is-night .diary-state-chips i{color:#bbb6c8;border-color:rgba(225,222,240,.08);background:rgba(255,255,255,.03)}
+
+@media(max-width:820px){
+  .mailbox-drawers{grid-template-columns:1fr;gap:9px}
+  .mailbox-drawer{min-height:118px;padding:15px 16px;display:grid;grid-template-columns:auto 1fr;column-gap:13px;align-items:center}
+  .mailbox-drawer .drawer-icon{margin:0;grid-row:1/4}
+  .mailbox-drawer small,.mailbox-drawer b,.mailbox-drawer em{grid-column:2}
+  .notion-photo-grid{grid-template-columns:1fr 1fr;gap:9px}
+  .notion-photo,.notion-photo:nth-child(n){grid-column:auto;padding:6px;border-radius:17px}
+  .notion-photo img{height:210px;border-radius:12px}
+  .album-note,.album-empty{grid-column:1/-1}
+  .home-state-pair,.diary-state-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:480px){
+  .notion-photo-grid{grid-template-columns:1fr}
+  .notion-photo,.notion-photo:nth-child(n),.album-note,.album-empty{grid-column:1}
+  .notion-photo img{height:auto;max-height:70vh}
+}
