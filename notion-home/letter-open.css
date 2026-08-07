@@ -1,0 +1,156 @@
+.letter-opening {
+  position: fixed;
+  inset: 0;
+  z-index: 1700;
+  display: none;
+  place-items: center;
+  padding: 24px;
+  background: rgba(22, 24, 34, .24);
+  backdrop-filter: blur(13px);
+}
+.letter-opening.is-open { display: grid; }
+.letter-opening-scene {
+  width: min(420px, 92vw);
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  perspective: 1200px;
+}
+.letter-opening-envelope {
+  position: relative;
+  width: min(340px, 82vw);
+  aspect-ratio: 1.52 / 1;
+  filter: drop-shadow(0 24px 36px rgba(23,24,34,.18));
+  transform: translateY(10px) scale(.96);
+  transition: transform .38s cubic-bezier(.2,.75,.2,1);
+}
+.letter-opening.is-opening .letter-opening-envelope { transform: translateY(0) scale(1); }
+.letter-opening-back,
+.letter-opening-front,
+.letter-opening-left,
+.letter-opening-right,
+.letter-opening-flap {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+}
+.letter-opening-back {
+  border: 1px solid rgba(144,122,85,.2);
+  background: linear-gradient(145deg, #efe5d7, #e6dac9);
+}
+.letter-opening-front {
+  z-index: 5;
+  clip-path: polygon(0 38%, 50% 72%, 100% 38%, 100% 100%, 0 100%);
+  background: linear-gradient(160deg, #eee4d5, #ded0bc);
+  border: 1px solid rgba(144,122,85,.18);
+}
+.letter-opening-left {
+  z-index: 4;
+  clip-path: polygon(0 0, 50% 58%, 0 100%);
+  background: linear-gradient(135deg, #f1e8da, #e4d7c5);
+}
+.letter-opening-right {
+  z-index: 4;
+  clip-path: polygon(100% 0, 50% 58%, 100% 100%);
+  background: linear-gradient(225deg, #eee4d7, #dfd2c0);
+}
+.letter-opening-flap {
+  z-index: 8;
+  transform-origin: 50% 0;
+  clip-path: polygon(0 0, 100% 0, 50% 66%);
+  background: linear-gradient(180deg, #f3eadc, #dfd1bd);
+  border-top: 1px solid rgba(144,122,85,.18);
+  transition: transform .34s cubic-bezier(.3,.7,.2,1) .12s, opacity .25s ease .18s;
+}
+.letter-opening.is-opening .letter-opening-flap {
+  transform: rotateX(178deg);
+  opacity: .78;
+}
+.letter-opening-seal {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  top: 45%;
+  width: 45px;
+  height: 45px;
+  margin: -22px 0 0 -22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #f4eadb;
+  background: radial-gradient(circle at 35% 30%, #b8915f, #8f6f47 72%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 4px 10px rgba(92,66,37,.2);
+  font: 600 16px/1 Georgia, serif;
+  transition: transform .22s ease .2s, opacity .2s ease .25s;
+}
+.letter-opening.is-opening .letter-opening-seal {
+  transform: scale(.82) rotate(-8deg);
+  opacity: 0;
+}
+.letter-opening-paper {
+  position: absolute;
+  z-index: 3;
+  left: 9%;
+  right: 9%;
+  bottom: 10%;
+  min-height: 72%;
+  padding: 19px 20px 22px;
+  border: 1px solid rgba(154,132,96,.16);
+  border-radius: 13px 13px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(142,118,80,.07) 27px 28px),
+    linear-gradient(180deg, #faf5ed, #f3eadf);
+  box-shadow: 0 5px 16px rgba(46,39,30,.08);
+  transform: translateY(36%);
+  transition: transform .38s cubic-bezier(.18,.82,.2,1) .34s;
+}
+.letter-opening.is-opening .letter-opening-paper { transform: translateY(-37%); }
+.letter-opening-paper span {
+  color: #a48b62;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .16em;
+}
+.letter-opening-paper b {
+  width: 100%;
+  margin-top: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #3c3a40;
+  font: 500 17px/1.4 Georgia, "Songti SC", serif;
+}
+.letter-opening-paper i {
+  margin-top: auto;
+  color: #b39767;
+  font-size: 10px;
+  font-style: normal;
+  letter-spacing: .12em;
+}
+.letter-opening-scene > small {
+  color: rgba(255,255,255,.92);
+  font-size: 10px;
+  letter-spacing: .08em;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .24s ease .34s, transform .24s ease .34s;
+  text-shadow: 0 1px 5px rgba(0,0,0,.2);
+}
+.letter-opening.is-opening .letter-opening-scene > small {
+  opacity: 1;
+  transform: translateY(0);
+}
+body.is-night .letter-opening { background: rgba(5,7,12,.48); }
+body.is-night .letter-opening-envelope { filter: drop-shadow(0 26px 44px rgba(0,0,0,.38)); }
+@media (max-width: 640px) {
+  .letter-opening-envelope { width: min(310px, 86vw); }
+  .letter-opening-paper b { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .letter-opening * { animation: none !important; transition: none !important; }
+}
