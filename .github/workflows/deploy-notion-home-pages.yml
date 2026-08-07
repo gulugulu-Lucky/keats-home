@@ -44,6 +44,23 @@ jobs:
           sed -i 's#前端样板 · API 待接入#Notion 已接入 · Worker 守门#g' ./notion-home/index.html
           sed -i "s#window.open(node.dataset.openUrl, '_blank', 'noopener');#window.location.href = node.dataset.openUrl;#g" ./notion-home/app.js
 
+      - name: Install hidden-room enhancements
+        run: |
+          cat ./notion-home/enhancements.css >> ./notion-home/styles.css
+          cat ./notion-home/reader-enhancements.css >> ./notion-home/reader.css
+          python - <<'PY'
+          from pathlib import Path
+          index = Path('./notion-home/index.html')
+          text = index.read_text(encoding='utf-8')
+          text = text.replace('<script src="./app.js"></script>', '<script src="./app.js"></script>\n  <script src="./enhancements.js"></script>')
+          index.write_text(text, encoding='utf-8')
+
+          reader = Path('./notion-home/reader.html')
+          text = reader.read_text(encoding='utf-8')
+          text = text.replace('<script src="./reader.js"></script>', '<script src="./reader.js"></script>\n  <script src="./reader-enhancements.js"></script>')
+          reader.write_text(text, encoding='utf-8')
+          PY
+
       - name: Upload Notion Home
         uses: actions/upload-pages-artifact@v4
         with:
