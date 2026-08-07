@@ -1,0 +1,115 @@
+/* Keats Home · monthly magazine */
+.magazine-wrap{width:min(1180px,calc(100% - 48px));margin:0 auto;padding:46px 0 90px}
+.magazine-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px}
+.magazine-heading .page-icon{display:inline-grid;place-items:center;width:48px;height:48px;border-radius:17px;background:linear-gradient(145deg,#242a3f,#4a4b68);color:#f1edf6;box-shadow:0 12px 28px rgba(40,38,56,.13)}
+.magazine-heading h1{margin:5px 0 8px;font-family:Georgia,"Songti SC",serif;font-size:clamp(34px,4vw,52px);font-weight:500}
+.magazine-heading p{margin:0;color:var(--muted);font-size:12px;line-height:1.8}
+.magazine-heading-side{max-width:330px;text-align:right;color:var(--muted);font-family:Georgia,"Songti SC",serif;font-size:12px;line-height:1.8}
+
+.magazine-shelf-wrap{position:relative;margin-bottom:34px;padding:22px 22px 25px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(180deg,color-mix(in srgb,var(--white) 72%,transparent),color-mix(in srgb,var(--paper-2) 82%,transparent));box-shadow:0 16px 38px rgba(56,46,60,.055);overflow:hidden}
+.magazine-shelf-wrap::after{content:"";position:absolute;left:18px;right:18px;bottom:12px;height:8px;border-radius:50%;background:rgba(72,57,47,.06);filter:blur(5px)}
+.magazine-shelf-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;color:var(--muted);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.magazine-shelf{position:relative;z-index:1;display:flex;gap:12px;overflow-x:auto;padding:3px 2px 8px;scrollbar-width:thin}
+.magazine-spine{position:relative;flex:0 0 166px;min-height:174px;padding:19px 16px 17px;border:1px solid rgba(105,91,106,.14);border-radius:16px 16px 8px 8px;text-align:left;background:linear-gradient(150deg,#e6ded6,#cfc6c6 55%,#b7b1bf);color:#3f3946;cursor:pointer;box-shadow:8px 12px 20px rgba(55,44,53,.08);transform-origin:bottom center;transition:.22s ease;overflow:hidden}
+.magazine-spine::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.38),transparent 12%,transparent 84%,rgba(52,43,52,.06));pointer-events:none}
+.magazine-spine:nth-child(3n+2){background:linear-gradient(150deg,#d7dbe3,#bebdcb 58%,#aaa7b8)}
+.magazine-spine:nth-child(3n){background:linear-gradient(150deg,#e6d6c3,#cdbba8 58%,#b6a69b)}
+.magazine-spine:hover{transform:translateY(-4px) rotate(-.4deg);box-shadow:10px 16px 28px rgba(55,44,53,.12)}
+.magazine-spine.is-active{outline:2px solid color-mix(in srgb,var(--gold) 55%,transparent);transform:translateY(-5px);box-shadow:10px 18px 30px rgba(55,44,53,.14)}
+.magazine-spine small{position:relative;display:block;font-size:8px;letter-spacing:.16em;opacity:.7}
+.magazine-spine b{position:relative;display:block;margin:33px 0 9px;font-family:Georgia,"Songti SC",serif;font-size:18px;font-weight:500;line-height:1.35}
+.magazine-spine span{position:relative;display:block;font-size:9px;opacity:.72;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.magazine-spine i{position:absolute;left:16px;bottom:14px;font-style:normal;font-size:8px;letter-spacing:.08em;opacity:.62}
+
+.magazine-book{display:grid;gap:24px}
+.magazine-cover{position:relative;min-height:560px;padding:34px 38px;border-radius:32px;overflow:hidden;background:linear-gradient(140deg,#1f2538 0%,#31364d 48%,#756d76 100%);color:#f1edf3;box-shadow:0 34px 80px rgba(29,27,43,.19);isolation:isolate}
+.magazine-cover::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 72% 26%,rgba(234,220,190,.18),transparent 23%),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px);background-size:auto,42px 42px,42px 42px;z-index:-2}
+.magazine-cover::after{content:"KH";position:absolute;right:-20px;bottom:-58px;font-family:Georgia,serif;font-size:260px;line-height:1;color:rgba(255,255,255,.035);z-index:-1}
+.magazine-cover header,.magazine-cover footer{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(244,240,248,.66)}
+.magazine-cover-main{position:absolute;left:clamp(34px,6vw,78px);right:clamp(34px,7vw,95px);top:50%;transform:translateY(-46%)}
+.magazine-cover-main small{display:inline-flex;padding:6px 10px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.045);font-size:9px;letter-spacing:.08em}
+.magazine-cover-main h2{margin:21px 0 14px;font-family:Georgia,"Songti SC",serif;font-size:clamp(50px,7vw,86px);font-weight:400;line-height:1.02;letter-spacing:-.035em}
+.magazine-cover-main p{margin:0;max-width:650px;color:rgba(246,241,248,.72);font-family:Georgia,"Songti SC",serif;font-size:13px;letter-spacing:.08em}
+.magazine-cover footer{position:absolute;left:38px;right:38px;bottom:31px;border-top:1px solid rgba(255,255,255,.09);padding-top:15px}
+.magazine-cover-orbit{position:absolute;right:7%;top:12%;width:190px;height:190px;border:1px solid rgba(255,255,255,.07);border-radius:50%}
+.magazine-cover-orbit::before,.magazine-cover-orbit::after{content:"";position:absolute;border:1px solid rgba(255,255,255,.055);border-radius:50%}
+.magazine-cover-orbit::before{inset:24px}.magazine-cover-orbit::after{inset:55px}
+.magazine-cover-orbit i{position:absolute;width:5px;height:5px;border-radius:50%;background:#e5d5b2;box-shadow:0 0 14px rgba(232,214,177,.72)}
+.magazine-cover-orbit i:nth-child(1){left:22px;top:88px}.magazine-cover-orbit i:nth-child(2){right:42px;top:22px}.magazine-cover-orbit i:nth-child(3){right:58px;bottom:30px}
+
+.magazine-editorial{display:grid;grid-template-columns:.8fr 1.3fr;gap:30px;padding:32px 34px;border-radius:25px}
+.magazine-editorial small{color:var(--muted);font-size:8px;letter-spacing:.15em}
+.magazine-editorial h3{margin:9px 0 0;font-family:Georgia,"Songti SC",serif;font-size:24px;font-weight:500;line-height:1.45}
+.magazine-editorial>p{margin:0;color:var(--muted);font-family:Georgia,"Songti SC",serif;font-size:14px;line-height:2}
+.magazine-editorial>div:last-child{grid-column:2;display:flex;flex-wrap:wrap;gap:7px;margin-top:-14px}
+.magazine-editorial>div:last-child span{padding:5px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:9px}
+
+.magazine-pages{display:grid;gap:24px}
+.magazine-section{padding:34px;border:1px solid var(--line);border-radius:28px;background:color-mix(in srgb,var(--white) 72%,var(--paper));box-shadow:0 16px 42px rgba(58,48,62,.055)}
+.magazine-section>header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:25px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.magazine-section>header small{display:block;color:var(--muted);font-size:8px;letter-spacing:.15em}
+.magazine-section>header h3{margin:7px 0 0;font-family:Georgia,"Songti SC",serif;font-size:26px;font-weight:500}
+.magazine-section>header>span{display:grid;place-items:center;min-width:39px;height:39px;padding:0 9px;border:1px solid var(--line);border-radius:50%;color:var(--muted);font-family:Georgia,serif;font-size:13px}
+
+.magazine-feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.magazine-diary{padding:20px 20px 18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,color-mix(in srgb,var(--paper-2) 78%,white),color-mix(in srgb,var(--white) 75%,transparent));transition:.2s ease}
+.magazine-diary.lead{grid-column:1/-1;padding:28px}
+.magazine-diary[data-mag-url]{cursor:pointer}
+.magazine-diary[data-mag-url]:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(54,46,57,.07)}
+.magazine-diary>div{display:flex;justify-content:space-between;color:var(--muted);font-size:9px}.magazine-diary i{font-style:normal}
+.magazine-diary h4{margin:13px 0 9px;font-family:Georgia,"Songti SC",serif;font-size:18px;font-weight:500}.magazine-diary.lead h4{font-size:26px}
+.magazine-diary p{margin:0;color:var(--muted);font-size:11px;line-height:1.85}
+.magazine-diary footer{display:flex;flex-wrap:wrap;gap:6px;margin-top:17px}.magazine-diary footer b{font-weight:400;font-size:8px;padding:4px 7px;border-radius:999px;background:rgba(107,96,116,.07);color:var(--muted)}
+
+.magazine-note-wall{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;padding:9px 4px 4px}
+.magazine-note-wall article{min-height:150px;padding:22px 19px;background:#eee3d3;border:1px solid rgba(118,95,75,.13);box-shadow:4px 8px 18px rgba(73,57,45,.08);transform:rotate(var(--note-turn));transform-origin:50% 10%;transition:.2s ease}
+.magazine-note-wall article:nth-child(3n+2){background:#e5e3ea}.magazine-note-wall article:nth-child(3n){background:#e9ddd8}
+.magazine-note-wall article:hover{transform:rotate(0) translateY(-2px)}
+.magazine-note-wall small{color:#847a72;font-size:8px}.magazine-note-wall p{margin:18px 0 0;font-family:Georgia,"Songti SC",serif;color:#4c4545;font-size:13px;line-height:1.9}
+
+.magazine-words-grid,.magazine-archive-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.magazine-entry,.magazine-quote{margin:0;padding:21px;border:1px solid var(--line);border-radius:18px;background:color-mix(in srgb,var(--paper-2) 68%,transparent)}
+.magazine-entry.is-openable,.magazine-quote[data-mag-url]{cursor:pointer;transition:.2s ease}.magazine-entry.is-openable:hover,.magazine-quote[data-mag-url]:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(54,46,57,.065)}
+.magazine-entry small{color:var(--muted);font-size:8px}.magazine-entry h4{margin:10px 0 8px;font-family:Georgia,"Songti SC",serif;font-size:16px;font-weight:500}.magazine-entry p{margin:0;color:var(--muted);font-size:10px;line-height:1.8}
+.magazine-quote{position:relative;padding:25px 24px 21px}.magazine-quote>span{position:absolute;right:16px;top:7px;font-family:Georgia,serif;font-size:56px;color:rgba(107,95,114,.10)}.magazine-quote p{position:relative;margin:0 0 15px;font-family:Georgia,"Songti SC",serif;font-size:15px;line-height:1.85}.magazine-quote footer{color:var(--muted);font-size:8px}
+
+.magazine-playlist{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.magazine-playlist li{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:12px;padding:14px 5px;border-bottom:1px solid var(--line)}
+.magazine-playlist li[data-mag-url]{cursor:pointer}.magazine-playlist li[data-mag-url]:hover{background:rgba(113,102,119,.035)}
+.magazine-playlist>li>span{font-family:Georgia,serif;color:var(--muted);font-size:10px}.magazine-playlist b{display:block;font-family:Georgia,"Songti SC",serif;font-size:14px;font-weight:500}.magazine-playlist small{display:block;margin-top:3px;color:var(--muted);font-size:9px}.magazine-playlist em{font-style:normal;color:var(--muted);font-size:9px}
+
+.magazine-photo-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:24px}
+.magazine-photo-strip figure{margin:0;padding:9px 9px 13px;background:#f4eee6;border:1px solid rgba(111,95,82,.10);box-shadow:3px 8px 18px rgba(64,50,44,.08);transform:rotate(-.6deg)}
+.magazine-photo-strip figure:nth-child(2n){transform:rotate(.8deg)}.magazine-photo-strip img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#ddd;border-radius:2px}.magazine-photo-strip figcaption{padding:10px 3px 0;color:#776e69;font-family:Georgia,"Songti SC",serif;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.magazine-paw-margin{display:grid;gap:9px}.magazine-paw-margin article{display:grid;grid-template-columns:36px 1fr;gap:10px;padding:14px 16px;border:1px dashed color-mix(in srgb,var(--line) 75%,transparent);border-radius:14px}.magazine-paw-margin article>span{font-size:18px;opacity:.55}.magazine-paw-margin b{font-family:Georgia,"Songti SC",serif;font-size:13px;font-weight:500}.magazine-paw-margin p{margin:4px 0 0;color:var(--muted);font-size:9px;line-height:1.65}
+.magazine-honesty{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:8px;line-height:1.7}
+
+.magazine-loading,.magazine-locked,.magazine-empty{padding:62px 28px;text-align:center;border-radius:28px}.magazine-loading>span,.magazine-locked>span,.magazine-empty>span{display:block;margin-bottom:13px;font-size:26px}.magazine-loading h3,.magazine-locked h3,.magazine-empty h3{margin:0;font-family:Georgia,"Songti SC",serif;font-size:22px;font-weight:500}.magazine-loading p,.magazine-locked p,.magazine-empty p{margin:9px 0 0;color:var(--muted);font-size:10px}
+
+body.is-night .magazine-shelf-wrap,body.is-night .magazine-section{background:rgba(255,255,255,.025)}
+body.is-night .magazine-spine{filter:brightness(.76) saturate(.78)}body.is-night .magazine-spine.is-active{filter:brightness(.9) saturate(.9)}
+body.is-night .magazine-editorial{background:rgba(255,255,255,.025)}
+body.is-night .magazine-diary,body.is-night .magazine-entry,body.is-night .magazine-quote{background:rgba(255,255,255,.025)}
+body.is-night .magazine-note-wall article{filter:brightness(.76)}
+body.is-night .magazine-photo-strip figure{filter:brightness(.72)}
+
+@media(max-width:900px){
+  .magazine-wrap{width:min(100% - 30px,1180px);padding-top:28px}
+  .magazine-heading{align-items:flex-start}.magazine-heading-side{display:none}
+  .magazine-cover{min-height:500px;padding:29px}.magazine-cover footer{left:29px;right:29px}
+  .magazine-editorial{grid-template-columns:1fr}.magazine-editorial>div:last-child{grid-column:auto;margin-top:-10px}
+  .magazine-note-wall{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .magazine-wrap{width:calc(100% - 20px);padding:18px 0 90px}
+  .magazine-heading{margin-bottom:19px}.magazine-heading h1{font-size:36px}.magazine-heading .page-icon{width:42px;height:42px;border-radius:14px}
+  .magazine-shelf-wrap{padding:16px 14px 19px;border-radius:20px}.magazine-spine{flex-basis:138px;min-height:148px;padding:15px 13px}.magazine-spine b{margin-top:25px;font-size:15px}.magazine-spine i{left:13px;bottom:11px}
+  .magazine-cover{min-height:440px;padding:23px;border-radius:24px}.magazine-cover-main{left:24px;right:24px}.magazine-cover-main h2{font-size:48px}.magazine-cover header{font-size:7px}.magazine-cover footer{left:23px;right:23px;bottom:21px;font-size:7px}.magazine-cover footer span:last-child{display:none}.magazine-cover-orbit{right:-34px;top:70px;opacity:.7}
+  .magazine-editorial{padding:24px;border-radius:20px}.magazine-editorial h3{font-size:20px}.magazine-editorial>p{font-size:12px}
+  .magazine-section{padding:23px 18px;border-radius:22px}.magazine-section>header{margin-bottom:18px}.magazine-section>header h3{font-size:21px}
+  .magazine-feature-grid,.magazine-words-grid,.magazine-archive-grid{grid-template-columns:1fr}.magazine-diary.lead{grid-column:auto;padding:22px}.magazine-diary.lead h4{font-size:21px}
+  .magazine-note-wall{grid-template-columns:1fr 1fr;gap:11px}.magazine-note-wall article{min-height:130px;padding:17px 14px}.magazine-note-wall p{font-size:11px}
+  .magazine-photo-strip{grid-template-columns:1fr 1fr;gap:10px}.magazine-photo-strip figure:nth-child(n+5){display:none}
+}
+@media(max-width:390px){.magazine-note-wall{grid-template-columns:1fr}.magazine-photo-strip{grid-template-columns:1fr 1fr}.magazine-cover-main h2{font-size:42px}}
+@media(prefers-reduced-motion:reduce){.magazine-spine,.magazine-diary,.magazine-entry,.magazine-quote,.magazine-note-wall article{transition:none}.magazine-spine:hover,.magazine-spine.is-active,.magazine-note-wall article:hover{transform:none}}
