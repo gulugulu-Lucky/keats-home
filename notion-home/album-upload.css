@@ -34,8 +34,15 @@
   background: linear-gradient(145deg, #20263a, #343a53);
   box-shadow: 0 10px 22px rgba(32, 38, 58, .16);
   cursor: pointer;
+  transition: .18s ease;
 }
 .album-upload-toolbar button span { color: #d9c597; margin-right: 4px; }
+.album-upload-toolbar button:disabled {
+  opacity: .56;
+  cursor: wait;
+  box-shadow: none;
+  filter: saturate(.65);
+}
 
 .album-upload-backdrop {
   position: fixed;
