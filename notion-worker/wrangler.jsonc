@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "keats-home-notion",
-  "main": "src/index.js",
+  "main": "src/album-worker.js",
   "compatibility_date": "2026-08-07",
   "observability": { "enabled": true },
   "vars": {
