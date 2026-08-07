@@ -31,6 +31,9 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
+      - name: Apply mobile access fix
+        run: cat ./notion-home/mobile-overrides.css >> ./notion-home/styles.css
+
       - name: Upload Notion Home
         uses: actions/upload-pages-artifact@v4
         with:
