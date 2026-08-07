@@ -56,12 +56,14 @@ jobs:
           cat ./notion-home/return-home.css >> ./notion-home/styles.css
           cat ./notion-home/memory-starmap.css >> ./notion-home/styles.css
           cat ./notion-home/magazine.css >> ./notion-home/styles.css
+          cat ./notion-home/magazine-fixes.css >> ./notion-home/styles.css
+          cat ./notion-home/future-mail.css >> ./notion-home/styles.css
           cat ./notion-home/reader-enhancements.css >> ./notion-home/reader.css
           python - <<'PY'
           from pathlib import Path
           index = Path('./notion-home/index.html')
           text = index.read_text(encoding='utf-8')
-          text = text.replace('href="./styles.css"', 'href="./styles.css?v=20260807e"', 1)
+          text = text.replace('href="./styles.css"', 'href="./styles.css?v=20260807f"', 1)
           text = text.replace(
               '<div class="topbar-right">',
               '<div class="topbar-right">\n          <div class="home-mode-switch" aria-label="小家显示模式">\n            <button type="button" data-home-mode="organize" aria-pressed="false">▦ 整理</button>\n            <button type="button" data-home-mode="home" aria-pressed="true">⌂ 回家</button>\n          </div>',
@@ -73,22 +75,34 @@ jobs:
               1,
           )
           text = text.replace(
+              '        <button class="nav-item" data-view="letters"><span>✉</span><b>信箱</b><i>5</i></button>',
+              '        <button class="nav-item" data-view="letters"><span>✉</span><b>信箱</b><i>5</i></button>\n        <button class="nav-item" data-view="futuremail"><span>📮</span><b>未来邮局</b><i></i></button>',
+              1,
+          )
+          text = text.replace(
               '        <button class="nav-item" data-view="album"><span>▣</span><b>相册</b><i></i></button>',
               '        <button class="nav-item" data-view="magazine"><span>▤</span><b>小家月刊</b><i></i></button>\n        <button class="nav-item" data-view="album"><span>▣</span><b>相册</b><i></i></button>',
               1,
           )
           magazine_view = Path('./notion-home/magazine-view.html').read_text(encoding='utf-8')
           text = text.replace('      <section class="view" id="view-timeline" data-title="时间线">', magazine_view + '      <section class="view" id="view-timeline" data-title="时间线">', 1)
+          future_view = Path('./notion-home/future-mail-view.html').read_text(encoding='utf-8')
+          text = text.replace('      <section class="view" id="view-letters" data-title="信箱">', future_view + '      <section class="view" id="view-letters" data-title="信箱">', 1)
           text = text.replace(
               '<div class="memory-board">',
               '<div class="memory-view-tools">\n            <div class="memory-view-switch" id="memoryViewSwitch" aria-label="记忆库显示方式">\n              <button type="button" class="is-active" data-memory-mode="cards">▦ 卡片</button>\n              <button type="button" data-memory-mode="stars">✦ 星图</button>\n            </div>\n          </div>\n          <section class="memory-starmap-shell" id="memoryStarMap" hidden>\n            <div class="memory-stars-loading"><span>✦</span><b>等你点亮星图。</b></div>\n          </section>\n          <div class="memory-board">',
               1,
           )
-          text = text.replace('<script src="./app.js"></script>', '<script src="./app.js"></script>\n  <script src="./enhancements.js"></script>\n  <script src="./album-upload.js"></script>\n  <script src="./home-status-polish.js"></script>\n  <script src="./little-notes.js"></script>\n  <script src="./home-search.js"></script>\n  <script src="./letter-open.js"></script>\n  <script src="./album-polaroid.js"></script>\n  <script src="./return-home.js?v=20260807c"></script>\n  <script src="./memory-starmap.js?v=20260807d"></script>\n  <script src="./magazine.js?v=20260807e"></script>')
+          text = text.replace('<script src="./app.js"></script>', '<script src="./app.js"></script>\n  <script src="./enhancements.js"></script>\n  <script src="./album-upload.js"></script>\n  <script src="./home-status-polish.js"></script>\n  <script src="./little-notes.js"></script>\n  <script src="./home-search.js"></script>\n  <script src="./letter-open.js"></script>\n  <script src="./album-polaroid.js"></script>\n  <script src="./return-home.js?v=20260807c"></script>\n  <script src="./memory-starmap.js?v=20260807d"></script>\n  <script src="./magazine.js?v=20260807e"></script>\n  <script src="./magazine-fixes.js?v=20260807f"></script>\n  <script src="./future-mail.js?v=20260807f"></script>')
           index.write_text(text, encoding='utf-8')
 
           app = Path('./notion-home/app.js')
           app_text = app.read_text(encoding='utf-8')
+          app_text = app_text.replace(
+              "    { view: 'letters', icon: '✉', title: '信箱', desc: '长信、留言和小纸条' },",
+              "    { view: 'letters', icon: '✉', title: '信箱', desc: '长信、留言和小纸条' },\n    { view: 'futuremail', icon: '📮', title: '未来邮局', desc: '写给以后、到日期才开封的信' },",
+              1,
+          )
           app_text = app_text.replace(
               "    { view: 'album', icon: '▣', title: '相册', desc: '想一直留着的画面' },",
               "    { view: 'magazine', icon: '▤', title: '小家月刊', desc: '每个月自己长出来的一册生活' },\n    { view: 'album', icon: '▣', title: '相册', desc: '想一直留着的画面' },",
@@ -98,6 +112,11 @@ jobs:
 
           search = Path('./notion-home/home-search.js')
           search_text = search.read_text(encoding='utf-8')
+          search_text = search_text.replace(
+              "    { kind: 'room', view: 'letters', icon: '✉', room: '信箱', title: '信箱', text: '长信、留言和小纸条' },",
+              "    { kind: 'room', view: 'letters', icon: '✉', room: '信箱', title: '信箱', text: '长信、留言和小纸条' },\n    { kind: 'room', view: 'futuremail', icon: '📮', room: '未来邮局', title: '未来邮局', text: '写给未来、到日期才会开封的信' },",
+              1,
+          )
           search_text = search_text.replace(
               "    { kind: 'room', view: 'album', icon: '▣', room: '相册', title: '相册', text: '照片、形象图、表情包和专属区' },",
               "    { kind: 'room', view: 'magazine', icon: '▤', room: '小家月刊', title: '小家月刊', text: '每个月自动装订起来的生活册' },\n    { kind: 'room', view: 'album', icon: '▣', room: '相册', title: '相册', text: '照片、形象图、表情包和专属区' },",
