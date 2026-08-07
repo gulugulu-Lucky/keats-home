@@ -1,0 +1,186 @@
+.album-upload-toolbar {
+  margin: 14px 0 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--white) 78%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: var(--shadow-soft);
+}
+.album-upload-toolbar > div { min-width: 0; }
+.album-upload-toolbar small {
+  display: block;
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.album-upload-toolbar b {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 560;
+  color: var(--ink-soft);
+}
+.album-upload-toolbar button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 13px;
+  padding: 11px 14px;
+  color: #f6f0e8;
+  background: linear-gradient(145deg, #20263a, #343a53);
+  box-shadow: 0 10px 22px rgba(32, 38, 58, .16);
+  cursor: pointer;
+}
+.album-upload-toolbar button span { color: #d9c597; margin-right: 4px; }
+
+.album-upload-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  padding: 22px;
+  display: none;
+  place-items: center;
+  background: rgba(20, 23, 35, .38);
+  backdrop-filter: blur(12px);
+}
+.album-upload-backdrop.is-open { display: grid; }
+.album-upload-modal {
+  width: min(520px, 100%);
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 26px;
+  padding: 22px;
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
+  box-shadow: 0 30px 90px rgba(18, 20, 31, .25);
+}
+.album-upload-modal header,
+.album-upload-modal footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.album-upload-modal header { margin-bottom: 18px; }
+.album-upload-modal header small {
+  color: var(--gold);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+.album-upload-modal h2 {
+  margin: 4px 0 0;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 26px;
+  font-weight: 500;
+}
+.album-upload-close {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--white) 76%, transparent);
+  cursor: pointer;
+  font-size: 22px;
+}
+.album-upload-field {
+  display: block;
+  margin: 13px 0;
+}
+.album-upload-field > span {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 650;
+}
+.album-upload-field i { color: var(--muted); font-style: normal; font-weight: 400; }
+.album-upload-field select,
+.album-upload-field input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  padding: 0 13px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--white) 72%, transparent);
+  outline: 0;
+}
+.album-upload-field select:focus,
+.album-upload-field input:focus { border-color: rgba(183,160,115,.72); }
+
+.album-file-picker {
+  min-height: 96px;
+  margin: 14px 0;
+  padding: 15px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  background: color-mix(in srgb, var(--paper-2) 46%, transparent);
+}
+.album-file-picker input { position: absolute; opacity: 0; pointer-events: none; }
+.album-picker-icon {
+  width: 50px;
+  height: 50px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--white) 80%, transparent);
+  box-shadow: var(--shadow-soft);
+  font-size: 22px;
+}
+.album-file-picker > span:nth-of-type(2) { min-width: 0; flex: 1; }
+.album-file-picker b,
+.album-file-picker small { display: block; }
+.album-file-picker b {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+.album-file-picker small { margin-top: 5px; color: var(--muted); font-size: 9px; }
+.album-file-picker em { color: var(--gold); font-size: 11px; font-style: normal; }
+.album-upload-progress {
+  min-height: 24px;
+  margin: 7px 0 4px;
+  color: var(--ink-soft);
+  font-size: 11px;
+  line-height: 1.65;
+}
+.album-upload-modal footer { margin-top: 8px; }
+.album-upload-cancel,
+.album-upload-submit {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.album-upload-cancel { color: var(--muted); background: transparent; }
+.album-upload-submit {
+  min-width: 112px;
+  color: #f7f1e8;
+  background: linear-gradient(145deg, #20263a, #343a53);
+}
+.album-upload-submit:disabled { opacity: .58; cursor: wait; }
+
+@media (max-width: 640px) {
+  .album-upload-toolbar { align-items: stretch; flex-direction: column; }
+  .album-upload-toolbar button { width: 100%; }
+  .album-upload-backdrop { padding: 12px; align-items: end; }
+  .album-upload-modal {
+    width: 100%;
+    max-height: 88vh;
+    overflow: auto;
+    border-radius: 24px 24px 18px 18px;
+    padding: 20px 17px 18px;
+  }
+  .album-upload-modal h2 { font-size: 23px; }
+  .album-file-picker { min-height: 90px; }
+}
