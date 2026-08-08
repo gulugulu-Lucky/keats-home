@@ -1,0 +1,148 @@
+.dj-keats-card {
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 86% 8%, rgba(183,160,115,.16), transparent 34%),
+    linear-gradient(145deg, rgba(38,44,66,.92), rgba(21,26,44,.94));
+}
+.dj-keats-card::after {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  right: -74px;
+  bottom: -82px;
+  border-radius: 50%;
+  border: 1px solid rgba(217,220,240,.08);
+  box-shadow: 0 0 0 22px rgba(217,220,240,.018), 0 0 0 48px rgba(217,220,240,.012);
+  pointer-events: none;
+}
+.dj-keats-live {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(217,220,240,.52);
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+.dj-keats-live i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #a3b592;
+  box-shadow: 0 0 14px rgba(163,181,146,.72);
+}
+.dj-keats-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+.dj-keats-mark {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  border: 1px solid rgba(183,160,115,.32);
+  background: rgba(255,255,255,.035);
+  font-size: 20px;
+  box-shadow: inset 0 1px rgba(255,255,255,.05);
+}
+.dj-keats-head .eyebrow { margin: 0 0 4px; }
+.dj-keats-head h3 {
+  margin: 0;
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 20px;
+  font-weight: 500;
+}
+.dj-keats-card blockquote {
+  position: relative;
+  z-index: 1;
+  margin: 20px 0 16px;
+  padding: 15px 0 0;
+  border-top: 1px solid var(--line);
+  color: rgba(231,220,207,.78);
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 11px;
+  line-height: 1.9;
+}
+.dj-keats-pick {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(183,160,115,.18);
+  border-radius: 15px;
+  background: rgba(183,160,115,.055);
+}
+.dj-keats-pick[hidden] { display: none; }
+.dj-keats-pick small,
+.dj-keats-pick b,
+.dj-keats-pick span { display: block; }
+.dj-keats-pick small {
+  color: var(--gold);
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: .18em;
+}
+.dj-keats-pick b {
+  margin-top: 6px;
+  color: var(--paper);
+  font-family: Georgia, "Songti SC", serif;
+  font-size: 15px;
+  font-weight: 500;
+}
+.dj-keats-pick span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 8px;
+}
+.dj-keats-button {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid rgba(183,160,115,.34);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(183,160,115,.2), rgba(166,160,185,.09));
+  color: var(--paper);
+  cursor: pointer;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  transition: transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.dj-keats-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: rgba(183,160,115,.62);
+  background: linear-gradient(135deg, rgba(183,160,115,.28), rgba(166,160,185,.13));
+}
+.dj-keats-button:disabled { cursor: not-allowed; opacity: .4; }
+.dj-keats-button span { margin-right: 6px; color: var(--gold); }
+.dj-keats-foot {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-top: 9px;
+  color: rgba(213,206,209,.42);
+  font-size: 7px;
+  line-height: 1.65;
+  text-align: center;
+}
+.record-row.is-dj-picked {
+  border-color: rgba(183,160,115,.46);
+  background: linear-gradient(90deg, rgba(183,160,115,.1), rgba(166,160,185,.045));
+  box-shadow: inset 3px 0 rgba(183,160,115,.72);
+}
+.record-row.is-dj-picked .record-index { color: var(--gold); }
+@media (max-width: 820px) {
+  .dj-keats-card { padding: 22px; }
+}
