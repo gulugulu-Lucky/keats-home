@@ -185,3 +185,11 @@
   setTimeout(boot, 120);
   setTimeout(boot, 700);
 })();
+
+(() => {
+  if (document.querySelector('script[data-clipboard-paste]')) return;
+  const script = document.createElement('script');
+  script.src = './clipboard-paste.js?v=20260808a';
+  script.dataset.clipboardPaste = '1';
+  document.body.appendChild(script);
+})();
