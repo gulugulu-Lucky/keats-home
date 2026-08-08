@@ -93,12 +93,18 @@
     return qs('.record-row.is-selected .record-badge')?.textContent?.trim() || '';
   }
 
+  function showAfterLoad(autoplay = false) {
+    loadSongs().then(() => {
+      const song = selectedSong();
+      if (isYoutubeSong(song) && !qs('#keatsYoutubeStage')) showStage(song, autoplay);
+    });
+  }
+
   function handleSpinCapture(event) {
     const button = event.target.closest?.('#spinButton');
     if (!button || selectedBadge() !== 'YouTube') return;
-    const song = selectedSong();
-    if (!isYoutubeSong(song)) return;
 
+    // Never let the old hidden 2px YouTube player take over on mobile/in-app browsers.
     event.preventDefault();
     event.stopImmediatePropagation();
 
@@ -108,10 +114,13 @@
       return;
     }
 
-    // A synthetic click from DJ Keats is blocked here. The original trusted
-    // DJ-button click will bubble to document and create the visible player.
+    // A synthetic click from DJ Keats is intentionally swallowed here.
+    // The original trusted DJ-button tap will create the visible player below.
     if (!event.isTrusted) return;
-    showStage(song, true);
+
+    const song = selectedSong();
+    if (isYoutubeSong(song)) showStage(song, true);
+    else showAfterLoad(false);
   }
 
   function shanghaiHour() {
@@ -126,7 +135,7 @@
   function timeCopy() {
     const hour = shanghaiHour();
     if (hour >= 5 && hour < 11) return { heading: '早上让我选。', pick: "DJ'S PICK · MORNING" };
-    if (hour >= 11 && hour < 18) return { heading: '这会儿让我选。', pick: "DJ'S PICK · AFTERNOON" };
+    if (hour >= 11 && hour < 18) return { heading: '下午让我选。', pick: "DJ'S PICK · AFTERNOON" };
     if (hour >= 18 && hour < 22) return { heading: '今晚让我选。', pick: "DJ'S PICK · EVENING" };
     return { heading: '夜里让我选。', pick: "DJ'S PICK · LATE NIGHT" };
   }
@@ -151,11 +160,12 @@
     }
 
     if (event.target.closest?.('#djPickButton')) {
-      // This listener runs while the original finger tap is still active.
-      // DJ's target listener has already selected the record by now.
+      // Target listener in radio-dj.js has already selected the record; this is
+      // still the same real finger tap, so the iframe is born from user intent.
       refreshDjCopy();
       const song = selectedSong();
       if (isYoutubeSong(song)) showStage(song, true);
+      else if (selectedBadge() === 'YouTube') showAfterLoad(false);
     }
   }
 
