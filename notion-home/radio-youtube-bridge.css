@@ -1,0 +1,54 @@
+.keats-youtube-stage {
+  margin: 18px 0 16px;
+  padding: 10px;
+  border: 1px solid rgba(48,52,73,.12);
+  border-radius: 16px;
+  background: rgba(32,38,58,.055);
+}
+.keats-youtube-stage-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: #77748f;
+  font-size: 6px;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+.keats-youtube-stage-head button {
+  width: 24px;
+  height: 24px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(32,38,58,.08);
+  color: #565a70;
+  cursor: pointer;
+}
+.keats-youtube-frame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  background: #111522;
+  box-shadow: 0 10px 24px rgba(32,38,58,.12);
+}
+.keats-youtube-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.keats-youtube-stage > small {
+  display: block;
+  margin: 8px 2px 1px;
+  color: rgba(48,52,73,.48);
+  font-size: 7px;
+  line-height: 1.6;
+}
+@media (max-width: 430px) {
+  .keats-youtube-stage { margin-top: 14px; padding: 8px; border-radius: 14px; }
+  .keats-youtube-frame { border-radius: 10px; }
+}
