@@ -1,0 +1,14 @@
+.keats-source-credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin: -13px 0 18px;
+  color: rgba(48,52,73,.52);
+  font-size: 7px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+.keats-source-credit:hover { color: #77748f; }
+.keats-source-credit span { color: #b07b55; }
+.keats-source-credit[hidden] { display: none; }
