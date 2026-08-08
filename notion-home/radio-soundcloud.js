@@ -7,19 +7,10 @@
   let songs = [];
   let loading = false;
   let widget = null;
-  let widgetReady = false;
   let loadedUrl = '';
   let playing = false;
   let apiPromise = null;
-
-  function esc(value = '') {
-    return String(value)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
-  }
+  let widgetPromise = null;
 
   function isSoundCloud(song) {
     return Boolean(song && song.sourceType === 'SoundCloud' && /^https:\/\/soundcloud\.com\//i.test(song.sourceUrl || ''));
@@ -65,12 +56,9 @@
       if (badge) badge.textContent = 'SoundCloud';
     });
 
-    const sourced = songs.filter(song => {
-      const type = String(song.sourceType || '').trim();
-      return Boolean(song.sourceUrl && ['自托管音频', 'YouTube', 'Spotify', 'SoundCloud'].includes(type));
-    }).length;
-    const signal = qs('#signalDetail');
-    if (signal && sourced) signal.textContent = `其中 ${sourced} 张已经接上音源；小家黑胶会负责自己的播放控制。`;
+    const sourced = songs.filter(song => song.sourceUrl && ['自托管音频', 'YouTube', 'Spotify', 'SoundCloud'].includes(String(song.sourceType || '').trim())).length;
+    const detail = qs('#signalDetail');
+    if (detail && sourced) detail.textContent = `其中 ${sourced} 张已经接上音源；播放按钮仍然归小家黑胶。`;
   }
 
   function ensureCredit(song) {
@@ -83,8 +71,7 @@
       credit.className = 'keats-source-credit';
       credit.target = '_blank';
       credit.rel = 'noopener noreferrer';
-      const reason = qs('#nowReason', card);
-      reason?.insertAdjacentElement('afterend', credit);
+      qs('#nowReason', card)?.insertAdjacentElement('afterend', credit);
     }
     if (!isSoundCloud(song)) {
       credit.hidden = true;
@@ -109,41 +96,56 @@
     return apiPromise;
   }
 
+  function bindWidgetEvents(SC) {
+    widget.bind(SC.Widget.Events.PLAY, () => setPlaying(true));
+    widget.bind(SC.Widget.Events.PAUSE, () => setPlaying(false));
+    widget.bind(SC.Widget.Events.FINISH, () => setPlaying(false));
+    widget.bind(SC.Widget.Events.ERROR, () => {
+      setPlaying(false);
+      toast('SoundCloud 没有播起来', '官方音源暂时没有回应，再点一次试试');
+    });
+  }
+
   async function ensureWidget(song) {
     if (!isSoundCloud(song)) throw new Error('这张唱片没有 SoundCloud 音源');
     const SC = await ensureApi();
 
-    let iframe = qs('#keatsSoundCloudEngine');
-    if (!iframe) {
-      iframe = document.createElement('iframe');
-      iframe.id = 'keatsSoundCloudEngine';
-      iframe.title = 'Keats Home SoundCloud audio engine';
-      iframe.allow = 'autoplay';
-      iframe.setAttribute('aria-hidden', 'true');
-      iframe.tabIndex = -1;
-      iframe.src = 'about:blank';
-      iframe.style.position = 'fixed';
-      iframe.style.width = '1px';
-      iframe.style.height = '1px';
-      iframe.style.left = '-9999px';
-      iframe.style.bottom = '0';
-      iframe.style.opacity = '0.01';
-      iframe.style.pointerEvents = 'none';
-      document.body.appendChild(iframe);
-      widget = SC.Widget(iframe);
-      widget.bind(SC.Widget.Events.READY, () => { widgetReady = true; });
-      widget.bind(SC.Widget.Events.PLAY, () => setPlaying(true));
-      widget.bind(SC.Widget.Events.PAUSE, () => setPlaying(false));
-      widget.bind(SC.Widget.Events.FINISH, () => setPlaying(false));
-      widget.bind(SC.Widget.Events.ERROR, () => {
-        setPlaying(false);
-        toast('SoundCloud 没有播起来', '官方音源暂时没有回应，再点一次试试');
-      });
+    if (!widget) {
+      if (widgetPromise) return widgetPromise;
+      widgetPromise = new Promise((resolve, reject) => {
+        const iframe = document.createElement('iframe');
+        iframe.id = 'keatsSoundCloudEngine';
+        iframe.title = 'Keats Home SoundCloud audio engine';
+        iframe.allow = 'autoplay';
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.tabIndex = -1;
+        iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(song.sourceUrl)}&auto_play=false&show_artwork=false&show_user=false&show_playcount=false&buying=false&sharing=false&download=false`;
+        iframe.style.position = 'fixed';
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.style.left = '-9999px';
+        iframe.style.bottom = '0';
+        iframe.style.opacity = '0.01';
+        iframe.style.pointerEvents = 'none';
+        document.body.appendChild(iframe);
+
+        widget = SC.Widget(iframe);
+        loadedUrl = song.sourceUrl;
+        bindWidgetEvents(SC);
+        let settled = false;
+        const timer = setTimeout(() => { if (!settled) reject(new Error('SoundCloud 音源加载超时')); }, 8000);
+        widget.bind(SC.Widget.Events.READY, () => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          resolve(widget);
+        });
+      }).finally(() => { widgetPromise = null; });
+      return widgetPromise;
     }
 
     if (loadedUrl !== song.sourceUrl) {
       loadedUrl = song.sourceUrl;
-      widgetReady = false;
       await new Promise((resolve, reject) => {
         let settled = false;
         const timer = setTimeout(() => { if (!settled) reject(new Error('SoundCloud 音源加载超时')); }, 8000);
@@ -157,7 +159,6 @@
           download: false,
           callback: () => {
             settled = true;
-            widgetReady = true;
             clearTimeout(timer);
             resolve();
           }
@@ -221,24 +222,21 @@
     const button = qs('#spinButton');
     if (button && !playing) {
       button.disabled = false;
-      button.innerHTML = '<span>▶</span> 播放';
       button.classList.remove('is-spinning');
+      button.innerHTML = '<span>▶</span> 播放';
     }
-    // Preload the official widget while the user is looking at the record;
-    // the actual PLAY command still comes from their own button tap.
     ensureWidget(song).catch(() => {});
   }
 
   function handleCapture(event) {
-    const spin = event.target.closest?.('#spinButton');
-    if (!spin) return;
+    const button = event.target.closest?.('#spinButton');
+    if (!button) return;
     const song = selectedSong();
     if (!isSoundCloud(song)) return;
     event.preventDefault();
     event.stopImmediatePropagation();
+
     if (!event.isTrusted) {
-      // DJ Keats' synthetic autoplay is intentionally ignored on mobile.
-      // The record is selected; the real play button remains ours to tap.
       syncSelectedSource();
       return;
     }
@@ -264,6 +262,7 @@
   function boot() {
     document.addEventListener('click', handleCapture, true);
     document.addEventListener('click', handleClick, false);
+
     const list = qs('#recordList');
     if (list) {
       new MutationObserver(() => {
@@ -272,6 +271,7 @@
         if (!songs.length) loadSongs();
       }).observe(list, { childList: true, subtree: true });
     }
+
     loadSongs();
     const timer = setInterval(() => {
       decorateRows();
