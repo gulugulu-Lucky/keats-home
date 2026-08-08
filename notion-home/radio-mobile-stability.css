@@ -1,0 +1,72 @@
+/* iPhone / in-app WebView stability layer.
+   Keep the mobile radio in normal document flow and avoid WebKit grid/compositor gaps. */
+@media (max-width: 720px) {
+  .radio-hero {
+    display: block !important;
+  }
+
+  .radio-console {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .turntable-wrap {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+
+  .turntable {
+    min-height: 320px;
+    margin-bottom: 18px;
+  }
+
+  .now-card {
+    min-height: 0 !important;
+  }
+
+  .station-grid,
+  .station-side {
+    display: block !important;
+  }
+
+  .library-card,
+  .station-side > .station-card {
+    margin-bottom: 20px;
+  }
+
+  /* backdrop-filter + several fixed compositing layers can leave unpainted
+     tiles in iOS in-app browsers while scrolling. The solid glass fill is
+     already opaque enough on mobile, so keep the look and drop the costly blur. */
+  .station-card {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* The audio engine must never contribute layout or scrollable overflow. */
+#keatsAudioEngineHost {
+  position: fixed !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  z-index: -1 !important;
+  contain: strict !important;
+}
+
+#keatsAudioEngineHost iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  min-width: 1px !important;
+  min-height: 1px !important;
+  max-width: 1px !important;
+  max-height: 1px !important;
+  border: 0 !important;
+  pointer-events: none !important;
+}
