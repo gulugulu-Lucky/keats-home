@@ -28,7 +28,7 @@
   }
 
   async function loadSongs() {
-    if (loading) return;
+    if (loading || songs.length) return;
     const token = sessionStorage.getItem(SESSION_KEY);
     if (!token) return;
     loading = true;
@@ -53,12 +53,15 @@
       const song = songs.find(item => String(item.title || '').trim() === title);
       if (!isSoundCloud(song)) return;
       const badge = qs('.record-badge', row);
-      if (badge) badge.textContent = 'SoundCloud';
+      // The record list is observed below. Rewriting the same text here used
+      // to retrigger the observer forever on iOS/WebView and freeze rendering.
+      if (badge && badge.textContent.trim() !== 'SoundCloud') badge.textContent = 'SoundCloud';
     });
 
     const sourced = songs.filter(song => song.sourceUrl && ['自托管音频', 'YouTube', 'Spotify', 'SoundCloud'].includes(String(song.sourceType || '').trim())).length;
     const detail = qs('#signalDetail');
-    if (detail && sourced) detail.textContent = `其中 ${sourced} 张已经接上音源；播放按钮仍然归小家黑胶。`;
+    const next = sourced ? `其中 ${sourced} 张已经接上音源；播放按钮仍然归小家黑胶。` : '';
+    if (detail && next && detail.textContent !== next) detail.textContent = next;
   }
 
   function ensureCredit(song) {
@@ -78,17 +81,33 @@
       return;
     }
     credit.hidden = false;
-    credit.href = song.sourceUrl;
-    credit.innerHTML = '<span>◌</span> 官方音源 · Nettwerk Music Group on SoundCloud';
+    if (credit.getAttribute('href') !== song.sourceUrl) credit.href = song.sourceUrl;
+    const label = '<span>◌</span> 官方音源 · Nettwerk Music Group on SoundCloud';
+    if (credit.innerHTML !== label) credit.innerHTML = label;
   }
 
   function ensureApi() {
     if (window.SC?.Widget) return Promise.resolve(window.SC);
     if (apiPromise) return apiPromise;
     apiPromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector('script[data-keats-soundcloud-api]');
+      if (existing) {
+        const wait = setInterval(() => {
+          if (window.SC?.Widget) {
+            clearInterval(wait);
+            resolve(window.SC);
+          }
+        }, 80);
+        setTimeout(() => {
+          clearInterval(wait);
+          if (!window.SC?.Widget) reject(new Error('SoundCloud API 没有准备好'));
+        }, 6000);
+        return;
+      }
       const script = document.createElement('script');
       script.src = 'https://w.soundcloud.com/player/api.js';
       script.async = true;
+      script.dataset.keatsSoundcloudApi = '1';
       script.onload = () => window.SC?.Widget ? resolve(window.SC) : reject(new Error('SoundCloud API 没有准备好'));
       script.onerror = () => reject(new Error('SoundCloud API 没有加载成功'));
       document.head.appendChild(script);
@@ -120,13 +139,22 @@
         iframe.setAttribute('aria-hidden', 'true');
         iframe.tabIndex = -1;
         iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(song.sourceUrl)}&auto_play=false&show_artwork=false&show_user=false&show_playcount=false&buying=false&sharing=false&download=false`;
-        iframe.style.position = 'fixed';
-        iframe.style.width = '1px';
-        iframe.style.height = '1px';
-        iframe.style.left = '-9999px';
-        iframe.style.bottom = '0';
-        iframe.style.opacity = '0.01';
-        iframe.style.pointerEvents = 'none';
+        iframe.style.cssText = [
+          'position:fixed',
+          'width:1px',
+          'height:1px',
+          'min-width:1px',
+          'min-height:1px',
+          'max-width:1px',
+          'max-height:1px',
+          'left:-10000px',
+          'top:0',
+          'border:0',
+          'opacity:0.01',
+          'pointer-events:none',
+          'overflow:hidden',
+          'z-index:-1'
+        ].join(';');
         document.body.appendChild(iframe);
 
         widget = SC.Widget(iframe);
@@ -176,9 +204,11 @@
     const button = qs('#spinButton');
     vinyl?.classList.toggle('is-spinning', playing);
     button?.classList.toggle('is-spinning', playing);
-    if (button) button.innerHTML = playing ? '<span>Ⅱ</span> 暂停' : '<span>▶</span> 播放';
+    const buttonHtml = playing ? '<span>Ⅱ</span> 暂停' : '<span>▶</span> 播放';
+    if (button && button.innerHTML !== buttonHtml) button.innerHTML = buttonHtml;
     const state = qs('#nowState');
-    if (state) state.textContent = playing ? '正在播放 · 小家唱机' : '可播放 · SoundCloud 官方音源';
+    const stateText = playing ? '正在播放 · 小家唱机' : '可播放 · SoundCloud 官方音源';
+    if (state && state.textContent !== stateText) state.textContent = stateText;
   }
 
   function toast(title, detail) {
@@ -218,12 +248,14 @@
     ensureCredit(song);
     if (!isSoundCloud(song)) return;
     const state = qs('#nowState');
-    if (state && !playing) state.textContent = '可播放 · SoundCloud 官方音源';
+    const idleState = '可播放 · SoundCloud 官方音源';
+    if (state && !playing && state.textContent !== idleState) state.textContent = idleState;
     const button = qs('#spinButton');
+    const idleButton = '<span>▶</span> 播放';
     if (button && !playing) {
       button.disabled = false;
       button.classList.remove('is-spinning');
-      button.innerHTML = '<span>▶</span> 播放';
+      if (button.innerHTML !== idleButton) button.innerHTML = idleButton;
     }
     ensureWidget(song).catch(() => {});
   }
@@ -265,10 +297,16 @@
 
     const list = qs('#recordList');
     if (list) {
+      let observerScheduled = false;
       new MutationObserver(() => {
-        decorateRows();
-        syncSelectedSource();
-        if (!songs.length) loadSongs();
+        if (observerScheduled) return;
+        observerScheduled = true;
+        requestAnimationFrame(() => {
+          observerScheduled = false;
+          decorateRows();
+          syncSelectedSource();
+          if (!songs.length) loadSongs();
+        });
       }).observe(list, { childList: true, subtree: true });
     }
 
@@ -278,7 +316,7 @@
       syncSelectedSource();
       if (!songs.length) loadSongs();
       if (songs.length && qsa('.record-row').length) clearInterval(timer);
-    }, 500);
+    }, 600);
     setTimeout(() => clearInterval(timer), 30000);
   }
 
