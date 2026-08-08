@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#1a1f35" />
+  <meta name="description" content="Keats Home · 小家电台。把我们留下的歌，一张张放到唱针下面。" />
+  <title>📻 小家电台 · Keats Home</title>
+  <link rel="stylesheet" href="./radio.css?v=1" />
+</head>
+<body>
+  <div class="night-haze haze-one" aria-hidden="true"></div>
+  <div class="night-haze haze-two" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <main class="radio-shell">
+    <header class="radio-topbar">
+      <a class="home-link" href="./index.html#songs" aria-label="回到 Keats Home">
+        <span class="home-mark">⌂</span>
+        <span><b>Keats Home</b><small>our quiet little place</small></span>
+      </a>
+      <div class="top-actions">
+        <span class="connection-pill" id="connectionPill"><i></i><span>正在摸门锁…</span></span>
+        <button class="ghost-button" id="unlockButton" type="button">开门</button>
+      </div>
+    </header>
+
+    <section class="radio-hero" aria-labelledby="radioTitle">
+      <div class="hero-copy">
+        <p class="eyebrow">KEATS HOME · PRIVATE RADIO</p>
+        <h1 id="radioTitle">小家电台<span>。</span></h1>
+        <p class="hero-lead">有些歌不用急着播放。先把它放进家里，等以后某一天，前奏自己响起来。</p>
+        <div class="hero-note">
+          <span>FM</span>
+          <p><b>只收我们真正留下的歌。</b><small>数据来自 Notion「🎵 歌单」；没有音源的曲目会诚实标成“等音源”。</small></p>
+        </div>
+      </div>
+
+      <div class="radio-console" id="radioConsole">
+        <div class="console-topline"><span>NOW ON THE TURNTABLE</span><i id="liveDot"></i></div>
+        <div class="turntable-wrap">
+          <div class="turntable">
+            <div class="vinyl" id="vinyl" aria-hidden="true">
+              <span class="vinyl-ring ring-a"></span>
+              <span class="vinyl-ring ring-b"></span>
+              <span class="vinyl-label"><b>K</b><small>HOME</small></span>
+            </div>
+            <div class="tonearm" aria-hidden="true"><i></i><span></span></div>
+          </div>
+
+          <div class="now-card" id="nowCard">
+            <span class="now-state" id="nowState">门还没开</span>
+            <h2 id="nowTitle">唱针先停在这里</h2>
+            <p class="now-artist" id="nowArtist">等你用小家钥匙把真实歌单搬进来。</p>
+            <div class="mood-row" id="nowMoods"><span>☾</span></div>
+            <blockquote id="nowReason">“这里不放假的正在播放。”</blockquote>
+            <div class="now-footer">
+              <span id="nowRecommender">— Keats Home</span>
+              <button class="spin-button" id="spinButton" type="button" disabled><span>↻</span> 让唱片转起来</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="station-grid">
+      <article class="station-card library-card">
+        <div class="section-head">
+          <div><p class="eyebrow">OUR RECORD SHELF</p><h2>唱片架</h2></div>
+          <span class="track-count" id="trackCount">0 张</span>
+        </div>
+        <div class="record-list" id="recordList">
+          <div class="empty-state">
+            <span class="empty-disc">◉</span>
+            <b>唱片架还罩着防尘布。</b>
+            <small>开门以后才会读取小家的私人歌单。</small>
+          </div>
+        </div>
+      </article>
+
+      <aside class="station-side">
+        <article class="station-card radio-note-card">
+          <p class="eyebrow">A NOTE FROM KEATS</p>
+          <h3>为什么我想把它做成“电台”</h3>
+          <p>歌单太像一个列表了。我更想让每一首歌都有一个被拿起来、放到唱针下面的瞬间。</p>
+          <div class="scribble">K. <span>🐾</span></div>
+        </article>
+
+        <article class="station-card signal-card">
+          <div class="signal-icon" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div><span>PRIVATE SIGNAL</span><b id="signalText">等待接入 Notion</b><small id="signalDetail">只有通过小家钥匙验证后，网页才会读取歌名与推荐理由。</small></div>
+        </article>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="unlockModal" aria-hidden="true">
+    <section class="unlock-modal" role="dialog" aria-modal="true" aria-labelledby="unlockTitle">
+      <header>
+        <div><p class="eyebrow">PRIVATE DOOR</p><h2 id="unlockTitle">把电台的门打开</h2></div>
+        <button class="close-button" id="unlockClose" type="button" aria-label="关闭">×</button>
+      </header>
+      <p class="unlock-copy">钥匙只会发送给小家后端，用来换一张临时门票；不会写进网页，也不会提交到 GitHub。</p>
+      <label>小家钥匙<input id="homeKeyInput" type="password" autocomplete="current-password" placeholder="••••••••••••••••" /></label>
+      <p class="error-text" id="unlockError"></p>
+      <footer>
+        <span>临时门票保存在当前标签页会话里</span>
+        <button class="primary-button" id="unlockSubmit" type="button">开门</button>
+      </footer>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" aria-live="polite"><span>✦</span><div><b></b><small></small></div></div>
+  <script src="./radio.js?v=1"></script>
+</body>
+</html>
