@@ -5,6 +5,14 @@
   const qsa = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 
   const state = { songs: [], selectedIndex: -1, spinning: false };
+  const playback = {
+    audio: new Audio(),
+    audioUrl: '',
+    ytPlayer: null,
+    ytVideoId: '',
+    ytApiPromise: null
+  };
+
   const nodes = {
     pill: qs('#connectionPill'),
     unlockButton: qs('#unlockButton'),
@@ -23,11 +31,14 @@
     nowRecommender: qs('#nowRecommender'),
     spinButton: qs('#spinButton'),
     vinyl: qs('#vinyl'),
+    vinylLabel: qs('.vinyl-label'),
     liveDot: qs('#liveDot'),
     signalText: qs('#signalText'),
     signalDetail: qs('#signalDetail'),
     toast: qs('#toast')
   };
+
+  playback.audio.preload = 'metadata';
 
   function esc(value = '') {
     return String(value)
@@ -95,20 +106,180 @@
     nodes.error.textContent = '';
   }
 
-  function stopSpin() {
-    state.spinning = false;
-    nodes.vinyl.classList.remove('is-spinning');
-    nodes.spinButton.classList.remove('is-spinning');
-    nodes.spinButton.innerHTML = '<span>↻</span> 让唱片转起来';
+  function setSpinning(spinning) {
+    state.spinning = Boolean(spinning);
+    nodes.vinyl.classList.toggle('is-spinning', state.spinning);
+    nodes.spinButton.classList.toggle('is-spinning', state.spinning);
   }
 
-  function selectSong(index, options = {}) {
+  function youtubeVideoId(value = '') {
+    if (!value) return '';
+    try {
+      const url = new URL(value);
+      const host = url.hostname.replace(/^www\./, '').toLowerCase();
+      if (host === 'youtu.be') return url.pathname.split('/').filter(Boolean)[0] || '';
+      if (host === 'youtube.com' || host === 'music.youtube.com' || host === 'm.youtube.com') {
+        if (url.pathname === '/watch') return url.searchParams.get('v') || '';
+        const parts = url.pathname.split('/').filter(Boolean);
+        if (['embed', 'shorts', 'live'].includes(parts[0])) return parts[1] || '';
+      }
+    } catch {}
+    return '';
+  }
+
+  function looksLikeAudioUrl(value = '') {
+    return /^https?:\/\//i.test(value) && /\.(mp3|m4a|aac|ogg|oga|wav|flac)(?:[?#]|$)/i.test(value);
+  }
+
+  function sourceMeta(song = {}) {
+    const type = String(song.sourceType || '').trim();
+    const url = String(song.sourceUrl || '').trim();
+    if (type === '自托管音频' && /^https?:\/\//i.test(url)) {
+      return { kind: 'audio', badge: '自托管', state: '可播放 · 自托管音频', idleLabel: '▶ 播放' };
+    }
+    if (type === 'YouTube' && youtubeVideoId(url)) {
+      return { kind: 'youtube', badge: 'YouTube', state: '可播放 · YouTube', idleLabel: '▶ 播放' };
+    }
+    if (type === 'Spotify' && /^https?:\/\//i.test(url)) {
+      return { kind: 'spotify', badge: 'Spotify', state: '外部播放 · Spotify', idleLabel: '↗ 打开 Spotify' };
+    }
+    if (!type && looksLikeAudioUrl(url)) {
+      return { kind: 'audio', badge: '音频', state: '可播放 · 直接音频', idleLabel: '▶ 播放' };
+    }
+    if (!type && youtubeVideoId(url)) {
+      return { kind: 'youtube', badge: 'YouTube', state: '可播放 · YouTube', idleLabel: '▶ 播放' };
+    }
+    return { kind: 'visual', badge: '等音源', state: '等音源 · 已放到唱针下', idleLabel: '↻ 让唱片转起来' };
+  }
+
+  function setButtonLabel(song, playing = false) {
+    const meta = sourceMeta(song);
+    let text = meta.idleLabel;
+    let symbol = '↻';
+    if (meta.kind === 'audio' || meta.kind === 'youtube') {
+      text = playing ? '暂停' : '播放';
+      symbol = playing ? 'Ⅱ' : '▶';
+    } else if (meta.kind === 'spotify') {
+      text = '打开 Spotify';
+      symbol = '↗';
+    } else if (playing) {
+      text = '停下唱片';
+      symbol = '↻';
+    }
+    nodes.spinButton.innerHTML = `<span>${symbol}</span> ${text}`;
+  }
+
+  function setCover(song = {}) {
+    const cover = String(song.coverUrl || '').trim();
+    const b = qs('b', nodes.vinylLabel);
+    const small = qs('small', nodes.vinylLabel);
+    if (/^https?:\/\//i.test(cover)) {
+      nodes.vinylLabel.style.backgroundImage = `url(${JSON.stringify(cover)})`;
+      nodes.vinylLabel.style.backgroundSize = 'cover';
+      nodes.vinylLabel.style.backgroundPosition = 'center';
+      if (b) b.style.opacity = '0';
+      if (small) small.style.opacity = '0';
+      return;
+    }
+    nodes.vinylLabel.style.backgroundImage = '';
+    nodes.vinylLabel.style.backgroundSize = '';
+    nodes.vinylLabel.style.backgroundPosition = '';
+    if (b) b.style.opacity = '';
+    if (small) small.style.opacity = '';
+  }
+
+  function ensureYouTubeApi() {
+    if (window.YT?.Player) return Promise.resolve(window.YT);
+    if (playback.ytApiPromise) return playback.ytApiPromise;
+    playback.ytApiPromise = new Promise((resolve, reject) => {
+      const prior = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => {
+        try { if (typeof prior === 'function') prior(); } catch {}
+        resolve(window.YT);
+      };
+      const script = document.createElement('script');
+      script.src = 'https://www.youtube.com/iframe_api';
+      script.async = true;
+      script.onerror = () => reject(new Error('YouTube 播放器没有加载成功'));
+      document.head.appendChild(script);
+      setTimeout(() => {
+        if (window.YT?.Player) resolve(window.YT);
+      }, 2500);
+    });
+    return playback.ytApiPromise;
+  }
+
+  async function ensureYouTubePlayer(videoId) {
+    const YT = await ensureYouTubeApi();
+    if (playback.ytPlayer && playback.ytVideoId === videoId) return playback.ytPlayer;
+    if (playback.ytPlayer) {
+      try { playback.ytPlayer.destroy(); } catch {}
+      playback.ytPlayer = null;
+    }
+    qs('#keatsYoutubePlayer')?.remove();
+    const host = document.createElement('div');
+    host.id = 'keatsYoutubePlayer';
+    host.style.position = 'fixed';
+    host.style.width = '2px';
+    host.style.height = '2px';
+    host.style.left = '-9999px';
+    host.style.bottom = '0';
+    host.style.opacity = '0.01';
+    host.style.pointerEvents = 'none';
+    document.body.appendChild(host);
+
+    playback.ytVideoId = videoId;
+    playback.ytPlayer = await new Promise((resolve, reject) => {
+      let settled = false;
+      const player = new YT.Player(host, {
+        width: '2',
+        height: '2',
+        videoId,
+        playerVars: { playsinline: 1, rel: 0, origin: location.origin },
+        events: {
+          onReady: () => {
+            settled = true;
+            resolve(player);
+          },
+          onStateChange: event => {
+            if (event.data === YT.PlayerState.ENDED || event.data === YT.PlayerState.PAUSED) {
+              setSpinning(false);
+              const song = state.songs[state.selectedIndex];
+              if (song) setButtonLabel(song, false);
+            }
+            if (event.data === YT.PlayerState.PLAYING) {
+              setSpinning(true);
+              const song = state.songs[state.selectedIndex];
+              if (song) setButtonLabel(song, true);
+            }
+          },
+          onError: () => showToast('YouTube 没有播起来', '这首视频可能不允许嵌入播放')
+        }
+      });
+      setTimeout(() => { if (!settled) reject(new Error('YouTube 播放器加载超时')); }, 8000);
+    });
+    return playback.ytPlayer;
+  }
+
+  function stopPlayback(options = {}) {
+    try { playback.audio.pause(); } catch {}
+    if (!options.keepAudioPosition) {
+      try { playback.audio.currentTime = 0; } catch {}
+    }
+    if (playback.ytPlayer) {
+      try { playback.ytPlayer.stopVideo(); } catch {}
+    }
+    setSpinning(false);
+  }
+
+  function selectSong(index) {
     const song = state.songs[index];
     if (!song) return;
+    stopPlayback();
     state.selectedIndex = index;
-    if (!options.keepSpin) stopSpin();
     qsa('.record-row', nodes.recordList).forEach((row, rowIndex) => row.classList.toggle('is-selected', rowIndex === index));
-    nodes.nowState.textContent = '等音源 · 已放到唱针下';
+    const meta = sourceMeta(song);
+    nodes.nowState.textContent = meta.state;
     nodes.nowTitle.textContent = song.title || '未命名歌曲';
     nodes.nowArtist.textContent = song.artist && song.artist !== '待补充' ? song.artist : '歌手还没写进去';
     nodes.nowMoods.innerHTML = (song.moods?.length ? song.moods : ['♪']).map(mood => `<span>${esc(mood)}</span>`).join('');
@@ -116,6 +287,8 @@
     nodes.nowRecommender.textContent = `— ${song.recommender || '我们'} 推荐`;
     nodes.spinButton.disabled = false;
     nodes.liveDot.classList.add('is-live');
+    setButtonLabel(song, false);
+    setCover(song);
   }
 
   function renderSongs(items = []) {
@@ -131,20 +304,24 @@
     nodes.recordList.innerHTML = items.map((song, index) => {
       const moodText = song.moods?.length ? song.moods.slice(0, 2).join(' · ') : '还没标氛围';
       const artist = song.artist && song.artist !== '待补充' ? song.artist : '歌手待补充';
+      const source = sourceMeta(song);
       return `
         <button class="record-row" type="button" data-record-index="${index}">
           <span class="record-index">${String(index + 1).padStart(2, '0')}</span>
           <span class="record-main"><b>${esc(song.title || '未命名歌曲')}</b><small>${esc(artist)}</small></span>
           <span class="record-person"><b>${esc(song.recommender || '我们')}</b><small>${esc(moodText)}</small></span>
-          <span class="record-badge">等音源</span>
+          <span class="record-badge">${esc(source.badge)}</span>
         </button>`;
     }).join('');
 
     qsa('[data-record-index]', nodes.recordList).forEach(button => {
       button.addEventListener('click', () => selectSong(Number(button.dataset.recordIndex)));
     });
+    const sourced = items.filter(item => sourceMeta(item).kind !== 'visual').length;
     nodes.signalText.textContent = `Notion 已接通 · ${items.length} 张唱片`;
-    nodes.signalDetail.textContent = '歌名、歌手、推荐人、氛围和推荐理由都来自我们的小家。';
+    nodes.signalDetail.textContent = sourced
+      ? `其中 ${sourced} 张已经接上音源；直接音频和 YouTube 可以从黑胶按钮播放。`
+      : '歌单已经同步；给「音源类型 / 音源链接」填值以后，这里就会真的响起来。';
     selectSong(0);
   }
 
@@ -211,23 +388,97 @@
     }
   }
 
-  nodes.spinButton.addEventListener('click', () => {
-    if (state.selectedIndex < 0) return;
-    state.spinning = !state.spinning;
-    nodes.vinyl.classList.toggle('is-spinning', state.spinning);
-    nodes.spinButton.classList.toggle('is-spinning', state.spinning);
-    nodes.spinButton.innerHTML = state.spinning
-      ? '<span>↻</span> 停下唱片'
-      : '<span>↻</span> 让唱片转起来';
-    if (state.spinning) showToast('唱片开始转了', '只是视觉唱盘；这首歌还没有接音源');
+  async function toggleSelectedSong() {
+    const song = state.songs[state.selectedIndex];
+    if (!song) return;
+    const meta = sourceMeta(song);
+
+    if (meta.kind === 'visual') {
+      const next = !state.spinning;
+      setSpinning(next);
+      setButtonLabel(song, next);
+      if (next) showToast('唱片开始转了', '这张还没有音源，所以现在只转黑胶');
+      return;
+    }
+
+    if (meta.kind === 'spotify') {
+      window.open(song.sourceUrl, '_blank', 'noopener');
+      showToast('把 Spotify 打开了', '以后再把它升级成小家里的内嵌播放');
+      return;
+    }
+
+    if (meta.kind === 'audio') {
+      if (playback.audioUrl !== song.sourceUrl) {
+        playback.audio.pause();
+        playback.audioUrl = song.sourceUrl;
+        playback.audio.src = song.sourceUrl;
+        playback.audio.currentTime = 0;
+      }
+      if (!playback.audio.paused) {
+        playback.audio.pause();
+        setSpinning(false);
+        setButtonLabel(song, false);
+        return;
+      }
+      try {
+        await playback.audio.play();
+        setSpinning(true);
+        setButtonLabel(song, true);
+        nodes.nowState.textContent = '正在播放 · 自托管音频';
+      } catch (error) {
+        setSpinning(false);
+        setButtonLabel(song, false);
+        showToast('音频没有播起来', '检查链接是否是浏览器可以直接访问的音频文件');
+      }
+      return;
+    }
+
+    if (meta.kind === 'youtube') {
+      const videoId = youtubeVideoId(song.sourceUrl);
+      try {
+        const player = await ensureYouTubePlayer(videoId);
+        const playerState = player.getPlayerState?.();
+        if (playerState === window.YT?.PlayerState?.PLAYING) {
+          player.pauseVideo();
+          setSpinning(false);
+          setButtonLabel(song, false);
+          return;
+        }
+        player.playVideo();
+        setSpinning(true);
+        setButtonLabel(song, true);
+        nodes.nowState.textContent = '正在播放 · YouTube';
+      } catch (error) {
+        setSpinning(false);
+        setButtonLabel(song, false);
+        showToast('YouTube 没有播起来', error.message || '再点一次播放试试');
+      }
+    }
+  }
+
+  playback.audio.addEventListener('ended', () => {
+    const song = state.songs[state.selectedIndex];
+    setSpinning(false);
+    if (song) {
+      setButtonLabel(song, false);
+      nodes.nowState.textContent = sourceMeta(song).state;
+    }
+  });
+  playback.audio.addEventListener('pause', () => {
+    const song = state.songs[state.selectedIndex];
+    if (!song || sourceMeta(song).kind !== 'audio') return;
+    setSpinning(false);
+    setButtonLabel(song, false);
   });
 
+  nodes.spinButton.addEventListener('click', toggleSelectedSong);
   nodes.unlockButton.addEventListener('click', openUnlock);
   nodes.unlockClose.addEventListener('click', closeUnlock);
   nodes.unlockModal.addEventListener('mousedown', event => { if (event.target === nodes.unlockModal) closeUnlock(); });
   nodes.unlockSubmit.addEventListener('click', unlock);
   nodes.keyInput.addEventListener('keydown', event => { if (event.key === 'Enter') unlock(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeUnlock(); });
+  window.addEventListener('beforeunload', () => stopPlayback());
 
   checkBackend();
 })();
