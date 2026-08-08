@@ -29,8 +29,16 @@ async function notionSongs(env) {
 
 export default {
   async fetch(request, env, ctx) {
-    const response = await appWorker.fetch(request, env, ctx);
     const url = new URL(request.url);
+
+    if (request.method === 'GET' && url.pathname === '/health/radio') {
+      return new Response(JSON.stringify({ status: 'ok', radioSourceBridge: true, version: 2 }), {
+        status: 200,
+        headers: { 'content-type': 'application/json; charset=utf-8' }
+      });
+    }
+
+    const response = await appWorker.fetch(request, env, ctx);
     if (request.method !== 'GET' || url.pathname !== '/api/songs' || !response.ok) return response;
 
     try {
