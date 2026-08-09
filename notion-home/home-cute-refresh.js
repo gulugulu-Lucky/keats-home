@@ -1,5 +1,11 @@
 (() => {
   const qs = (selector, scope = document) => scope.querySelector(selector);
+  const setText = (node, value) => {
+    if (node && node.textContent !== value) node.textContent = value;
+  };
+  const setHtml = (node, value) => {
+    if (node && node.innerHTML !== value) node.innerHTML = value;
+  };
 
   function sectionTitle(key, eyebrow, title, note) {
     let node = qs(`[data-home-section="${key}"]`);
@@ -48,40 +54,26 @@
   function relabelCards() {
     const diary = qs('#view-home .diary-card');
     if (diary) {
-      const kicker = qs('.card-kicker', diary);
-      const title = qs('h2', diary);
-      const desc = qs(':scope > p', diary);
-      const link = qs('.card-link', diary);
-      if (kicker) kicker.innerHTML = '<span>📖</span> 桌上的日记本';
-      if (title) title.textContent = '翻翻今天写了什么';
-      if (desc) desc.textContent = '长长短短都算。今天发生过的东西，就放在这张纸上。';
-      if (link) link.innerHTML = '钻进日记本 <span>↗</span>';
+      setHtml(qs('.card-kicker', diary), '<span>📖</span> 桌上的日记本');
+      setText(qs('h2', diary), '翻翻今天写了什么');
+      setText(qs(':scope > p', diary), '长长短短都算。今天发生过的东西，就放在这张纸上。');
+      setHtml(qs('.card-link', diary), '钻进日记本 <span>↗</span>');
     }
 
     const keats = qs('#view-home .keats-card');
-    if (keats) {
-      const title = qs('.keats-head h3', keats);
-      if (title) title.textContent = '小砚台刚刚在干嘛';
-    }
+    if (keats) setText(qs('.keats-head h3', keats), '小砚台刚刚在干嘛');
 
     const letter = qs('#view-home .letter-card');
     if (letter) {
-      const kicker = qs('.card-kicker', letter);
-      const link = qs('.card-link', letter);
-      if (kicker) kicker.innerHTML = '<span>💌</span> 门边的小信箱';
-      if (link) link.innerHTML = '拆信去 <span>→</span>';
+      setHtml(qs('.card-kicker', letter), '<span>💌</span> 门边的小信箱');
+      setHtml(qs('.card-link', letter), '拆信去 <span>→</span>');
     }
 
     const memory = qs('#view-home .memory-card');
-    if (memory) {
-      const kicker = qs('.card-kicker', memory);
-      if (kicker) kicker.innerHTML = '<span>🗝️</span> 上锁的小抽屉';
-    }
+    if (memory) setHtml(qs('.card-kicker', memory), '<span>🗝️</span> 上锁的小抽屉');
 
-    const recentTitle = qs('#view-home .recent-card .section-heading h2');
-    const recentEyebrow = qs('#view-home .recent-card .section-heading .eyebrow');
-    if (recentTitle) recentTitle.textContent = '今天留下了什么';
-    if (recentEyebrow) recentEyebrow.textContent = 'TODAY AT HOME';
+    setText(qs('#view-home .recent-card .section-heading h2'), '今天留下了什么');
+    setText(qs('#view-home .recent-card .section-heading .eyebrow'), 'TODAY AT HOME');
   }
 
   function syncLatestHomeBits() {
@@ -90,15 +82,17 @@
     if (pawRow && keatsQuote) {
       const body = qs('small', pawRow)?.textContent?.trim();
       const title = qs('b', pawRow)?.textContent?.trim();
-      keatsQuote.textContent = body || title || '豹豹刚刚在家里转了一圈。';
+      setText(keatsQuote, body || title || '豹豹刚刚在家里转了一圈。');
     }
 
     const letterRow = qs('#view-home .trace-row[data-view="letters"]');
     const letterTitle = qs('#view-home .letter-card h3');
     const letterDesc = qs('#view-home .letter-card p');
     if (letterRow && letterTitle) {
-      letterTitle.textContent = qs('b', letterRow)?.textContent?.trim() || letterTitle.textContent;
-      if (letterDesc) letterDesc.textContent = qs('small', letterRow)?.textContent?.trim() || letterDesc.textContent;
+      const title = qs('b', letterRow)?.textContent?.trim();
+      const body = qs('small', letterRow)?.textContent?.trim();
+      if (title) setText(letterTitle, title);
+      if (body && letterDesc) setText(letterDesc, body);
     }
   }
 
