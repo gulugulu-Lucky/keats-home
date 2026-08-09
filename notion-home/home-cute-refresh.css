@@ -92,6 +92,7 @@
 #view-home .recent-card .section-heading{margin-bottom:6px}
 #view-home .trace-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 #view-home .trace-row{
+  display:grid;
   min-width:0;
   min-height:92px;
   border:1px solid var(--line);
@@ -100,6 +101,7 @@
   background:color-mix(in srgb,var(--paper) 64%,transparent);
   grid-template-columns:34px minmax(0,1fr);
   align-items:start;
+  column-gap:10px;
 }
 #view-home .trace-row + .trace-row{border-top:1px solid var(--line)}
 #view-home .trace-row .trace-icon{
