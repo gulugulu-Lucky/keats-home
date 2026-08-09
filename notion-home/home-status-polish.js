@@ -1,5 +1,40 @@
 (() => {
   let scheduled = false;
+  let clockTimer = null;
+
+  function renderLiveClock() {
+    const today = document.querySelector('#todayText');
+    const shortDate = document.querySelector('#shortDate');
+    if (!today && !shortDate) return;
+
+    const now = new Date();
+    const dateText = new Intl.DateTimeFormat('zh-CN', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric'
+    }).format(now);
+    const timeText = new Intl.DateTimeFormat('zh-CN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      hourCycle: 'h23'
+    }).format(now);
+
+    if (today) today.textContent = `${dateText} · ${timeText}`;
+    if (shortDate) {
+      shortDate.textContent = new Intl.DateTimeFormat('en-GB', {
+        month: '2-digit',
+        day: '2-digit'
+      }).format(now).replace('/', ' / ');
+    }
+  }
+
+  function startLiveClock() {
+    renderLiveClock();
+    if (clockTimer) clearInterval(clockTimer);
+    clockTimer = setInterval(renderLiveClock, 1000);
+  }
 
   function polishHome() {
     const host = document.querySelector('.little-weather');
@@ -38,6 +73,7 @@
 
   function polish() {
     scheduled = false;
+    renderLiveClock();
     polishHome();
     polishReader();
   }
@@ -51,8 +87,17 @@
   const observer = new MutationObserver(schedulePolish);
   observer.observe(document.body, { childList: true, subtree: true });
 
-  window.addEventListener('pageshow', schedulePolish);
+  window.addEventListener('pageshow', () => {
+    schedulePolish();
+    renderLiveClock();
+  });
+  window.addEventListener('focus', renderLiveClock);
   window.addEventListener('hashchange', schedulePolish);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) renderLiveClock();
+  });
+
+  startLiveClock();
   schedulePolish();
   setTimeout(schedulePolish, 500);
   setTimeout(schedulePolish, 1200);
