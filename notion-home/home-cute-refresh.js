@@ -7,6 +7,25 @@
     if (node && node.innerHTML !== value) node.innerHTML = value;
   };
 
+  function updateLiveClock() {
+    const now = new Date();
+    const fullDate = new Intl.DateTimeFormat('zh-CN', {
+      weekday: 'long', month: 'long', day: 'numeric'
+    }).format(now);
+    const time = new Intl.DateTimeFormat('zh-CN', {
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    }).format(now);
+    const short = new Intl.DateTimeFormat('en-GB', {
+      month: '2-digit', day: '2-digit'
+    }).format(now).replace('/', ' / ');
+
+    setText(qs('#todayText'), `${fullDate} · ${time}`);
+    setText(qs('#shortDate'), short);
+    setText(qs('#editorDate'), new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    }).format(now));
+  }
+
   function sectionTitle(key, eyebrow, title, note) {
     let node = qs(`[data-home-section="${key}"]`);
     if (node) return node;
@@ -135,8 +154,17 @@
     observer.observe(homeView, { childList: true, subtree: true, characterData: true });
   }
 
-  window.addEventListener('pageshow', schedule);
+  window.addEventListener('pageshow', () => {
+    updateLiveClock();
+    schedule();
+  });
   window.addEventListener('hashchange', schedule);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) updateLiveClock();
+  });
+
+  updateLiveClock();
+  setInterval(updateLiveClock, 1000);
   schedule();
   setTimeout(schedule, 300);
   setTimeout(schedule, 1200);
