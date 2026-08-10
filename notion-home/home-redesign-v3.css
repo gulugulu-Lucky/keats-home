@@ -1,0 +1,72 @@
+/* Keats Home · homepage redesign v3 · loaded last on purpose */
+#view-home .hero-copy h1 .hero-welcome,
+#view-home .hero-copy h1 .hero-kitten{display:block}
+#view-home .hero-copy h1 .hero-welcome{color:var(--ink)}
+#view-home .hero-copy h1 .hero-kitten{color:var(--gold);font-style:normal;margin-top:.08em}
+#view-home .hero-copy h1 .hero-kitten::after{display:none!important}
+
+@media(max-width:720px){
+  body:has(#view-home.is-visible) .topbar{height:46px!important;padding:0 12px!important;background:color-mix(in srgb,var(--paper) 90%,transparent)!important}
+  body:has(#view-home.is-visible) .topbar-left{gap:8px!important}
+  body:has(#view-home.is-visible) .crumbs{font-size:11px!important}
+  body:has(#view-home.is-visible) .crumbs span{display:none!important}
+  body:has(#view-home.is-visible) .topbar-right{gap:5px!important}
+  body:has(#view-home.is-visible) .topbar-right .sync-pill,
+  body:has(#view-home.is-visible) .topbar-right .soft-button,
+  body:has(#view-home.is-visible) .home-mode-switch [data-home-mode="organize"]{display:none!important}
+  body:has(#view-home.is-visible) .home-mode-switch{padding:2px!important;background:transparent!important;border:0!important;box-shadow:none!important}
+  body:has(#view-home.is-visible) .home-mode-switch [data-home-mode="home"]{padding:5px 9px!important;border:1px solid var(--line)!important;background:color-mix(in srgb,var(--white) 68%,transparent)!important;font-size:9px!important}
+
+  body.keats-return-home #view-home .home-wrap,
+  #view-home .home-wrap{width:calc(100% - 20px)!important;padding-top:10px!important;padding-bottom:62px!important}
+  body.keats-return-home #view-home .hero-card,
+  #view-home .hero-card{display:flex!important;flex-direction:column!important;min-height:0!important;border-radius:24px 19px 28px 21px!important;overflow:visible!important}
+
+  body.keats-return-home #view-home .hero-presence,
+  #view-home .hero-presence{position:static!important;align-self:flex-start!important;margin:14px 16px 0!important;max-width:none!important;padding:6px 10px!important;font-size:9px!important;transform:rotate(-.6deg)!important}
+
+  body.keats-return-home #view-home .hero-copy,
+  #view-home .hero-copy{padding:18px 18px 8px!important;display:block!important}
+  body.keats-return-home #view-home .hero-copy .eyebrow,
+  #view-home .hero-copy .eyebrow{margin-bottom:10px!important}
+  body.keats-return-home #view-home #todayText,
+  #view-home #todayText{min-height:24px!important;padding:4px 8px!important;font-size:9px!important}
+  body.keats-return-home #view-home .hero-copy h1,
+  #view-home .hero-copy h1{font-size:34px!important;line-height:.98!important;letter-spacing:-.035em!important;margin:0!important;max-width:none!important}
+  #view-home .hero-copy h1 .hero-welcome{font-size:.95em}
+  #view-home .hero-copy h1 .hero-kitten{font-size:1.08em;margin-left:.7em}
+  body.keats-return-home #view-home .hero-copy>p,
+  #view-home .hero-copy>p{font-size:11px!important;line-height:1.65!important;margin:14px 0 0!important;max-width:25em!important;color:var(--ink-soft)!important}
+  body.keats-return-home #view-home .hero-actions,
+  #view-home .hero-actions{margin-top:16px!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:10px!important}
+  #view-home .hero-actions .primary-button{width:auto!important;min-height:36px!important;padding:7px 14px!important;font-size:10px!important;border-radius:13px 11px 14px 10px!important}
+  #view-home .hero-actions .text-button{font-size:9px!important;text-align:left!important;max-width:115px!important;line-height:1.4!important}
+
+  body.keats-return-home #view-home .hero-scene.home-doodle-scene-v2,
+  #view-home .hero-scene.home-doodle-scene-v2{min-height:172px!important;height:172px!important;padding:0 12px 12px!important;margin-top:2px!important;background:linear-gradient(180deg,transparent,rgba(217,183,177,.045))!important}
+  body.keats-return-home #view-home .home-doodle-scene-v2 svg,
+  #view-home .home-doodle-scene-v2 svg{width:min(100%,330px)!important;height:168px!important;max-height:168px!important;transform:translateY(2px)!important}
+
+  #view-home .hero-card::before{width:46px!important;height:14px!important;left:18px!important;top:-7px!important}
+  #view-home .hero-card::after{width:46px!important;height:14px!important;right:22px!important;bottom:-6px!important}
+
+  #view-home .home-status-feature{padding:15px!important;border-radius:19px!important}
+  #view-home .home-status-feature .section-heading h2{font-size:21px!important}
+  #view-home .home-status-feature .home-state-person{min-height:76px!important;padding:12px!important}
+  #view-home .home-status-feature .home-state-person b{font-size:17px!important}
+  #view-home .home-section-title{margin-top:21px!important}
+
+  body:has(#view-home.is-visible) .mobile-bottom-nav{height:50px!important;padding:3px 8px max(3px,env(safe-area-inset-bottom))!important;background:color-mix(in srgb,var(--paper) 78%,transparent)!important;backdrop-filter:blur(18px)!important}
+  body:has(#view-home.is-visible) .mobile-bottom-nav button span{font-size:13px!important}
+  body:has(#view-home.is-visible) .mobile-bottom-nav button small{font-size:6px!important}
+}
+
+@media(max-width:430px){
+  body.keats-return-home #view-home .hero-copy h1,
+  #view-home .hero-copy h1{font-size:32px!important}
+  #view-home .hero-copy h1 .hero-kitten{margin-left:.55em}
+  body.keats-return-home #view-home .hero-scene.home-doodle-scene-v2,
+  #view-home .hero-scene.home-doodle-scene-v2{height:164px!important;min-height:164px!important}
+  body.keats-return-home #view-home .home-doodle-scene-v2 svg,
+  #view-home .home-doodle-scene-v2 svg{height:158px!important;max-height:158px!important}
+}
