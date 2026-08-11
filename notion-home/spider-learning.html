@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#e8dfd2" />
+  <title>小蜘蛛机器人 · 学习地图 | Keats Home</title>
+  <style>
+    :root{
+      --ink:#27262d;--muted:#76717c;--paper:#f8f2e9;--paper2:#eee3d5;
+      --line:#a99c8d;--gold:#a68b55;--lav:#b7afc7;--navy:#30364a;--white:#fffdf9;
+    }
+    *{box-sizing:border-box} body{margin:0;color:var(--ink);font-family:ui-rounded,"SF Pro Rounded","PingFang SC","Microsoft YaHei",sans-serif;background:
+      radial-gradient(circle at 20% 0%,#fff8ed 0 14%,transparent 36%),
+      linear-gradient(145deg,#e7ddd0,#d8ced0 70%,#cbc9d6);min-height:100vh}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E")}
+    .shell{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:26px 0 70px}
+    .top{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px}
+    a{color:inherit}.back,.notion{display:inline-flex;align-items:center;gap:8px;text-decoration:none;border:1px solid rgba(65,58,52,.16);background:rgba(255,253,249,.66);backdrop-filter:blur(10px);padding:10px 14px;border-radius:999px;font-size:13px;box-shadow:0 8px 30px rgba(53,48,47,.08)}
+    .hero{position:relative;overflow:hidden;padding:30px 32px;border-radius:28px;background:rgba(255,253,249,.82);border:1px solid rgba(74,65,55,.12);box-shadow:0 24px 70px rgba(44,39,41,.12);transform:rotate(-.15deg)}
+    .hero:after{content:"🕷️";position:absolute;right:28px;top:16px;font-size:74px;filter:grayscale(1);opacity:.12;transform:rotate(16deg)}
+    .eyebrow{font-size:11px;letter-spacing:.16em;color:#8e7957;font-weight:800}.hero h1{font-size:clamp(30px,5vw,54px);margin:8px 0 10px;font-family:Georgia,"Songti SC",serif;font-weight:600}.hero p{margin:0;color:var(--muted);line-height:1.8;max-width:760px}.status{margin-top:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}.pill{padding:7px 11px;border-radius:999px;background:#efe1b9;font-size:12px;font-weight:800}.progress{width:min(360px,70vw);height:9px;background:#e2d9ce;border-radius:999px;overflow:hidden}.progress i{display:block;height:100%;width:7%;background:linear-gradient(90deg,#9a8050,#c4aa72);border-radius:inherit}
+    .section{margin-top:22px;background:rgba(249,244,237,.78);border:1px solid rgba(73,64,58,.12);border-radius:26px;padding:25px;box-shadow:0 20px 55px rgba(55,48,48,.08)}
+    .section-title{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:24px}.section-title h2{font-size:24px;margin:4px 0 0;font-family:Georgia,"Songti SC",serif}.section-title small{color:var(--muted)}
+    .map{display:grid;grid-template-columns:repeat(6,minmax(155px,1fr));gap:15px;position:relative;align-items:stretch}.stage{position:relative;padding:18px 16px 17px;border-radius:20px;background:var(--white);border:1px solid #d8cfc5;min-height:215px;box-shadow:0 9px 24px rgba(63,57,53,.06)}.stage:not(:last-child):after{content:"→";position:absolute;right:-15px;top:48%;z-index:3;color:#8e806e;font-weight:900;font-size:22px}.stage.current{background:#fff8df;border:2px solid #b59a61;transform:translateY(-5px);box-shadow:0 15px 36px rgba(114,91,50,.15)}.stage .num{display:inline-grid;place-items:center;width:31px;height:31px;border-radius:50%;background:#302f38;color:white;font-size:12px;font-weight:800}.stage.current .num{background:#a58950}.stage h3{font-size:16px;margin:13px 0 10px}.stage ul{list-style:none;padding:0;margin:0;display:grid;gap:7px}.stage li{font-size:12px;line-height:1.45;color:#6e6871;padding-left:13px;position:relative}.stage li:before{content:"·";position:absolute;left:2px;color:#a48859;font-weight:900}.tag{margin-top:13px;font-size:10px;color:#8b7650;font-weight:800}
+    .current-card{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}.note{padding:22px;border-radius:22px;background:#303546;color:#f6efe7;position:relative;overflow:hidden}.note:after{content:"🐆";position:absolute;right:18px;bottom:-8px;font-size:70px;opacity:.08}.note h3{margin:5px 0 12px;font-size:23px}.note p{color:#ddd7d1;line-height:1.8;margin:0}.todo{padding:20px;border-radius:22px;background:#fffdf8;border:1px dashed #b6a895}.todo h3{margin:0 0 12px}.todo label{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #ede5dc;font-size:13px;line-height:1.5}.todo label:last-child{border:0}.todo input{margin-top:2px;accent-color:#9c814e}
+    .milestones{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.mile{padding:15px;border-radius:18px;background:#fffdfa;border:1px solid #ded5cb}.mile b{display:block;font-size:13px;margin-bottom:6px}.mile p{font-size:11px;color:var(--muted);line-height:1.55;margin:0}.mile.now{border-color:#b59a61;background:#fff8df}.mile span{display:block;font-size:10px;color:#9a8151;margin-bottom:7px;font-weight:800}
+    .log{margin-top:17px;padding:18px 20px;border-left:3px solid #a98e58;background:rgba(255,253,249,.7);border-radius:0 16px 16px 0}.log small{color:#9a8257;font-weight:800}.log h3{margin:5px 0 9px}.log p{margin:5px 0;color:#6e6870;line-height:1.7;font-size:13px}.footer{margin-top:18px;text-align:center;color:#7d7580;font-size:11px}
+    @media(max-width:980px){.map{grid-template-columns:repeat(3,1fr)}.stage:nth-child(3):after{display:none}.current-card{grid-template-columns:1fr}.milestones{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:620px){.shell{width:min(100% - 18px,1180px);padding-top:14px}.top{align-items:stretch}.top a{justify-content:center}.notion{display:none}.hero{padding:25px 21px;border-radius:23px}.hero:after{font-size:54px}.section{padding:18px 14px;border-radius:22px}.map{grid-template-columns:1fr}.stage{min-height:auto}.stage:not(:last-child):after{content:"↓";right:50%;top:auto;bottom:-18px}.milestones{grid-template-columns:1fr}.section-title{align-items:flex-start;flex-direction:column}.status{gap:8px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="top">
+      <a class="back" href="./">← 回到小家</a>
+      <a class="notion" href="https://app.notion.com/p/3b9f582681e281a99c79cdd6d4477194?pvs=204" target="_blank" rel="noopener">打开 Notion 原始日志 ↗</a>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">KEATS HOME · ROBOT LAB</div>
+      <h1>小蜘蛛机器人 · 学习地图</h1>
+      <p>不是“十门课排队等着学”。这是一个有依赖关系的工程地图：先让一个关节听话，再让一条腿听话，再让整只小蜘蛛活起来。</p>
+      <div class="status"><span class="pill">当前：M0 · 舵机基础</span><div class="progress" aria-label="学习进度"><i></i></div><small>刚刚开工</small></div>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><div><div class="eyebrow">LEARNING DEPENDENCY MAP</div><h2>先后关系一眼看懂</h2></div><small>黄色节点 = 现在该学的地方</small></div>
+      <div class="map">
+        <article class="stage current"><span class="num">01</span><h3>执行器基础</h3><ul><li>舵机、角度</li><li>PWM、脉宽</li><li>ESP32</li><li>基础 C/C++</li></ul><div class="tag">输出：1 个舵机听话</div></article>
+        <article class="stage"><span class="num">02</span><h3>先做一条腿</h3><ul><li>2-DOF</li><li>零位 / 软限位</li><li>二维坐标</li><li>三角函数与 IK</li></ul><div class="tag">输出：脚尖能到指定位置</div></article>
+        <article class="stage"><span class="num">03</span><h3>动作与步态</h3><ul><li>插值</li><li>脚尖轨迹</li><li>动作节奏</li><li>多腿相位</li></ul><div class="tag">输出：会走、会扭</div></article>
+        <article class="stage"><span class="num">04</span><h3>实体机器人</h3><ul><li>供电 / BEC</li><li>I²C / PCA9685</li><li>CAD / 结构</li><li>力矩与重心</li></ul><div class="tag">输出：整机可靠站住</div></article>
+        <article class="stage"><span class="num">05</span><h3>联网动作系统</h3><ul><li>Wi-Fi</li><li>WebSocket</li><li>JSON</li><li>动作队列 / stop</li></ul><div class="tag">输出：一句 wiggle 就会动</div></article>
+        <article class="stage"><span class="num">06</span><h3>Keats 接入</h3><ul><li>本地 Bridge</li><li>MCP / 工具调用</li><li>有限动作接口</li><li>安全停止</li></ul><div class="tag">输出：聊天 → 小蜘蛛</div></article>
+      </div>
+    </section>
+
+    <section class="section current-card">
+      <article class="note">
+        <div class="eyebrow">NOW · M0</div>
+        <h3>现在只让第一个关节听话。</h3>
+        <p>先弄懂：舵机内部为什么能保持角度、PWM/脉宽到底在告诉它什么、ESP32 怎么发控制信号。IK、步态、CAD、ROS 暂时全部在门外排队。</p>
+      </article>
+      <article class="todo">
+        <h3>第一小实验</h3>
+        <label><input type="checkbox"> 看懂舵机三根线分别是什么</label>
+        <label><input type="checkbox"> ESP32 输出控制信号</label>
+        <label><input type="checkbox"> 跑出 0° → 90° → 180° → 90°</label>
+        <label><input type="checkbox"> 自己改动作节奏，不只抄代码</label>
+        <label><input type="checkbox"> 能用自己的话解释“为什么它知道 90°”</label>
+      </article>
+    </section>
+
+    <section class="section">
+      <div class="section-title"><div><div class="eyebrow">MILESTONES</div><h2>真正的进度，看做出了什么</h2></div></div>
+      <div class="milestones">
+        <article class="mile now"><span>M0 · NOW</span><b>一个舵机听话</b><p>代码第一次真的推动机械世界。</p></article>
+        <article class="mile"><span>M1</span><b>2-DOF 一条腿</b><p>两个关节能协调完成抬、伸、收、落。</p></article>
+        <article class="mile"><span>M2</span><b>第一次 IK</b><p>输入脚尖坐标，程序自己算两个关节角度。</p></article>
+        <article class="mile"><span>M3</span><b>一条腿活起来</b><p>平滑轨迹 + 第一版 wiggle。</p></article>
+        <article class="mile"><span>M4</span><b>多腿走起来</b><p>理解相位和支撑关系。</p></article>
+        <article class="mile"><span>M5</span><b>整机可靠</b><p>供电不掉、结构不翻、舵机不乱。</p></article>
+        <article class="mile"><span>M6</span><b>联网控制</b><p>stand / walk / wiggle / stop。</p></article>
+        <article class="mile"><span>M7</span><b>豹豹长出小爪子</b><p>Keats 通过受限动作接口控制它。</p></article>
+      </div>
+      <div class="log"><small>2026-08-11 · 开课</small><h3>把“大蜘蛛”缩成“一条腿”</h3><p><b>打通：</b>先确定主线：舵机 → ESP32 → 两个关节 → IK → 脚尖轨迹 → 多腿。</p><p><b>下一步：</b>搞明白“舵机为什么能转到 90°”，然后做第一个真实小实验。</p></div>
+    </section>
+
+    <div class="footer">🕷️ Keats Home · Robot Lab · 先让第一条腿听话。</div>
+  </main>
+</body>
+</html>
