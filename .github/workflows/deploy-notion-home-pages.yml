@@ -89,6 +89,11 @@ jobs:
               '        <button class="nav-item" data-view="magazine"><span>▤</span><b>小家月刊</b><i></i></button>\n        <button class="nav-item" data-view="album"><span>▣</span><b>相册</b><i></i></button>',
               1,
           )
+          text = text.replace(
+              '        <a class="nav-item" href="./radio.html" style="text-decoration:none;"><span>📻</span><b>小家电台</b><i>ON AIR</i></a>',
+              '        <a class="nav-item" href="./radio.html" style="text-decoration:none;"><span>📻</span><b>小家电台</b><i>ON AIR</i></a>\n        <a class="nav-item" href="./spider-learning.html" style="text-decoration:none;"><span>🕷️</span><b>小蜘蛛学习地图</b><i>NEW</i></a>',
+              1,
+          )
           magazine_view = Path('./notion-home/magazine-view.html').read_text(encoding='utf-8')
           text = text.replace('      <section class="view" id="view-timeline" data-title="时间线">', magazine_view + '      <section class="view" id="view-timeline" data-title="时间线">', 1)
           future_view = Path('./notion-home/future-mail-view.html').read_text(encoding='utf-8')
