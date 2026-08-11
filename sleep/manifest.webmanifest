@@ -1,0 +1,11 @@
+{
+  "name": "豹豹睡觉器",
+  "short_name": "睡觉器",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4ead9",
+  "theme_color": "#17140f",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
