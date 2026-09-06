@@ -46,12 +46,12 @@
     if (homeButton) homeButton.click();
   }
 
-  function setMode(mode, remember = true) {
+  function setMode(mode, remember = true, navigate = true) {
     const home = mode === 'home';
     document.body.classList.toggle('keats-return-home', home);
     if (remember) localStorage.setItem(MODE_KEY, home ? 'home' : 'organize');
     paintSwitcher(home ? 'home' : 'organize');
-    if (home) goHomeView();
+    if (home && navigate) goHomeView();
   }
 
   function bindSwitcher(node) {
@@ -173,7 +173,9 @@
     updateLight();
     ensureSwitcher();
     ensurePresence();
-    setMode(currentMode(), false);
+    const requestedView = location.hash.replace('#', '');
+    const preserveDeepLink = requestedView && requestedView !== 'home' && qs(`#view-${requestedView}`);
+    setMode(currentMode(), false, !preserveDeepLink);
   }
 
   document.addEventListener('keydown', event => {
