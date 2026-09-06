@@ -1,0 +1,314 @@
+/* Keats Home · Cottage House v1 · whole-house visual system
+   2026-09-07 — intentionally loaded LAST.
+   Goal: make every room feel like the same soft illustrated home. */
+
+:root{
+  --c-ink:#49382f;
+  --c-ink-soft:#77695f;
+  --c-brown:#875a38;
+  --c-brown-soft:#b98b68;
+  --c-blue:#6f91bd;
+  --c-blue-deep:#587da9;
+  --c-sky:#dcecf5;
+  --c-cream:#fbf2e3;
+  --c-paper:#fffaf1;
+  --c-paper-2:#f7ead7;
+  --c-peach:#f2c9ad;
+  --c-sage:#a8b998;
+  --c-line:rgba(91,67,52,.14);
+  --c-shadow:0 16px 42px rgba(106,78,57,.09);
+}
+
+/* ---------- whole app ---------- */
+body.cottage-house-v1,
+body.cottage-house-v1.is-night{
+  --ink:var(--c-ink)!important;
+  --ink-soft:var(--c-ink-soft)!important;
+  --muted:#85786e!important;
+  --paper:var(--c-paper)!important;
+  --white:#fffaf1!important;
+  --gold:#ad7449!important;
+  color:var(--c-ink)!important;
+  background:
+    radial-gradient(circle at 14% 12%,rgba(111,145,189,.065) 0 2px,transparent 2.6px) 0 0/84px 84px,
+    radial-gradient(circle at 82% 19%,rgba(168,185,152,.06) 0 2px,transparent 2.6px) 0 0/112px 112px,
+    linear-gradient(180deg,#fffaf1 0%,#fbf1e2 57%,#f4e5d2 100%)!important;
+}
+body.cottage-house-v1::before{
+  opacity:.2!important;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220'%3E%3Cg fill='none' stroke='%23835f47' stroke-opacity='.09' stroke-width='1.1' stroke-linecap='round'%3E%3Cpath d='M8 37c22 3 39-2 62 0M145 20c20 2 39-1 67 2M20 178c22-2 43 2 64-1M136 151c23 4 45 1 72 3'/%3E%3C/g%3E%3C/svg%3E")!important;
+}
+body.cottage-house-v1 .ambient{opacity:.04!important}
+body.cottage-house-v1 .grain{opacity:.08!important;mix-blend-mode:multiply}
+body.cottage-house-v1 .workspace{background:transparent!important;color:var(--c-ink)!important}
+body.cottage-house-v1 h1,
+body.cottage-house-v1 h2,
+body.cottage-house-v1 h3,
+body.cottage-house-v1 .brand b{
+  color:var(--c-ink)!important;
+  font-family:"Kaiti SC","STKaiti","KaiTi","Songti SC",serif!important;
+}
+
+/* ---------- chrome ---------- */
+body.cottage-house-v1 .topbar,
+body.cottage-house-v1.is-night .topbar{
+  height:58px!important;
+  padding:0 16px!important;
+  background:rgba(255,250,241,.91)!important;
+  border-bottom:1px solid rgba(91,67,52,.08)!important;
+  box-shadow:0 7px 24px rgba(99,71,52,.04)!important;
+  backdrop-filter:blur(18px)!important;
+}
+body.cottage-house-v1 .crumbs{color:var(--c-ink)!important;font-weight:650}
+body.cottage-house-v1 .mobile-menu,
+body.cottage-house-v1 .icon-button,
+body.cottage-house-v1 .soft-button,
+body.cottage-house-v1 .sync-pill,
+body.cottage-house-v1 .home-mode-switch button{
+  color:var(--c-ink)!important;
+  background:rgba(255,252,246,.92)!important;
+  border:1.4px solid rgba(91,67,52,.13)!important;
+  box-shadow:0 4px 12px rgba(91,67,52,.045)!important;
+}
+body.cottage-house-v1 .home-mode-switch{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;gap:7px!important}
+body.cottage-house-v1 .home-mode-switch button{border-radius:999px!important;min-height:34px!important;padding:7px 13px!important}
+body.cottage-house-v1 .home-mode-switch button.is-active{background:#fff4df!important;color:var(--c-brown)!important}
+
+body.cottage-house-v1 .sidebar,
+body.cottage-house-v1.is-night .sidebar{
+  background:rgba(255,249,239,.97)!important;
+  color:var(--c-ink)!important;
+  border-right:1px solid rgba(91,67,52,.1)!important;
+  box-shadow:12px 0 40px rgba(91,67,52,.05)!important;
+}
+body.cottage-house-v1 .brand-mark{background:#fff0d8!important;color:var(--c-brown)!important;border-color:rgba(91,67,52,.24)!important}
+body.cottage-house-v1 .brand small,
+body.cottage-house-v1 .nav-label,
+body.cottage-house-v1 .sidebar-note small,
+body.cottage-house-v1 .mini-profile small{color:var(--c-ink-soft)!important}
+body.cottage-house-v1 .nav-item{color:var(--c-ink)!important;border-radius:16px!important}
+body.cottage-house-v1 .nav-item:hover{background:#fbedd9!important}
+body.cottage-house-v1 .nav-item.is-active{background:#e8eff7!important;color:#4f7098!important;outline:0!important}
+body.cottage-house-v1 .search-trigger,
+body.cottage-house-v1 .sidebar-note,
+body.cottage-house-v1 .mini-profile{background:#fffaf1!important;color:var(--c-ink)!important;border-color:var(--c-line)!important}
+
+/* ---------- shared content ---------- */
+body.cottage-house-v1 .content-wrap,
+body.cottage-house-v1 .home-wrap{width:min(1080px,calc(100% - 42px))!important;color:var(--c-ink)!important}
+body.cottage-house-v1 .view:not(#view-home) .content-wrap{padding-top:30px!important;padding-bottom:110px!important}
+body.cottage-house-v1 .view:not(#view-home) .content-wrap::before{display:none!important}
+body.cottage-house-v1 .eyebrow{color:var(--c-blue-deep)!important;letter-spacing:.17em!important;font-weight:700!important}
+body.cottage-house-v1 .page-icon{display:none!important}
+
+body.cottage-house-v1 .page-heading{
+  position:relative!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(250px,38%)!important;
+  align-items:center!important;
+  gap:24px!important;
+  min-height:265px!important;
+  margin:0 0 22px!important;
+  padding:30px 30px!important;
+  overflow:hidden!important;
+  border:1.5px solid var(--c-line)!important;
+  border-radius:32px 25px 34px 27px!important;
+  background:linear-gradient(112deg,rgba(255,250,241,.98) 0 61%,rgba(231,242,247,.88) 61% 100%)!important;
+  box-shadow:6px 7px 0 rgba(114,84,60,.035),var(--c-shadow)!important;
+}
+body.cottage-house-v1 .page-heading::after{
+  content:""!important;position:absolute!important;left:28px!important;bottom:20px!important;width:128px!important;height:7px!important;
+  border-bottom:2px solid rgba(111,145,189,.34)!important;border-radius:50%!important;transform:rotate(-1deg)!important;
+}
+body.cottage-house-v1 .page-heading>div:first-child{position:relative;z-index:2;max-width:590px}
+body.cottage-house-v1 .page-heading h1{font-size:clamp(42px,6vw,68px)!important;line-height:1.02!important;margin:8px 0 12px!important;letter-spacing:.015em!important}
+body.cottage-house-v1 .page-heading p:not(.eyebrow){color:var(--c-ink-soft)!important;line-height:1.8!important;margin:0!important}
+body.cottage-house-v1 .page-heading>.primary-button{position:relative!important;z-index:3!important;align-self:end!important;justify-self:start!important;grid-column:1!important;width:max-content!important}
+
+/* ---------- illustration language ---------- */
+body.cottage-house-v1 .cottage-page-art{
+  position:absolute;z-index:1;right:0;top:0;width:42%;height:100%;pointer-events:none;overflow:hidden;
+}
+body.cottage-house-v1 .cottage-page-art svg{width:100%;height:100%;display:block}
+body.cottage-house-v1 .cottage-page-art .sketch{fill:none;stroke:#80583d;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+body.cottage-house-v1 .cottage-page-art .soft-line{fill:none;stroke:#9b765c;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+body.cottage-house-v1 .cottage-page-art .paper-note{fill:#fff8e8;stroke:#caa987;stroke-width:1.25}
+body.cottage-house-v1 .cottage-page-art .sky{fill:#dcecf5}
+body.cottage-house-v1 .cottage-page-art .wood{fill:#c49369}
+body.cottage-house-v1 .cottage-page-art .leaf{fill:#9eb48d;stroke:#765d47;stroke-width:1.1}
+body.cottage-house-v1 .cottage-page-art .cat{fill:#f8f1e7;stroke:#765545;stroke-width:1.7}
+body.cottage-house-v1 .cottage-page-art .cat-dark{fill:#6e6a66;stroke:#765545;stroke-width:1.7}
+body.cottage-house-v1 .cottage-page-art .mug{fill:#fff5e3;stroke:#80583d;stroke-width:1.7}
+body.cottage-house-v1 .cottage-page-art text{fill:#765545;font-family:"Kaiti SC","STKaiti","KaiTi",serif}
+
+/* ---------- buttons / chips ---------- */
+body.cottage-house-v1 .primary-button{
+  color:#fffaf1!important;background:var(--c-blue)!important;border:0!important;border-radius:22px 18px 23px 19px!important;
+  box-shadow:0 8px 0 rgba(78,113,154,.09),0 13px 24px rgba(78,113,154,.12)!important;transform:none!important;
+}
+body.cottage-house-v1 .primary-button:hover{background:var(--c-blue-deep)!important;transform:translateY(-1px)!important}
+body.cottage-house-v1 .chip{
+  color:var(--c-ink)!important;background:#fffaf1!important;border:1.2px solid rgba(91,67,52,.14)!important;border-radius:999px!important;
+  box-shadow:0 3px 8px rgba(91,67,52,.035)!important;transform:none!important;
+}
+body.cottage-house-v1 .chip.is-selected{color:#fff!important;background:var(--c-blue)!important;border-color:transparent!important}
+body.cottage-house-v1 .filter-row{gap:9px!important;margin:0 0 20px!important;overflow:auto!important;scrollbar-width:none}
+
+/* ---------- universal paper cards ---------- */
+body.cottage-house-v1 :where(.paper-card,.entry-card,.mail-item,.memory-tile,.quote-wall blockquote,.pawprint-list article,.timeline-list article>div,.photo,.future-mail-card,.magazine-card,.note-card,.paw-card,.memory-item){
+  color:var(--c-ink)!important;background:rgba(255,250,241,.96)!important;border:1.35px solid rgba(91,67,52,.12)!important;
+  border-radius:25px 20px 28px 21px!important;box-shadow:4px 5px 0 rgba(104,75,54,.035),0 15px 34px rgba(104,75,54,.065)!important;
+}
+body.cottage-house-v1 :where(.entry-card,.mail-item,.memory-tile,.quote-wall blockquote,.pawprint-list article,.photo){transition:transform .18s ease,box-shadow .18s ease}
+body.cottage-house-v1 :where(.entry-card,.mail-item,.memory-tile,.quote-wall blockquote,.pawprint-list article,.photo):hover{transform:translateY(-2px)!important;box-shadow:4px 6px 0 rgba(104,75,54,.04),0 19px 39px rgba(104,75,54,.08)!important}
+body.cottage-house-v1 :where(.entry-card,.mail-item,.memory-tile,.quote-wall blockquote,.pawprint-list article) p{color:var(--c-ink-soft)!important}
+
+/* ---------- home ---------- */
+body.cottage-house-v1 #view-home .hero-card{
+  min-height:430px!important;overflow:hidden!important;background:linear-gradient(110deg,#fffaf1 0 52%,#e7f2f6 52% 100%)!important;
+  border-radius:34px 27px 36px 29px!important;border:1.5px solid var(--c-line)!important;box-shadow:6px 8px 0 rgba(107,78,57,.035),var(--c-shadow)!important;
+}
+body.cottage-house-v1 #view-home .hero-card::before{background:rgba(218,188,147,.48)!important;border:0!important}
+body.cottage-house-v1 #view-home .hero-card::after{background:rgba(214,181,137,.39)!important;border:0!important}
+body.cottage-house-v1 #view-home .hero-copy{z-index:3!important;padding:54px 32px 36px!important}
+body.cottage-house-v1 #view-home .hero-copy h1{font-size:clamp(48px,7vw,78px)!important;line-height:.98!important}
+body.cottage-house-v1 #view-home .hero-copy>p{color:var(--c-ink-soft)!important;font-size:15px!important;max-width:34em!important}
+body.cottage-house-v1 #view-home .hero-presence{z-index:4!important;background:#eef5e9!important;color:#667b5b!important;border:1px solid rgba(98,122,87,.16)!important}
+body.cottage-house-v1 #view-home .hero-scene{z-index:2!important;min-height:410px!important;height:100%!important;background:transparent!important}
+body.cottage-house-v1 #view-home .hero-scene svg{width:100%!important;height:100%!important;max-height:none!important;filter:none!important}
+body.cottage-house-v1 #view-home .home-grid,
+body.cottage-house-v1 #view-home .lower-grid{gap:18px!important}
+body.cottage-house-v1 #view-home .home-status-feature,
+body.cottage-house-v1 #view-home .feature-card,
+body.cottage-house-v1 #view-home .keats-card,
+body.cottage-house-v1 #view-home .letter-card,
+body.cottage-house-v1 #view-home .memory-card,
+body.cottage-house-v1 #view-home .recent-card,
+body.cottage-house-v1 #view-home .little-weather{background:#fffaf1!important}
+
+/* ---------- diary ---------- */
+body.cottage-house-v1:has(#view-diary.is-visible) .workspace{background:transparent!important}
+body.cottage-house-v1 #view-diary .content-wrap{width:min(1040px,calc(100% - 42px))!important;padding-top:30px!important}
+body.cottage-house-v1 #view-diary .page-heading{min-height:330px!important;background:linear-gradient(112deg,#fffaf1 0 57%,#eef6f8 57% 100%)!important}
+body.cottage-house-v1 #view-diary .entry-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important}
+body.cottage-house-v1 #view-diary .entry-card{position:relative!important;padding:25px 25px 22px!important;background:#fffaf1!important}
+body.cottage-house-v1 #view-diary .entry-card::before{content:"";position:absolute;top:-7px;left:50%;width:55px;height:15px;background:rgba(222,197,158,.42);transform:translateX(-50%) rotate(-1.5deg)}
+body.cottage-house-v1 #view-diary .entry-card h3{font-size:23px!important;line-height:1.42!important;margin:14px 0 12px!important}
+body.cottage-house-v1 #view-diary .entry-card p{line-height:1.82!important}
+body.cottage-house-v1 #view-diary .entry-meta i{color:#6d7990!important;background:#edf1f5!important;border:1px solid rgba(82,107,139,.1)!important;border-radius:999px!important}
+body.cottage-house-v1 #view-diary .entry-tags span{background:#edf2f7!important;color:#6880a0!important;border:0!important}
+body.cottage-house-v1 #view-diary .entry-tags span:nth-child(2){background:#fff0dd!important;color:#a06f48!important}
+
+/* ---------- letters ---------- */
+body.cottage-house-v1 #view-letters .mail-stack{gap:14px!important}
+body.cottage-house-v1 #view-letters .mail-item{padding:22px!important}
+body.cottage-house-v1 #view-letters .mail-seal{background:#f1dfc6!important;color:var(--c-brown)!important;border-color:rgba(91,67,52,.18)!important}
+body.cottage-house-v1 #view-letters .mail-item.unread{background:linear-gradient(100deg,#fffaf1,#fdf0dd)!important}
+
+/* ---------- pawprints ---------- */
+body.cottage-house-v1 #view-pawprints .pawprint-intro{background:linear-gradient(105deg,#fffaf1,#edf4e8)!important}
+body.cottage-house-v1 #view-pawprints .big-paw{filter:none!important}
+body.cottage-house-v1 #view-pawprints .pawprint-list{gap:14px!important}
+body.cottage-house-v1 #view-pawprints .pawprint-list article{background:#fffaf1!important}
+body.cottage-house-v1 #view-pawprints .pawprint-list article>span{color:#6b87ad!important}
+
+/* ---------- memories ---------- */
+body.cottage-house-v1 #view-memories .memory-board{gap:16px!important}
+body.cottage-house-v1 #view-memories .memory-tile{background:#fffaf1!important}
+body.cottage-house-v1 #view-memories .memory-tile.gold{background:#fff3dc!important}
+body.cottage-house-v1 #view-memories .memory-tile.blue{background:#eaf1f7!important}
+body.cottage-house-v1 #view-memories .memory-tile.violet{background:#f1ebf4!important}
+body.cottage-house-v1 #view-memories .memory-tile.paper{background:#fffaf1!important}
+body.cottage-house-v1 .memory-view-switch{background:#fffaf1!important;border-color:var(--c-line)!important}
+body.cottage-house-v1 .memory-view-switch button.is-active{background:#e9f0f7!important;color:#54759d!important}
+
+/* ---------- timeline ---------- */
+body.cottage-house-v1 #view-timeline .timeline-list article i{background:var(--c-blue)!important;box-shadow:0 0 0 6px #edf3f8!important}
+body.cottage-house-v1 #view-timeline .timeline-list article::before{background:rgba(111,145,189,.25)!important}
+body.cottage-house-v1 #view-timeline .timeline-list time{color:#7d6f64!important}
+
+/* ---------- album ---------- */
+body.cottage-house-v1 #view-album .photo-grid{gap:18px!important}
+body.cottage-house-v1 #view-album .photo{padding:12px!important;background:#fffaf1!important;transform:rotate(-.35deg)!important}
+body.cottage-house-v1 #view-album .photo:nth-child(even){transform:rotate(.55deg)!important}
+body.cottage-house-v1 #view-album .photo-placeholder{background:#e6eef4!important;color:#6680a0!important}
+body.cottage-house-v1 #view-album .photo-placeholder.warm{background:#f6e4ce!important;color:#9b714e!important}
+body.cottage-house-v1 #view-album .photo-placeholder.dusk{background:#e8e0eb!important;color:#7c6d83!important}
+
+/* ---------- quotes ---------- */
+body.cottage-house-v1 #view-quotes .quote-wall{gap:16px!important}
+body.cottage-house-v1 #view-quotes blockquote{background:#fffaf1!important;color:var(--c-ink)!important}
+body.cottage-house-v1 #view-quotes blockquote>span{color:var(--c-blue)!important}
+
+/* ---------- dynamically inserted rooms ---------- */
+body.cottage-house-v1 #view-futuremail :where(.future-mail-card,.future-mail-compose,.future-mail-hero),
+body.cottage-house-v1 #view-magazine :where(.magazine-card,.magazine-cover,.magazine-section){
+  background:#fffaf1!important;color:var(--c-ink)!important;border-color:var(--c-line)!important;box-shadow:var(--c-shadow)!important;
+}
+body.cottage-house-v1 #view-futuremail,
+body.cottage-house-v1 #view-magazine{color:var(--c-ink)!important}
+
+/* ---------- editor/search ---------- */
+body.cottage-house-v1 .editor-modal,
+body.cottage-house-v1 .command-palette{background:#fffaf1!important;color:var(--c-ink)!important;border-color:var(--c-line)!important;box-shadow:0 30px 80px rgba(72,50,35,.16)!important}
+body.cottage-house-v1 .editor-modal input,
+body.cottage-house-v1 .editor-modal textarea,
+body.cottage-house-v1 .command-input{background:#fffdf8!important;color:var(--c-ink)!important;border-color:var(--c-line)!important}
+
+/* ---------- bottom navigation ---------- */
+body.cottage-house-v1 .mobile-bottom-nav,
+body.cottage-house-v1.is-night .mobile-bottom-nav{
+  background:rgba(255,250,241,.94)!important;border-top:1px solid rgba(91,67,52,.08)!important;box-shadow:0 -10px 28px rgba(91,67,52,.06)!important;backdrop-filter:blur(18px)!important;
+}
+body.cottage-house-v1 .mobile-bottom-nav button{color:#716860!important;border-radius:15px!important}
+body.cottage-house-v1 .mobile-bottom-nav button.is-active{background:#fff0d8!important;color:#8b5b38!important}
+
+/* ---------- mobile ---------- */
+@media(max-width:720px){
+  body.cottage-house-v1 .topbar{height:52px!important;padding:0 12px!important}
+  body.cottage-house-v1 .topbar-right .sync-pill,
+  body.cottage-house-v1 .topbar-right .soft-button{display:none!important}
+  body.cottage-house-v1 .home-mode-switch [data-home-mode="organize"]{display:inline-flex!important}
+  body.cottage-house-v1 .home-mode-switch button{font-size:9px!important;min-height:31px!important;padding:6px 10px!important}
+  body.cottage-house-v1 .content-wrap,
+  body.cottage-house-v1 .home-wrap{width:calc(100% - 22px)!important}
+  body.cottage-house-v1 .view:not(#view-home) .content-wrap{padding-top:12px!important;padding-bottom:78px!important}
+  body.cottage-house-v1 .page-heading{
+    grid-template-columns:minmax(0,1fr)!important;min-height:350px!important;padding:22px 20px 24px!important;margin-bottom:14px!important;border-radius:27px 22px 29px 23px!important;
+    background:linear-gradient(180deg,#fffaf1 0 55%,#eef6f8 55% 100%)!important;
+  }
+  body.cottage-house-v1 .page-heading>div:first-child{padding-right:0!important;z-index:3!important}
+  body.cottage-house-v1 .page-heading h1{font-size:44px!important;margin:7px 0 9px!important}
+  body.cottage-house-v1 .page-heading p:not(.eyebrow){font-size:12px!important;max-width:24em!important}
+  body.cottage-house-v1 .page-heading>.primary-button{position:absolute!important;left:20px!important;top:150px!important;min-height:46px!important;padding:10px 24px!important;font-size:14px!important}
+  body.cottage-house-v1 .page-heading::after{display:none!important}
+  body.cottage-house-v1 .cottage-page-art{top:auto!important;right:0!important;bottom:0!important;width:100%!important;height:185px!important;opacity:1!important}
+
+  body.cottage-house-v1 #view-home .hero-card{min-height:620px!important;display:block!important;background:linear-gradient(180deg,#fffaf1 0 52%,#eaf4f7 52% 100%)!important}
+  body.cottage-house-v1 #view-home .hero-copy{padding:66px 20px 16px!important}
+  body.cottage-house-v1 #view-home .hero-copy h1{font-size:43px!important;line-height:.98!important}
+  body.cottage-house-v1 #view-home .hero-copy>p{font-size:12px!important;line-height:1.72!important}
+  body.cottage-house-v1 #view-home .hero-actions{display:flex!important;flex-wrap:wrap!important;gap:9px!important;margin-top:17px!important}
+  body.cottage-house-v1 #view-home .hero-actions .primary-button{min-height:42px!important;font-size:11px!important}
+  body.cottage-house-v1 #view-home .hero-scene{position:absolute!important;left:0!important;right:0!important;bottom:0!important;height:300px!important;min-height:300px!important;padding:0!important;margin:0!important}
+  body.cottage-house-v1 #view-home .hero-presence{position:absolute!important;left:20px!important;top:14px!important;margin:0!important}
+
+  body.cottage-house-v1 #view-diary .page-heading{min-height:390px!important}
+  body.cottage-house-v1 #view-diary .entry-grid{grid-template-columns:1fr!important;gap:14px!important}
+  body.cottage-house-v1 #view-diary .entry-card{padding:21px 19px 20px!important}
+  body.cottage-house-v1 #view-diary .entry-card h3{font-size:20px!important}
+
+  body.cottage-house-v1 .mobile-bottom-nav{height:58px!important;padding:5px 8px max(6px,env(safe-area-inset-bottom))!important}
+  body.cottage-house-v1 .mobile-bottom-nav button span{font-size:17px!important}
+  body.cottage-house-v1 .mobile-bottom-nav button small{font-size:8px!important}
+}
+
+@media(max-width:430px){
+  body.cottage-house-v1 .page-heading{min-height:360px!important}
+  body.cottage-house-v1 .page-heading h1{font-size:40px!important}
+  body.cottage-house-v1 .page-heading>.primary-button{top:142px!important}
+  body.cottage-house-v1 .cottage-page-art{height:170px!important}
+  body.cottage-house-v1 #view-home .hero-card{min-height:590px!important}
+  body.cottage-house-v1 #view-home .hero-copy h1{font-size:40px!important}
+  body.cottage-house-v1 #view-home .hero-scene{height:282px!important;min-height:282px!important}
+}
