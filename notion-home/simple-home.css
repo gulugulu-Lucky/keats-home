@@ -12,7 +12,7 @@
   --simple-radius: 18px;
 }
 
-/* Remove decorative layers accumulated by earlier home redesigns. */
+/* Remove only decorative layers; keep backend status and live Notion data visible. */
 .ambient,
 .grain,
 .hero-scene,
@@ -20,9 +20,7 @@
 .envelope-art,
 .tiny-orbit,
 .home-mode-switch,
-.sync-pill,
 .sidebar-note,
-.little-weather,
 [class*="house-scene"],
 [class*="cottage-scene"],
 [class*="home-illustration"],
@@ -123,6 +121,28 @@ body {
   gap: 8px !important;
 }
 
+/* Keep the backend door visible, just make it quiet. */
+.sync-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  min-height: 34px !important;
+  padding: 7px 10px !important;
+  border: 1px solid var(--simple-line) !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--simple-muted) !important;
+  box-shadow: none !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+}
+
+.sync-pill i {
+  width: 7px !important;
+  height: 7px !important;
+  flex: 0 0 7px !important;
+}
+
 .home-wrap,
 .content-wrap {
   max-width: 1040px !important;
@@ -195,6 +215,25 @@ body {
 
 .primary-button {
   border-radius: 11px !important;
+}
+
+/* Live Notion state stays on the home page, but without a decorative scene. */
+.little-weather {
+  display: block !important;
+  margin: 14px 0 0 !important;
+  padding: 16px 18px !important;
+  background: var(--simple-surface) !important;
+  border: 1px solid var(--simple-line) !important;
+  border-radius: var(--simple-radius) !important;
+  box-shadow: none !important;
+}
+
+.little-weather .section-heading {
+  margin-bottom: 10px !important;
+}
+
+.little-weather .mood-moon {
+  display: none !important;
 }
 
 .home-grid {
@@ -369,6 +408,11 @@ body[data-theme="night"] .mobile-bottom-nav {
     border-radius: 15px !important;
   }
 
+  .little-weather {
+    padding: 14px 16px !important;
+    border-radius: 15px !important;
+  }
+
   .section-heading {
     align-items: flex-start !important;
     gap: 10px !important;
@@ -384,6 +428,12 @@ body[data-theme="night"] .mobile-bottom-nav {
 
   .topbar {
     min-height: 54px !important;
+  }
+
+  .sync-pill {
+    max-width: 152px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
   }
 
   .topbar-right #newEntryButton {
