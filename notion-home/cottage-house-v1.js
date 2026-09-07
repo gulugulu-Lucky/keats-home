@@ -2,23 +2,6 @@
   const qs = (s, root = document) => root.querySelector(s);
   const qsa = (s, root = document) => [...root.querySelectorAll(s)];
 
-  const roomNotes = {
-    diary: '和小猫一起的柔软日常 ♡',
-    letters: '慢慢写，慢慢寄 ♡',
-    pawprints: '豹豹来过这里 🐾',
-    memories: '把重要的事收好 ♡',
-    timeline: '日子一格一格长大',
-    album: '想一直留着的画面',
-    quotes: '有些话值得贴在墙上',
-    songs: '让小家有一点声音',
-    futuremail: '写给以后再打开',
-    magazine: '把一个月装订起来'
-  };
-
-  function escapeText(value = '') {
-    return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
-  }
-
   function ensureBackendStatusStyle() {
     let style = qs('#cottageBackendStatusFix');
     if (!style) {
@@ -28,11 +11,10 @@
     }
     style.textContent = `
       @media (max-width:720px){
-        body.cottage-house-v1:has(#view-home.is-visible) .topbar-right .sync-pill,
         body.cottage-house-v1 .topbar-right .sync-pill{
           display:inline-flex!important;
           align-items:center!important;
-          max-width:118px!important;
+          max-width:132px!important;
           min-height:31px!important;
           padding:6px 9px!important;
           border-radius:999px!important;
@@ -44,10 +26,11 @@
           cursor:pointer!important;
         }
         body.cottage-house-v1 .topbar-right .soft-button{display:none!important}
+        body.cottage-house-v1 .home-mode-switch [data-home-mode="organize"]{display:none!important}
         body.cottage-house-v1 .topbar-right{gap:5px!important}
       }
       @media (max-width:390px){
-        body.cottage-house-v1 .topbar-right .sync-pill{max-width:96px!important;font-size:7px!important;padding:6px 8px!important}
+        body.cottage-house-v1 .topbar-right .sync-pill{max-width:112px!important;font-size:7px!important;padding:6px 8px!important}
       }
     `;
   }
@@ -61,7 +44,7 @@
     pill.style.setProperty('opacity', '1', 'important');
     pill.style.setProperty('pointer-events', 'auto', 'important');
     if (window.innerWidth <= 720) {
-      pill.style.setProperty('max-width', window.innerWidth <= 390 ? '96px' : '118px', 'important');
+      pill.style.setProperty('max-width', window.innerWidth <= 390 ? '112px' : '132px', 'important');
       pill.style.setProperty('min-height', '31px', 'important');
       pill.style.setProperty('padding', '6px 9px', 'important');
       pill.style.setProperty('font-size', window.innerWidth <= 390 ? '7px' : '8px', 'important');
@@ -71,8 +54,8 @@
     }
   }
 
-  function cottageArt(note = 'Good days with Keats ♡', compact = false) {
-    const safe = escapeText(note);
+  function cottageArt(note = '有猫，有你，就是家。') {
+    const safe = String(note).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
     return `
       <svg viewBox="0 0 460 280" role="img" aria-label="窗边睡猫、植物和小纸条组成的手绘小家">
         <rect class="sky" x="254" y="12" width="184" height="154" rx="4"/>
@@ -80,10 +63,8 @@
         <path d="M260 127c26-18 47-12 67-30 18-16 35-10 58-21 17-8 31-6 51-8v98H254z" fill="#eef7fa"/>
         <circle cx="397" cy="48" r="19" fill="#fff8dc" opacity=".92"/>
         <path d="M388 43c8-7 18-8 28-3" class="soft-line"/>
-
         <path d="M242 166h204" class="sketch"/>
         <rect class="wood" x="235" y="166" width="211" height="15" rx="3"/>
-
         <g transform="translate(286 120)">
           <path class="cat" d="M12 39c2-22 19-34 45-34 31 0 55 16 61 39-6 22-30 31-62 31-31 0-48-13-44-36z"/>
           <path class="cat-dark" d="M57 13c14-11 36-7 45 7l9 18c-12-9-25-14-38-13-6-6-11-9-16-12z" opacity=".88"/>
@@ -92,13 +73,11 @@
           <path class="soft-line" d="M28 29l-15-3m15 9-16 2m47-8 15-3m-15 9 16 3"/>
           <path class="sketch" d="M111 45c17 4 23 14 17 21-8 8-25 4-34-5"/>
         </g>
-
         <g transform="translate(376 169)">
           <path class="mug" d="M0 0h42v43c0 8-6 14-14 14H14C6 57 0 51 0 43z"/>
           <path class="sketch" d="M42 12c20-2 21 27 2 29"/>
           <path class="soft-line" d="M13 17h17m-14 9h11"/>
         </g>
-
         <g transform="translate(18 34)">
           <path class="sketch" d="M0 74h170"/>
           <path class="wood" d="M3 74h167v10H3z"/>
@@ -110,20 +89,17 @@
           <rect x="74" y="45" width="16" height="29" rx="2" fill="#e8c9b9" stroke="#80583d" stroke-width="1.4"/>
           <rect x="90" y="39" width="15" height="35" rx="2" fill="#d7dfca" stroke="#80583d" stroke-width="1.4"/>
         </g>
-
         <g transform="translate(36 165)">
           <rect class="paper-note" x="0" y="0" width="166" height="64" rx="4" transform="rotate(-2 83 32)"/>
           <path d="M71 -4h40v12H71z" fill="#ead1a8" opacity=".65" transform="rotate(1 91 2)"/>
           <text x="18" y="27" font-size="13">${safe}</text>
           <text x="18" y="45" font-size="10" opacity=".75">Keats Home</text>
         </g>
-
-        ${compact ? '' : `
         <g transform="translate(191 194)">
           <path class="sketch" d="M0 30c16-10 34-9 52 1M15 31v32m23-32v32M6 63h42"/>
           <path class="leaf" d="M18 10c-12 2-18 10-17 19 9 4 18 1 24-8 0-5-2-8-7-11z"/>
           <path class="leaf" d="M34 7c11 1 18 8 19 17-8 5-17 3-24-5-1-5 1-9 5-12z"/>
-        </g>`}
+        </g>
       </svg>`;
   }
 
@@ -131,22 +107,11 @@
     const scene = qs('#view-home .hero-scene');
     if (!scene) return;
     scene.className = 'hero-scene cottage-home-scene';
-    scene.innerHTML = cottageArt('有猫，有你，就是家。', false);
+    scene.innerHTML = cottageArt();
   }
 
-  function installPageArt() {
-    qsa('.view:not(#view-home)').forEach(view => {
-      const heading = qs('.page-heading', view);
-      if (!heading) return;
-      let art = qs('.cottage-page-art', heading);
-      if (!art) {
-        art = document.createElement('div');
-        art.className = 'cottage-page-art';
-        heading.appendChild(art);
-      }
-      const key = view.id.replace('view-', '');
-      art.innerHTML = cottageArt(roomNotes[key] || 'Keats Home ♡', true);
-    });
+  function cleanInnerPageArt() {
+    qsa('.cottage-page-art').forEach(node => node.remove());
   }
 
   function install() {
@@ -154,7 +119,7 @@
     ensureBackendStatusStyle();
     forceBackendStatusVisible();
     redrawHome();
-    installPageArt();
+    cleanInnerPageArt();
   }
 
   install();
@@ -166,12 +131,4 @@
   window.addEventListener('pageshow', install);
   window.addEventListener('resize', forceBackendStatusVisible);
   window.addEventListener('hashchange', () => setTimeout(install, 40));
-})();
-
-(() => {
-  if (document.querySelector('script[data-door-recovery]')) return;
-  const script = document.createElement('script');
-  script.src = './door-recovery.js?v=20260907a';
-  script.dataset.doorRecovery = '1';
-  document.body.appendChild(script);
 })();
