@@ -126,10 +126,34 @@
   }
 
   function showError(message) {
-    qs('#readerStatus').classList.add('is-hidden');
-    qs('#readerArticle').classList.add('is-hidden');
-    qs('#readerError').classList.remove('is-hidden');
-    qs('#readerErrorText').textContent = message;
+    const status = qs('#readerStatus');
+    const article = qs('#readerArticle');
+    const error = qs('#readerError');
+    if (status) status.classList.add('is-hidden');
+    if (article) article.classList.add('is-hidden');
+    if (error) error.classList.remove('is-hidden');
+    const errorText = qs('#readerErrorText');
+    if (errorText) errorText.textContent = message;
+  }
+
+  function revealArticle() {
+    const status = qs('#readerStatus');
+    const error = qs('#readerError');
+    const article = qs('#readerArticle');
+    if (status) status.classList.add('is-hidden');
+    if (error) error.classList.add('is-hidden');
+    if (article) {
+      article.classList.remove('is-hidden');
+      article.style.display = '';
+      article.style.visibility = 'visible';
+      article.style.opacity = '1';
+    }
+    const content = qs('#notionContent');
+    if (content) {
+      content.style.display = '';
+      content.style.visibility = 'visible';
+      content.style.opacity = '1';
+    }
   }
 
   async function loadPage() {
@@ -162,7 +186,8 @@
       qs('#pageSummary').textContent = summaryFor(item);
       qs('#pageMeta').innerHTML = metaFor(item);
       qs('#pageTags').innerHTML = tagsFor(item).map(tag => `<span>${esc(tag)}</span>`).join('');
-      qs('#notionContent').innerHTML = (data.blocks || []).map(renderBlock).join('') || '<p>这一页目前只有标题，没有正文。</p>';
+      const bodyHtml = (data.blocks || []).map(renderBlock).join('') || '<p>这一页目前只有标题，没有正文。</p>';
+      qs('#notionContent').innerHTML = bodyHtml;
       qs('#articleFooter').textContent = footerFor(item);
 
       if (item.notionUrl) {
@@ -171,8 +196,14 @@
         notionLink.classList.remove('is-hidden');
       }
 
-      qs('#readerStatus').classList.add('is-hidden');
-      qs('#readerArticle').classList.remove('is-hidden');
+      revealArticle();
+
+      // Some optional enhancement styles/scripts are appended at deploy time.
+      // Re-assert visibility on the next frames so an enhancement can never
+      // leave a successfully loaded diary body hidden on iOS/Safari.
+      requestAnimationFrame(revealArticle);
+      setTimeout(revealArticle, 120);
+      setTimeout(revealArticle, 800);
     } catch (error) {
       showError(error.message || '这一页暂时没翻开。');
     }
