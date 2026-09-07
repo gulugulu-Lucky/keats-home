@@ -167,3 +167,11 @@
   window.addEventListener('resize', forceBackendStatusVisible);
   window.addEventListener('hashchange', () => setTimeout(install, 40));
 })();
+
+(() => {
+  if (document.querySelector('script[data-door-recovery]')) return;
+  const script = document.createElement('script');
+  script.src = './door-recovery.js?v=20260907a';
+  script.dataset.doorRecovery = '1';
+  document.body.appendChild(script);
+})();
