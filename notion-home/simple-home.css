@@ -1,0 +1,392 @@
+/* Keats Home · simple layout layer
+   Keep the rooms and data; remove the stacked decorative redesigns. */
+
+:root {
+  --simple-bg: #f6f2ec;
+  --simple-surface: rgba(255, 255, 255, 0.78);
+  --simple-surface-strong: #fffdf9;
+  --simple-line: rgba(79, 66, 56, 0.13);
+  --simple-ink: #3f3832;
+  --simple-muted: #8a7f76;
+  --simple-accent: #8a6f60;
+  --simple-radius: 18px;
+}
+
+/* Remove decorative layers accumulated by earlier home redesigns. */
+.ambient,
+.grain,
+.hero-scene,
+.keats-glow,
+.envelope-art,
+.tiny-orbit,
+.home-mode-switch,
+.sync-pill,
+.sidebar-note,
+.little-weather,
+[class*="house-scene"],
+[class*="cottage-scene"],
+[class*="home-illustration"],
+[class*="handdrawn"],
+[class*="room-scene"] {
+  display: none !important;
+}
+
+html,
+body {
+  background: var(--simple-bg) !important;
+}
+
+body {
+  color: var(--simple-ink) !important;
+}
+
+.app-shell {
+  background: transparent !important;
+}
+
+.sidebar,
+.topbar,
+.paper-card,
+.entry-card,
+.mail-item,
+.memory-card,
+.recent-card,
+.editor-modal,
+.command-palette {
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.sidebar {
+  background: rgba(250, 247, 242, 0.96) !important;
+  border-right: 1px solid var(--simple-line) !important;
+}
+
+.brand-mark {
+  background: transparent !important;
+  border: 1px solid var(--simple-line) !important;
+  box-shadow: none !important;
+}
+
+.brand small,
+.nav-label,
+.eyebrow,
+.page-heading p,
+.card-kicker,
+.tiny-note,
+.paper-card p,
+.entry-card p,
+.mail-item p {
+  color: var(--simple-muted) !important;
+}
+
+.search-trigger,
+.nav-item,
+.mini-profile,
+.icon-button,
+.soft-button,
+.text-button,
+.primary-button,
+.chip {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.search-trigger {
+  background: rgba(255,255,255,.5) !important;
+  border: 1px solid var(--simple-line) !important;
+  border-radius: 12px !important;
+}
+
+.nav-item {
+  border-radius: 10px !important;
+  background: transparent !important;
+}
+
+.nav-item:hover,
+.nav-item.is-active {
+  background: rgba(138, 111, 96, 0.08) !important;
+}
+
+.nav-item i {
+  background: transparent !important;
+  color: var(--simple-muted) !important;
+}
+
+.topbar {
+  background: rgba(246, 242, 236, 0.94) !important;
+  border-bottom: 1px solid var(--simple-line) !important;
+}
+
+.topbar-right {
+  gap: 8px !important;
+}
+
+.home-wrap,
+.content-wrap {
+  max-width: 1040px !important;
+}
+
+.home-wrap {
+  padding-top: 30px !important;
+  padding-bottom: 46px !important;
+}
+
+.paper-card,
+.entry-card,
+.mail-item {
+  background: var(--simple-surface) !important;
+  border: 1px solid var(--simple-line) !important;
+  border-radius: var(--simple-radius) !important;
+}
+
+.hero-card {
+  min-height: 0 !important;
+  display: block !important;
+  padding: 34px 36px !important;
+  overflow: hidden !important;
+}
+
+.hero-copy {
+  max-width: 680px !important;
+}
+
+.hero-copy h1 {
+  margin: 8px 0 10px !important;
+  font-size: clamp(30px, 5vw, 48px) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.hero-copy h1 em {
+  color: var(--simple-accent) !important;
+}
+
+.hero-copy > p {
+  max-width: 560px !important;
+  margin-bottom: 22px !important;
+  font-size: 15px !important;
+  line-height: 1.8 !important;
+}
+
+.hero-presence {
+  position: static !important;
+  display: inline-flex !important;
+  margin: 0 0 8px !important;
+  padding: 6px 10px !important;
+  border: 1px solid var(--simple-line) !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: var(--simple-muted) !important;
+  box-shadow: none !important;
+}
+
+.hero-presence i {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.hero-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+}
+
+.primary-button {
+  border-radius: 11px !important;
+}
+
+.home-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
+  margin-top: 14px !important;
+}
+
+.home-grid > .paper-card {
+  min-height: 0 !important;
+  padding: 22px !important;
+  transform: none !important;
+}
+
+.home-grid h2,
+.home-grid h3 {
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+  font-size: 20px !important;
+}
+
+.diary-paper {
+  margin-top: 16px !important;
+  padding: 15px !important;
+  background: rgba(255,255,255,.45) !important;
+  border: 1px solid var(--simple-line) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.keats-head img {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+}
+
+.keats-card blockquote {
+  margin: 16px 0 !important;
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+}
+
+.paw-row {
+  margin-top: 10px !important;
+}
+
+.memory-count strong {
+  font-size: 38px !important;
+}
+
+.tag-cloud {
+  margin-top: 12px !important;
+}
+
+.tag-cloud span,
+.entry-tags span {
+  background: rgba(138,111,96,.07) !important;
+  border: 1px solid var(--simple-line) !important;
+  box-shadow: none !important;
+}
+
+.lower-grid {
+  display: block !important;
+  margin-top: 14px !important;
+}
+
+.recent-card {
+  padding: 22px !important;
+}
+
+.trace-row {
+  background: transparent !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+
+.trace-row + .trace-row {
+  border-top: 1px solid var(--simple-line) !important;
+}
+
+.page-heading {
+  margin-bottom: 24px !important;
+}
+
+.entry-grid,
+.memory-board {
+  gap: 14px !important;
+}
+
+.entry-card,
+.mail-item {
+  transform: none !important;
+}
+
+.mobile-bottom-nav {
+  background: rgba(250,247,242,.96) !important;
+  border-top: 1px solid var(--simple-line) !important;
+  box-shadow: none !important;
+}
+
+.mobile-bottom-nav button {
+  background: transparent !important;
+}
+
+.mobile-bottom-nav button.is-active {
+  color: var(--simple-accent) !important;
+}
+
+/* Night mode stays simple instead of turning into a different visual system. */
+body.is-night,
+body[data-theme="night"] {
+  --simple-bg: #1f1c1a;
+  --simple-surface: #292522;
+  --simple-surface-strong: #2c2825;
+  --simple-line: rgba(255,255,255,.09);
+  --simple-ink: #f3ece5;
+  --simple-muted: #aaa099;
+  --simple-accent: #d6b8a5;
+  background: var(--simple-bg) !important;
+}
+
+body.is-night .sidebar,
+body[data-theme="night"] .sidebar,
+body.is-night .topbar,
+body[data-theme="night"] .topbar,
+body.is-night .mobile-bottom-nav,
+body[data-theme="night"] .mobile-bottom-nav {
+  background: rgba(31,28,26,.96) !important;
+}
+
+@media (max-width: 760px) {
+  .home-wrap,
+  .content-wrap {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .home-wrap {
+    padding-top: 14px !important;
+    padding-bottom: 92px !important;
+  }
+
+  .hero-card {
+    padding: 24px 20px !important;
+    border-radius: 16px !important;
+  }
+
+  .hero-copy h1 {
+    font-size: 34px !important;
+  }
+
+  .hero-copy > p {
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+  }
+
+  .hero-actions {
+    align-items: flex-start !important;
+  }
+
+  .home-grid {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+    margin-top: 10px !important;
+  }
+
+  .home-grid > .paper-card,
+  .recent-card {
+    padding: 18px !important;
+    border-radius: 15px !important;
+  }
+
+  .section-heading {
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .trace-row {
+    padding: 13px 0 !important;
+  }
+
+  .trace-row time {
+    display: none !important;
+  }
+
+  .topbar {
+    min-height: 54px !important;
+  }
+
+  .topbar-right #newEntryButton {
+    padding: 8px 10px !important;
+  }
+}
