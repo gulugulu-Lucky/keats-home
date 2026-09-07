@@ -28,6 +28,7 @@
     }
     style.textContent = `
       @media (max-width:720px){
+        body.cottage-house-v1:has(#view-home.is-visible) .topbar-right .sync-pill,
         body.cottage-house-v1 .topbar-right .sync-pill{
           display:inline-flex!important;
           align-items:center!important;
@@ -49,6 +50,25 @@
         body.cottage-house-v1 .topbar-right .sync-pill{max-width:96px!important;font-size:7px!important;padding:6px 8px!important}
       }
     `;
+  }
+
+  function forceBackendStatusVisible() {
+    const pill = qs('.topbar-right .sync-pill');
+    if (!pill) return;
+    pill.style.setProperty('display', 'inline-flex', 'important');
+    pill.style.setProperty('align-items', 'center', 'important');
+    pill.style.setProperty('visibility', 'visible', 'important');
+    pill.style.setProperty('opacity', '1', 'important');
+    pill.style.setProperty('pointer-events', 'auto', 'important');
+    if (window.innerWidth <= 720) {
+      pill.style.setProperty('max-width', window.innerWidth <= 390 ? '96px' : '118px', 'important');
+      pill.style.setProperty('min-height', '31px', 'important');
+      pill.style.setProperty('padding', '6px 9px', 'important');
+      pill.style.setProperty('font-size', window.innerWidth <= 390 ? '7px' : '8px', 'important');
+      pill.style.setProperty('white-space', 'nowrap', 'important');
+      pill.style.setProperty('overflow', 'hidden', 'important');
+      pill.style.setProperty('text-overflow', 'ellipsis', 'important');
+    }
   }
 
   function cottageArt(note = 'Good days with Keats ♡', compact = false) {
@@ -132,6 +152,7 @@
   function install() {
     document.body.classList.add('cottage-house-v1');
     ensureBackendStatusStyle();
+    forceBackendStatusVisible();
     redrawHome();
     installPageArt();
   }
@@ -140,6 +161,9 @@
   requestAnimationFrame(install);
   setTimeout(install, 120);
   setTimeout(install, 800);
+  setTimeout(forceBackendStatusVisible, 1400);
+  setTimeout(forceBackendStatusVisible, 2600);
   window.addEventListener('pageshow', install);
+  window.addEventListener('resize', forceBackendStatusVisible);
   window.addEventListener('hashchange', () => setTimeout(install, 40));
 })();
