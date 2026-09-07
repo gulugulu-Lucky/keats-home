@@ -19,6 +19,38 @@
     return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
   }
 
+  function ensureBackendStatusStyle() {
+    let style = qs('#cottageBackendStatusFix');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'cottageBackendStatusFix';
+      document.head.appendChild(style);
+    }
+    style.textContent = `
+      @media (max-width:720px){
+        body.cottage-house-v1 .topbar-right .sync-pill{
+          display:inline-flex!important;
+          align-items:center!important;
+          max-width:118px!important;
+          min-height:31px!important;
+          padding:6px 9px!important;
+          border-radius:999px!important;
+          font-size:8px!important;
+          line-height:1!important;
+          white-space:nowrap!important;
+          overflow:hidden!important;
+          text-overflow:ellipsis!important;
+          cursor:pointer!important;
+        }
+        body.cottage-house-v1 .topbar-right .soft-button{display:none!important}
+        body.cottage-house-v1 .topbar-right{gap:5px!important}
+      }
+      @media (max-width:390px){
+        body.cottage-house-v1 .topbar-right .sync-pill{max-width:96px!important;font-size:7px!important;padding:6px 8px!important}
+      }
+    `;
+  }
+
   function cottageArt(note = 'Good days with Keats ♡', compact = false) {
     const safe = escapeText(note);
     return `
@@ -99,6 +131,7 @@
 
   function install() {
     document.body.classList.add('cottage-house-v1');
+    ensureBackendStatusStyle();
     redrawHome();
     installPageArt();
   }
