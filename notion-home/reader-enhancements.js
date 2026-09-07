@@ -61,6 +61,9 @@
     }
   }
 
+  // Keep this file purely additive. The base reader is responsible for
+  // loading and revealing the article; enhancements must never hide or
+  // replace #readerArticle / #notionContent.
   const observer = new MutationObserver(() => repairTitle());
   observer.observe(document.documentElement, { subtree: true, childList: true, characterData: true });
   setTimeout(() => observer.disconnect(), 8000);
