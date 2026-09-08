@@ -1,26 +1,48 @@
 # Keats Home remote MCP
 
-The Worker exposes a remote MCP endpoint at:
+The Worker exposes a private remote MCP endpoint at:
 
-`/mcp`
+`https://keats-home-notion.k995680983-3fb.workers.dev/mcp`
 
-It is implemented with the official Model Context Protocol TypeScript server SDK and serves current MCP HTTP clients through the SDK's web-standard handler.
+The server uses Cloudflare Agents' stateless `createMcpHandler()` with the MCP TypeScript v2 server package and Cloudflare's OAuth 2.1 provider.
 
-## Authentication
+## ChatGPT configuration
 
-Every `/mcp` request requires:
+Use:
 
-`Authorization: Bearer <MCP_ACCESS_KEY>`
+- Name: `Keats Home`
+- Server URL: `https://keats-home-notion.k995680983-3fb.workers.dev/mcp`
+- Authentication: `OAuth`
 
-`MCP_ACCESS_KEY` is a Cloudflare Secret. Never commit its value to GitHub.
+Do not choose unauthenticated mode because this MCP exposes write actions.
 
-The normal little-home browser continues using its existing authentication path; the MCP key is dedicated to tool access.
+## OAuth
+
+Cloudflare's `@cloudflare/workers-oauth-provider` owns OAuth discovery, client registration, token exchange, refresh tokens, token validation, and protected-resource challenges.
+
+The application-owned `/authorize` page asks the owner for the existing `MCP_ACCESS_KEY`. The key is compared only inside the Worker and is never returned to the MCP client. After successful authorization the client receives OAuth access/refresh tokens managed by the provider.
+
+Supported scopes:
+
+- `home:read`
+- `home:write`
+- `offline_access`
+
+Access tokens last 1 hour. Refresh tokens last 180 days and rotate when used.
+
+OAuth storage requires a Cloudflare KV namespace bound as:
+
+`OAUTH_KV`
+
+The KV id must be configured in `wrangler.jsonc` before the OAuth flow can run.
+
+`MCP_ACCESS_KEY` remains a Cloudflare Secret. Never commit its value to GitHub.
 
 ## Tools
 
 ### `capture_home_event`
 
-Writes a short candidate moment to the D1 event basket. It is additive and same-day duplicate-safe.
+Writes a short candidate moment to the D1 event basket. Requires `home:write`. It is additive and same-day duplicate-safe.
 
 Inputs:
 - `summary`
@@ -32,21 +54,23 @@ Inputs:
 
 ### `get_pending_home_events`
 
-Read-only. Returns pending event-basket items with optional `date` and `limit` filters.
+Read-only. Requires `home:read`. Returns pending event-basket items with optional `date` and `limit` filters.
 
 ### `resolve_home_event`
 
-Marks a pending event as `kept`, `discarded`, or `used`. This does not delete Notion diary or letter content.
+Requires `home:write`. Marks a pending event as `kept`, `discarded`, or `used`. This does not delete Notion diary or letter content.
 
 ## Safety
 
-- Requests with an unexpected browser `Origin` are rejected.
-- Secrets and credentials should never be supplied to `capture_home_event`.
-- The tool description explicitly tells the model to skip routine acknowledgements, task-only chatter, near-duplicates, secrets, credentials, and sensitive personal data.
+- OAuth 2.1 protects all `/mcp` access.
+- The owner must explicitly authorize a client using the private Cloudflare secret.
+- Authorization uses a short-lived CSRF cookie and strict redirect/client validation from the OAuth provider.
+- Tool callbacks enforce read/write scopes.
+- Secrets and credentials must never be supplied to `capture_home_event`.
 - D1 remains the temporary event basket; durable diary/letter content remains in Notion.
 
 ## Health
 
 `GET /health/mcp`
 
-Returns only boolean configuration state; it never returns secret values.
+Returns boolean configuration state only; it never returns secret values. OAuth is ready only when `oauthKvConfigured`, `d1Configured`, and `mcpKeyConfigured` are all true.
