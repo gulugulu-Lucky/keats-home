@@ -1,10 +1,20 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "keats-home-notion",
-  "main": "src/clipboard-media-worker.js",
+  "main": "src/home-events-worker.js",
   "compatibility_date": "2026-08-07",
   "observability": { "enabled": true },
   "vars": {
     "FRONTEND_ORIGIN": "https://gulugulu-lucky.github.io"
   }
+
+  // HOME_EVENTS_DB will be added here after the Cloudflare D1 database is created:
+  // "d1_databases": [
+  //   {
+  //     "binding": "HOME_EVENTS_DB",
+  //     "database_name": "keats-home-events",
+  //     "database_id": "<cloudflare-generated-database-id>",
+  //     "migrations_dir": "migrations"
+  //   }
+  // ]
 }
