@@ -30,11 +30,11 @@ Supported scopes:
 
 Access tokens last 1 hour. Refresh tokens last 180 days and rotate when used.
 
-OAuth storage requires a Cloudflare KV namespace bound as:
+OAuth storage requires one Cloudflare KV namespace. Create it once, then bind it to the Worker as:
 
 `OAUTH_KV`
 
-The KV id must be configured in `wrangler.jsonc` before the OAuth flow can run.
+Until this binding exists, `/health/mcp` reports `oauthKvConfigured: false` and the authorization page intentionally refuses to start. This keeps the production Worker from pretending OAuth is ready before token storage exists.
 
 `MCP_ACCESS_KEY` remains a Cloudflare Secret. Never commit its value to GitHub.
 
