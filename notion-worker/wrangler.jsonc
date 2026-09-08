@@ -6,9 +6,6 @@
   "compatibility_flags": ["global_fetch_strictly_public"],
   "observability": { "enabled": true },
   "keep_vars": true,
-  "secrets": {
-    "required": ["MCP_ACCESS_KEY"]
-  },
   "vars": {
     "FRONTEND_ORIGIN": "https://gulugulu-lucky.github.io"
   },
