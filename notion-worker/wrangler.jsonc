@@ -3,6 +3,7 @@
   "name": "keats-home-notion",
   "main": "src/mcp-worker.js",
   "compatibility_date": "2026-08-07",
+  "compatibility_flags": ["global_fetch_strictly_public"],
   "observability": { "enabled": true },
   "vars": {
     "FRONTEND_ORIGIN": "https://gulugulu-lucky.github.io"
@@ -15,4 +16,12 @@
       "migrations_dir": "migrations"
     }
   ]
+
+  // OAuth requires one Cloudflare KV namespace. After creating it, add:
+  // "kv_namespaces": [
+  //   {
+  //     "binding": "OAUTH_KV",
+  //     "id": "<cloudflare-generated-kv-namespace-id>"
+  //   }
+  // ]
 }
