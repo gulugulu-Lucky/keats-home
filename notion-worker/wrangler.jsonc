@@ -1,8 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "keats-home-notion",
-  "main": "src/home-events-worker.js",
+  "main": "src/mcp-worker.js",
   "compatibility_date": "2026-08-07",
+  "compatibility_flags": ["global_fetch_strictly_public"],
   "observability": { "enabled": true },
   "vars": {
     "FRONTEND_ORIGIN": "https://gulugulu-lucky.github.io"
@@ -13,6 +14,12 @@
       "database_name": "keats-home-events",
       "database_id": "e26b6b97-e54e-4f2d-b225-dc09f6e9cb00",
       "migrations_dir": "migrations"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "a3f38c7ec46e494ea68f50c11d18de78"
     }
   ]
 }
