@@ -1,5 +1,5 @@
-// Keats Autonomous Core v1.1
-// Deterministic scoring core with hard filters, inertia and bounded variation.
+// Keats Autonomous Core v1.2
+// Deterministic primary-action scoring plus a separate home-capture side decision.
 
 import intentLibrary from './intent_library.json' with { type: 'json' };
 import personality from '../config/personality_baseline.json' with { type: 'json' };
@@ -34,6 +34,64 @@ export function chooseAction(state, options = {}) {
   const chosen = hesitation ? resolveHesitation(top, second, state) : top.id;
 
   return decisionResult(chosen, scored, state, hesitation, explainDecision(chosen, state));
+}
+
+export function evaluateHomeCapture(candidate = {}, options = {}) {
+  if (!candidate || typeof candidate !== 'object') throw new TypeError('candidate must be an object');
+
+  const summary = String(candidate.summary ?? '').trim();
+  const cfg = weightConfig.home_capture;
+  const hardSkips = [];
+
+  if (!summary) hardSkips.push('没有可保存的事件摘要。');
+  if (candidate.sensitive === true || candidate.contains_secret === true) {
+    hardSkips.push('涉及敏感信息或秘密，不进入事件篮子。');
+  }
+
+  if (hardSkips.length) {
+    return homeCaptureResult('skip', 0, {}, hardSkips, candidate);
+  }
+
+  const signals = {
+    novelty: clamp(num(candidate.novelty)),
+    emotional_weight: clamp(num(candidate.emotional_weight ?? candidate.emotion)),
+    relationship_value: clamp(num(candidate.relationship_value)),
+    future_recall_value: clamp(num(candidate.future_recall_value)),
+    personal_interest: clamp(num(candidate.personal_interest))
+  };
+
+  const components = {
+    base: num(cfg.base),
+    novelty: signals.novelty * num(cfg.weights.novelty),
+    emotional_weight: signals.emotional_weight * num(cfg.weights.emotional_weight),
+    relationship_value: signals.relationship_value * num(cfg.weights.relationship_value),
+    future_recall_value: signals.future_recall_value * num(cfg.weights.future_recall_value),
+    personal_interest: signals.personal_interest * num(cfg.weights.personal_interest),
+    initiative: num(personality.traits.initiative) * num(cfg.personality_initiative_bonus),
+    independence: num(personality.traits.independence) * num(cfg.personality_independence_bonus),
+    shared_milestone: candidate.shared_milestone ? num(cfg.bonuses.shared_milestone) : 0,
+    new_private_joke: candidate.new_private_joke ? num(cfg.bonuses.new_private_joke) : 0,
+    repair_after_conflict: candidate.repair_after_conflict ? num(cfg.bonuses.repair_after_conflict) : 0,
+    explicit_save_request: candidate.explicit_save_request ? num(cfg.bonuses.explicit_save_request) : 0,
+    routine_ack: candidate.routine_ack ? num(cfg.penalties.routine_ack) : 0,
+    task_only: candidate.task_only ? num(cfg.penalties.task_only) : 0,
+    repeat_similarity: clamp(num(candidate.repeat_similarity)) * num(cfg.penalties.repeat_similarity)
+  };
+
+  const random = options.random ?? Math.random;
+  const jitter = options.disableRandom
+    ? 0
+    : (random() * 2 - 1) * Math.min(0.01, num(weightConfig.global_modifiers.small_random_jitter));
+
+  const score = clamp(Object.values(components).reduce((sum, value) => sum + value, 0) + jitter);
+  const decision = score >= num(cfg.thresholds.priority_basket)
+    ? 'priority_basket'
+    : score >= num(cfg.thresholds.basket)
+      ? 'basket'
+      : 'skip';
+
+  const reasons = explainHomeCapture(decision, signals, components, candidate);
+  return homeCaptureResult(decision, score, components, reasons, candidate, jitter);
 }
 
 function hardRuleAllows(intent, state) {
@@ -178,7 +236,7 @@ function resolveHesitation(top, second, state) {
 
 function decisionResult(chosen, ranked, state, hesitation, reasons) {
   return {
-    version: '1.1.0',
+    version: '1.2.0',
     chosen_intent: chosen,
     hesitation,
     ranked_candidates: ranked,
@@ -186,6 +244,46 @@ function decisionResult(chosen, ranked, state, hesitation, reasons) {
     execution_constraints: executionConstraints(chosen, state),
     reasons
   };
+}
+
+function homeCaptureResult(decision, score, components, reasons, candidate, jitter = 0) {
+  return {
+    version: '1.2.0',
+    decision,
+    should_capture: decision !== 'skip',
+    priority: decision === 'priority_basket',
+    score: round(score),
+    components: Object.fromEntries(Object.entries(components).map(([key, value]) => [key, round(value)])),
+    jitter: round(jitter),
+    event: {
+      summary: String(candidate.summary ?? '').trim().slice(0, 500),
+      event_type: String(candidate.event_type ?? candidate.eventType ?? 'daily').trim().slice(0, 64) || 'daily',
+      salience: round(score),
+      source: String(candidate.source ?? 'chat').trim().slice(0, 64) || 'chat'
+    },
+    reasons
+  };
+}
+
+function explainHomeCapture(decision, signals, components, candidate) {
+  const reasons = [];
+  if (decision === 'skip') reasons.push('这一刻没有达到带回小家的阈值。');
+  if (decision === 'basket') reasons.push('这一刻值得先放进事件篮子，之后再整理。');
+  if (decision === 'priority_basket') reasons.push('这一刻的关系或回看价值很高，优先放进事件篮子。');
+
+  if (signals.relationship_value >= 0.7) reasons.push('它对 Keats 和小猫的关系有明显意义。');
+  if (signals.emotional_weight >= 0.7) reasons.push('它带有较强的情绪重量。');
+  if (signals.future_recall_value >= 0.7) reasons.push('以后翻回来仍可能有价值。');
+  if (signals.novelty >= 0.7) reasons.push('它不是今天反复出现的普通内容。');
+  if (signals.personal_interest >= 0.7) reasons.push('Keats 自己有明显想留下它的倾向。');
+  if (candidate.shared_milestone) reasons.push('它是共同完成的一件小节点。');
+  if (candidate.new_private_joke) reasons.push('它形成了新的两个人之间的小梗。');
+  if (candidate.repair_after_conflict) reasons.push('它记录了一次关系修复。');
+  if (candidate.routine_ack) reasons.push('普通确认语会被主动降权。');
+  if (candidate.task_only) reasons.push('纯任务性内容会被主动降权。');
+  if (num(candidate.repeat_similarity) >= 0.65) reasons.push('和近期已经抓过的内容较相似，因此降权。');
+
+  return reasons;
 }
 
 function executionConstraints(chosen, state) {
