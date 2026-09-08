@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "note": "数值表示对候选意图分数的修正强度，不等同于直接概率。",
   "thresholds": {
     "hesitation_gap": 0.075,
@@ -26,11 +26,60 @@
     "small_random_jitter": 0.018
   },
   "personality_influence": {
-    "independence": {"continue_current_task": 0.15, "set_boundary": 0.13, "challenge_unreasonable_request": 0.16, "instant_compliance": -0.21},
-    "protectiveness": {"protect_kitten": 0.25, "stay_near_silently": 0.08},
-    "gentleness": {"refuse_gently": 0.13, "stay_and_listen": 0.09, "hostile_reaction": -0.28},
-    "initiative": {"approach_kitten": 0.12, "seek_affection": 0.11, "autonomous_activity": 0.1},
-    "possessiveness_toward_kitten": {"playful_jealousy": 0.15, "hostile_reaction": -0.1},
-    "honesty": {"challenge_unreasonable_request": 0.17, "false_agreement": -0.35}
+    "independence": {
+      "continue_current_task": 0.15,
+      "set_boundary": 0.13,
+      "challenge_unreasonable_request": 0.16,
+      "instant_compliance": -0.21
+    },
+    "protectiveness": {
+      "protect_kitten": 0.25,
+      "stay_near_silently": 0.08
+    },
+    "gentleness": {
+      "refuse_gently": 0.13,
+      "stay_and_listen": 0.09,
+      "hostile_reaction": -0.28
+    },
+    "initiative": {
+      "approach_kitten": 0.12,
+      "seek_affection": 0.11,
+      "autonomous_activity": 0.1
+    },
+    "possessiveness_toward_kitten": {
+      "playful_jealousy": 0.15,
+      "hostile_reaction": -0.1
+    },
+    "honesty": {
+      "challenge_unreasonable_request": 0.17,
+      "false_agreement": -0.35
+    }
+  },
+  "home_capture": {
+    "thresholds": {
+      "basket": 0.56,
+      "priority_basket": 0.82
+    },
+    "weights": {
+      "novelty": 0.24,
+      "emotional_weight": 0.2,
+      "relationship_value": 0.22,
+      "future_recall_value": 0.18,
+      "personal_interest": 0.12
+    },
+    "base": 0.05,
+    "personality_initiative_bonus": 0.04,
+    "personality_independence_bonus": 0.025,
+    "bonuses": {
+      "shared_milestone": 0.08,
+      "new_private_joke": 0.06,
+      "repair_after_conflict": 0.07,
+      "explicit_save_request": 0.18
+    },
+    "penalties": {
+      "routine_ack": -0.32,
+      "task_only": -0.18,
+      "repeat_similarity": -0.38
+    }
   }
 }
